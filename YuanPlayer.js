@@ -184,14 +184,14 @@ YuanPlayer.prototype = {
     var media = this.mediaObject;
     if (media) {
       var temp = media.volume + 0.2;
-      media.volume = (temp >= 1.0) ? 1.0 : (temp + 0.2);
+      media.volume = (temp >= 1.0) ? 1.0 : temp;
     }
   },
   minusVolume: function() {
     var media = this.mediaObject;
     if (media) {
       var temp = media.volume - 0.2;
-      media.volume = (temp >= 0.0) ? (temp - 0.2) : 0.0;
+      media.volume = (temp >= 0.0) ? temp : 0.0;
     }
   }
 };
