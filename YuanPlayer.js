@@ -1,3 +1,8 @@
+if(!Array.isArray) {
+  Array.isArray = function (vArg) {
+    return Object.prototype.toString.call(vArg) === "[object Array]";
+  };
+}
 function YuanPlayer(options){
   this.container = 'yuanplayer';
   this.mediaObject = null;
@@ -7,14 +12,10 @@ YuanPlayer.prototype = {
   constructor: YuanPlayer,
   init: function (options) {
     this.initOptions(options);
-
     // If no valid container exists, we do nothing.
-    if(!this.container || !document.getElementById(this.container)) {
-      return ;
-    }
-
+    if(!this.container || !document.getElementById(this.container)) return ;
     this.addMediaElement();
-
+    this.bindMediaEvents();
   },
   initOptions: function(options) {
     for (var prop in options) {
@@ -29,34 +30,62 @@ YuanPlayer.prototype = {
 
       //mediaElement.src = this.src;
       mediaElement.controls = 'controls';
-      if (this.mediaWidth && this.mediaHeight) {
 
-      }
       this.addMediaSource();
       container.appendChild(mediaElement);
     }
-    return this;
+  },
+  bindMediaEvents: function() {
+    var that = this;
+    var media = this.mediaObject;
+    if (!media) return ;
+    media.addEventListener('durationchange', function(){
+      if (that.cssSelector && that.cssSelector.duration) {
+        document.querySelector(that.cssSelector.duration).innerText = that.formatTime(Math.floor(media.duration));
+      }
+    }, false);
+    media.addEventListener('timeupdate', function(){
+      if (that.cssSelector && that.cssSelector.currentTime) {
+        document.querySelector(that.cssSelector.currentTime).innerText = that.formatTime(Math.floor(media.currentTime));
+      }
+    }, false);
+  },
+  formatTime: function(timeInSeconds) {
+    var result = "";
+    var seconds = Math.floor(timeInSeconds),
+        hours = Math.floor(seconds / 3600),
+        minutes = Math.floor((seconds - (hours * 3600)) / 60),
+        seconds = seconds - (hours * 3600) - (minutes * 60);
+
+    if (hours >0 && minutes < 10) {
+        minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+    result = hours ? (hours + ':') : '' + minutes + ':' + seconds;
+    return result;
   },
   addMediaSource: function(){
     var media = this.mediaObject;
     var sources = this.source;
     if (sources) {
-      for (var i = 0, len = sources.length; i < len; i++) {
-        var sourceElement = document.createElement('source');
-        if (typeof sources[i] == 'object') {
-          sourceElement.src = sources[i].src;
-          sourceElement.type = sources[i].type ? sources[i].type : this.getMimeType(sources[i].src);
-          media.appendChild(sourceElement);
-        } else if (typeof sources[i] == 'string') {
-          sourceElement.src = sources[i];
-          sourceElement.type = this.getMimeType(sources[i]);
-        }
-      }
+      this.setMedia(sources);
     }
   },
   play: function(){
     if (this.mediaObject) {
       this.mediaObject.play();
+    }
+  },
+  togglePlay: function() {
+    var media = this.mediaObject;
+    if (media) {
+      if (media.paused) {
+        media.play();
+      } else {
+        media.pause();
+      }
     }
   },
   stop: function(){
@@ -102,21 +131,67 @@ YuanPlayer.prototype = {
     return 'audio/' + type;
   },
   pause: function(){
-
+    var media = this.mediaObject;
+    if (media) {
+      media.pause();
+    }
   },
-  fastforward: function(){
-
+  setMedia: function(mediaParam) {
+    var media = this.mediaObject;
+    if (!media) return;
+    media.innerHTML = '';
+    if (typeof mediaParam == 'string') {
+      var sourceElement = document.createElement('source');
+      sourceElement.src = mediaParam;
+      sourceElement.type = this.getMimeType(mediaParam);
+      media.appendChild(sourceElement);
+    } else if (typeof mediaParam == 'object'){
+      if (Array.isArray(mediaParam)) {
+        for (var i = 0; i < mediaParam.length; i++) {
+          this.setMediaItem(mediaParam[i]);
+        }
+      } else {
+        this.setMediaItem(mediaParam);
+      }
+    }
   },
-  rewind: function(){
-
+  setMediaItem: function (mediaObj) {
+    var media = this.mediaObject;
+    var sourceElement = document.createElement('source');
+    sourceElement.src = mediaObj.src;
+    sourceElement.type = mediaObj.type ? mediaObj.type : this.getMimeType(mediaObj.src);
+    media.appendChild(sourceElement);
   },
-  seek: function(){
-
+  mute: function() {
+    var media = this.mediaObject;
+    if (media) {
+      media.muted = true;;
+    }
   },
-  reload: function(){
-
+  unmute: function() {
+    var media = this.mediaObject;
+    if (media) {
+      media.muted = false;
+    }
   },
-  setMedia: function(){
-
+  toggleMute: function() {
+    var media = this.mediaObject;
+    if (media) {
+      media.muted = !media.muted;
+    }
+  },
+  addVolume: function() {
+    var media = this.mediaObject;
+    if (media) {
+      var temp = media.volume + 0.2;
+      media.volume = (temp >= 1.0) ? 1.0 : (temp + 0.2);
+    }
+  },
+  minusVolume: function() {
+    var media = this.mediaObject;
+    if (media) {
+      var temp = media.volume - 0.2;
+      media.volume = (temp >= 0.0) ? (temp - 0.2) : 0.0;
+    }
   }
 };
