@@ -6,6 +6,11 @@ if(!Array.isArray) {
 function YuanPlayer(options){
   this.container = 'yuanplayer';
   this.mediaObject = null;
+  this.lyricObj = {
+    timeArray:[],
+    lyricArray: []
+  };
+  this.lyricCurrentPosition = 0;
   this.init(options);
 }
 YuanPlayer.prototype = {
@@ -16,6 +21,7 @@ YuanPlayer.prototype = {
     if(!this.container || !document.getElementById(this.container)) return ;
     this.addMediaElement();
     this.bindMediaEvents();
+    this.addLyric();
   },
   initOptions: function(options) {
     for (var prop in options) {
@@ -48,7 +54,114 @@ YuanPlayer.prototype = {
       if (that.cssSelector && that.cssSelector.currentTime) {
         document.querySelector(that.cssSelector.currentTime).innerText = that.formatTime(Math.floor(media.currentTime));
       }
+      if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
+        that.scrollLyric(media.currentTime);
+      }
     }, false);
+  },
+  scrollLyric: function(currentTime){
+    var newLyricIndex = this.getNewLyricIndex(currentTime);
+    if (newLyricIndex == this.lyricCurrentPosition) return ;
+
+    this.lyricCurrentPosition = newLyricIndex;
+    var wrapContainer = document.getElementById('lyric-wrapcontainer');
+    var marginTopValue = - newLyricIndex * 25;
+    console.log('newLyricIndex',- newLyricIndex * 25 );
+    wrapContainer.style.marginTop = '' + marginTopValue + 'px' ;
+  },
+  getNewLyricIndex: function (currentTime) {
+    var index = 0;
+    var timeArray = this.lyricObj.timeArray;
+    if (timeArray.length) {
+      for (var i = 0; i < timeArray.length; i++) {
+        if (currentTime <= timeArray[i]) {
+          index = i;
+          break;
+        }
+      }
+    }
+    return index;
+  },
+  addLyric: function() {
+    var that = this;
+    var lyric = this.lyric;
+    if (lyric) {
+      if (typeof lyric =='string') {
+        // Add container for lyric
+        var lyricDiv = document.createElement('div');
+        var wrapContainer = document.createElement('div');
+        lyricDiv.id = "lyric-container";
+        wrapContainer.id = "lyric-wrapcontainer";
+        document.body.appendChild(lyricDiv);
+        lyricDiv.appendChild(wrapContainer);
+
+        if (lyric.substr(0, 8) == 'https://' || lyric.substr(0, 7) == 'http://') {
+          yuanjs.ajax({url:lyric}).then(function(lyricText){
+            var lyricItems = lyricText.responseText.split(/[\n\r]/g);
+            lyricItems = that.parseLyricItems(lyricItems);
+            lyricItems.sort(function(x,y){ return that.compareTimeSpan.call(that,x,y);});
+            that.addLyricItems(lyricItems);
+            that.logLyricInfo(lyricItems);
+            //debugger;
+          },function(err){
+            console.log('error:', err);
+          });
+        }
+
+      }
+    }
+  },
+  logLyricInfo: function(items){
+    var patt = /\[|\]/;
+    for (var i = 0; i < items.length; i++) {
+      var component = items[i].split(patt);
+      if (component[2] == '') {
+        // If no lyric
+        break;
+      }
+      this.lyricObj.timeArray.push(this.parseTimeToSeconds(component[1]));
+      this.lyricObj.lyricArray.push(component[2]);
+    }
+  },
+  compareTimeSpan: function(x,y){
+    var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2})\]/;
+    var xTime = x.match(timePattern)[1], yTime = y.match(timePattern)[1];
+    var xTimeInSeconds = this.parseTimeToSeconds(xTime), yTimeInSeconds = this.parseTimeToSeconds(yTime);
+    //debugger;
+    return xTimeInSeconds - yTimeInSeconds;
+  },
+  parseTimeToSeconds: function(timeString) {
+    var component = timeString.split('.');
+    var bigPart = component[0];
+    var bigPartComponent = bigPart.split(':');
+    var minutePart = parseInt(bigPartComponent[0]);
+    var secondPart = parseInt(bigPartComponent[1]);
+    return minutePart * 60 + secondPart + '.' + component[1];
+  },
+  parseLyricItems: function(items) {
+    var result = [];
+    var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2}\]/g;
+    for(var i = 0, l = items.length; i < l; i++) {
+      var thisItem = items[i];
+      var timeSpanArray = thisItem.match(timePattern);
+      if (timeSpanArray) {
+        var lyric = thisItem.split(timePattern).pop();
+        for (var j = 0, len = timeSpanArray.length; j < len; j++) {
+          result.push(timeSpanArray[j]+lyric);
+        }
+      };
+    }
+    return result;
+  },
+  addLyricItems: function (items) {
+    var lyricContainer = document.getElementById('lyric-container');
+    var wrapContainer = document.getElementById('lyric-wrapcontainer');
+
+    for (var i = 0, l = items.length; i < l; i++) {
+      var div = document.createElement('div');
+      div.innerText = items[i].split(']')[1];
+      wrapContainer.appendChild(div);
+    }
   },
   formatTime: function(timeInSeconds) {
     var result = "";

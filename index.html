@@ -14,6 +14,18 @@
         padding-left: 5px;
         padding-right: 5px;
       }
+      #lyric-container {
+        text-align: center;
+        height: 100px;
+        width: 300px;
+        border: 1px solid blue;
+        overflow: hidden;
+        padding-top: 50px;
+      }
+      #lyric-container div {
+        margin-bottom: 5px;
+        height: 20px;
+      }
     </style>
   </head>
   <body>
@@ -22,6 +34,7 @@
     </div>
     <div><span id="currentTime-span">0:00</span>/<span id="duration-span">0:00</span></div>
     <div id="controlbutton-container"><span id="play-button">Play</span>&nbsp;<span id="pause-button">Pause</span>&nbsp;<span id="toggleplay-button">Toggle Play</span>&nbsp;<span id="stop-button">Stop</span>&nbsp;<span id="mute-button">Mute</span>&nbsp;<span id="unmute-button">Unmute</span>&nbsp;<span id="togglemute-button">Toggle Mute</span>&nbsp;<span id="volumeadd-button">Volume++</span>&nbsp;<span id="volumeminus-button">Volume--</span></div>
+    <script type="text/javascript" src="yuan.js"></script>
     <script type="text/javascript" src="YuanPlayer.js"></script>
     <script type="text/javascript">
       window.onload = initAll;
@@ -35,7 +48,8 @@
           cssSelector: {
             'duration': '#duration-span',
             'currentTime': '#currentTime-span'
-          }
+          },
+          lyric: 'http://localhost/yuanplayer/I-am-a-tree-in-autumn.lrc'
         }
 
         var player = new YuanPlayer(options);
