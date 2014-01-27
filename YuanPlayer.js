@@ -67,7 +67,6 @@ YuanPlayer.prototype = {
     this.lyricCurrentPosition = newLyricIndex;
     var wrapContainer = document.getElementById('lyric-wrapcontainer');
     var marginTopValue = - newLyricIndex * 25;
-    console.log('newLyricIndex',- newLyricIndex * 25 );
     wrapContainer.style.marginTop = '' + marginTopValue + 'px' ;
 
     // Hightlight the current lyric
@@ -88,7 +87,7 @@ YuanPlayer.prototype = {
       }
       for (var i = 0; i < timeLength; i++) {
         if (currentTime <= timeArray[i]) {
-          index = i;
+          index = i - 1;
           break;
         }
       }
