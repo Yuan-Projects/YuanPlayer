@@ -72,8 +72,15 @@ YuanPlayer.prototype = {
   getNewLyricIndex: function (currentTime) {
     var index = 0;
     var timeArray = this.lyricObj.timeArray;
-    if (timeArray.length) {
-      for (var i = 0; i < timeArray.length; i++) {
+    var timeLength = timeArray.length;
+    if (timeLength) {
+      if(currentTime <= timeArray[0]) {
+        return 0;
+      }
+      if(currentTime >= timeArray[timeLength-1]) {
+        return timeLength - 1;
+      }
+      for (var i = 0; i < timeLength; i++) {
         if (currentTime <= timeArray[i]) {
           index = i;
           break;
