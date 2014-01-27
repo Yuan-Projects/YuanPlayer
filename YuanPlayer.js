@@ -61,13 +61,18 @@ YuanPlayer.prototype = {
   },
   scrollLyric: function(currentTime){
     var newLyricIndex = this.getNewLyricIndex(currentTime);
-    if (newLyricIndex == this.lyricCurrentPosition) return ;
+    var oldPosition = this.lyricCurrentPosition;
+    if (newLyricIndex == oldPosition) return ;
 
     this.lyricCurrentPosition = newLyricIndex;
     var wrapContainer = document.getElementById('lyric-wrapcontainer');
     var marginTopValue = - newLyricIndex * 25;
     console.log('newLyricIndex',- newLyricIndex * 25 );
     wrapContainer.style.marginTop = '' + marginTopValue + 'px' ;
+
+    // Hightlight the current lyric
+    document.getElementById('lyric-wrapcontainer').getElementsByTagName('div')[oldPosition].style.fontWeight =  'normal';
+    document.getElementById('lyric-wrapcontainer').getElementsByTagName('div')[newLyricIndex].style.fontWeight = 'bold';
   },
   getNewLyricIndex: function (currentTime) {
     var index = 0;
