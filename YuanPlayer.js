@@ -71,8 +71,9 @@ YuanPlayer.prototype = {
     wrapContainer.style.marginTop = '' + marginTopValue + 'px' ;
 
     // Hightlight the current lyric
-    document.getElementById('lyric-wrapcontainer').getElementsByTagName('div')[oldPosition].style.fontWeight =  'normal';
-    document.getElementById('lyric-wrapcontainer').getElementsByTagName('div')[newLyricIndex].style.fontWeight = 'bold';
+    var lyricDivs = document.getElementById('lyric-wrapcontainer').getElementsByTagName('div');
+    lyricDivs[oldPosition].style.fontWeight =  'normal';
+    lyricDivs[newLyricIndex].style.fontWeight = 'bold';
   },
   getNewLyricIndex: function (currentTime) {
     var index = 0;
