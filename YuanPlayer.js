@@ -129,7 +129,6 @@ YuanPlayer.prototype = {
       var component = items[i].split(patt);
       if (component[2] == '') {
         // If no lyric
-        break;
       }
       this.lyricObj.timeArray.push(this.parseTimeToSeconds(component[1]));
       this.lyricObj.lyricArray.push(component[2]);
