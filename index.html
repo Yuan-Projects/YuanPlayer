@@ -1,109 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
     <title>YuanPlayer</title>
-    <style type="text/css">
-      #controlbutton-container span {
-        background-color: lightblue;
-        cursor: pointer;
-        display: inline-block;
-        text-align: center;
-        margin-right: 5px;
-        border-radius: 3px;
-        padding-left: 5px;
-        padding-right: 5px;
-      }
-      #lyric-container {
-        text-align: center;
-        height: 100px;
-        width: 300px;
-        border: 1px solid blue;
-        overflow: hidden;
-        padding-top: 50px;
-      }
-      #lyric-container div {
-        margin-bottom: 5px;
-        height: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div id="yuanplayer">
-
-    </div>
+    <div id="yuanplayer"></div>
     <div><span id="currentTime-span">0:00</span>/<span id="duration-span">0:00</span></div>
     <div id="controlbutton-container"><span id="play-button">Play</span>&nbsp;<span id="pause-button">Pause</span>&nbsp;<span id="toggleplay-button">Toggle Play</span>&nbsp;<span id="stop-button">Stop</span>&nbsp;<span id="mute-button">Mute</span>&nbsp;<span id="unmute-button">Unmute</span>&nbsp;<span id="togglemute-button">Toggle Mute</span>&nbsp;<span id="volumeadd-button">Volume++</span>&nbsp;<span id="volumeminus-button">Volume--</span></div>
     <script type="text/javascript" src="yuan.js"></script>
     <script type="text/javascript" src="YuanPlayer.js"></script>
-    <script type="text/javascript">
-      window.onload = initAll;
-      function initAll () {
-        // Webm Sample: http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm
-        // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
-        var options = {
-          source:[
-            { src: 'http://localhost/tree.mp3'}
-          ],
-          cssSelector: {
-            'duration': '#duration-span',
-            'currentTime': '#currentTime-span'
-          },
-          lyric: 'http://localhost/yuanplayer/I-am-a-tree-in-autumn.lrc'
-        }
-
-        var player = new YuanPlayer(options);
-
-        var playButton = document.getElementById('play-button');
-        var pauseButton = document.getElementById('pause-button');
-        var togglePlayButton = document.getElementById('toggleplay-button');
-        var stopButton = document.getElementById('stop-button');
-        var muteButton = document.getElementById('mute-button');
-        var unmuteButton = document.getElementById('unmute-button');
-        var togglemuteButton = document.getElementById('togglemute-button');
-        var volumeaddButton = document.getElementById('volumeadd-button');
-        var volumeminusButton = document.getElementById('volumeminus-button');
-
-        playButton.addEventListener('click', playMedia, false);
-        pauseButton.addEventListener('click', pauseMedia, false);
-        togglePlayButton.addEventListener('click', togglePlayMedia, false);
-        stopButton.addEventListener('click', stopMedia, false);
-        muteButton.addEventListener('click', muteMedia, false);
-        unmuteButton.addEventListener('click', unmuteMedia, false);
-        togglemuteButton.addEventListener('click', togglemuteMedia, false);
-        volumeaddButton.addEventListener('click', volumeAddMedia, false);
-        volumeminusButton.addEventListener('click', volumeMinusMedia, false);
-
-
-        function playMedia() {
-          player.play();
-        }
-        function pauseMedia() {
-          player.pause();
-        }
-        function togglePlayMedia() {
-          player.togglePlay();
-        }
-        function stopMedia() {
-          player.stop();
-        }
-        function muteMedia() {
-          player.mute();
-        }
-        function unmuteMedia() {
-          player.unmute();
-        }
-        function togglemuteMedia() {
-          player.toggleMute();
-        }
-        function volumeAddMedia() {
-          player.addVolume();
-        }
-        function volumeMinusMedia() {
-          player.minusVolume();
-        }
-
-      }
-    </script>
+    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

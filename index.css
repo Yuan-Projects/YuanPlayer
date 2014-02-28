@@ -1,0 +1,22 @@
+#controlbutton-container span {
+  background-color: lightblue;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  margin-right: 5px;
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+#lyric-container {
+  text-align: center;
+  height: 100px;
+  width: 300px;
+  border: 1px solid blue;
+  overflow: hidden;
+  padding-top: 50px;
+}
+#lyric-container div {
+  margin-bottom: 5px;
+  height: 20px;
+}
