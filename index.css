@@ -1,3 +1,15 @@
+#yuanplayer {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#controlbutton-container {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 #controlbutton-container span {
   background-color: lightblue;
   cursor: pointer;
@@ -8,13 +20,23 @@
   padding-left: 5px;
   padding-right: 5px;
 }
+
+#time-container {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 #lyric-container {
+  margin-top: 2em;
+  border-radius: 5px;
   text-align: center;
   height: 100px;
-  width: 300px;
+  width: 95%;
   border: 1px solid blue;
   overflow: hidden;
   padding-top: 50px;
+  margin-left:  auto;
+  margin-right: auto;
 }
 #lyric-container div {
   margin-bottom: 5px;
