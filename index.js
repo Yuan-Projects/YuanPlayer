@@ -1,4 +1,9 @@
 window.onload = initAll;
+function qualifyURL(url) {
+  var a = document.createElement('a');
+  a.href = url;
+  return a.href;
+}
 function initAll () {
   // Webm Sample: http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm
   // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
@@ -10,8 +15,8 @@ function initAll () {
       'duration': '#duration-span',
       'currentTime': '#currentTime-span'
     },
-    lyric: 'http://192.168.1.108/YuanPlayer/to-the-future-myself.lrc'
-  }
+    lyric: qualifyURL('to-the-future-myself.lrc')
+  };
 
   var player = new YuanPlayer(options);
 
