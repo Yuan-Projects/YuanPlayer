@@ -9,7 +9,7 @@ function initAll () {
   // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
   var options = {
     source:[
-      { src: '/test/to-the-future-myself.mp3'}
+      { src: 'http://stream13.qqmusic.qq.com/30411231.mp3'}
     ],
     cssSelector: {
       'duration': '#duration-span',
