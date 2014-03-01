@@ -17,9 +17,11 @@ Features:
 YuanPlayer Compatibility
 
 Browser
- * Google Chrome 33 (Windows 8.1, Mac OS X)
- * Firefox 27 (Windows 8.1, Mac OS X)
- * IE 11 (Windows 8.1)
+ * Google Chrome 33 (Windows, Mac OS X)
+ * Firefox 27 (Windows, Mac OS X)
+ * Internet Explorer 11 (Windows)
+ * Internet Explorer 10 (Windows)
+ * Internet Explorer 9 (Windows)
  * Safari 7.0.2(Mac OS X)
 
 Mobile Browser
