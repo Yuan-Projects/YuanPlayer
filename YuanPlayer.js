@@ -45,13 +45,16 @@ YuanPlayer.prototype = {
     var that = this;
     var media = this.mediaObject;
     if (!media) return ;
-    media.addEventListener('durationchange', function(){
-      if (that.cssSelector && that.cssSelector.duration) {
+    
+    function updateDuration() {
+      if (that.cssSelector && that.cssSelector.duration && !isNaN(media.duration)) {
         document.querySelector(that.cssSelector.duration).innerText = that.formatTime(Math.floor(media.duration));
       }
-    }, false);
+    }
+    media.addEventListener('durationchange', updateDuration, false);
+    media.addEventListener('progress', updateDuration, false);
     media.addEventListener('timeupdate', function(){
-      if (that.cssSelector && that.cssSelector.currentTime) {
+      if (that.cssSelector && that.cssSelector.currentTime && !isNaN(media.currentTime)) {
         document.querySelector(that.cssSelector.currentTime).innerText = that.formatTime(Math.floor(media.currentTime));
       }
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
