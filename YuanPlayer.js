@@ -173,7 +173,8 @@ YuanPlayer.prototype = {
 
     for (var i = 0, l = items.length; i < l; i++) {
       var div = document.createElement('div');
-      div.innerText = items[i].split(']')[1];
+      var content = items[i].split(']')[1];
+      (typeof div.textContent != 'undefined') ? (div.textContent = content) : (div.innerText = content);
       wrapContainer.appendChild(div);
     }
   },
