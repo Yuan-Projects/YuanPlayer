@@ -13,6 +13,11 @@ function YuanPlayer(options){
   this.lyricCurrentPosition = 0;
   this.init(options);
 }
+YuanPlayer.helper = {
+  innerText: function(element, text) {
+    (typeof element.textContent != 'undefined') ? (element.textContent = text) : (element.innerText = text);
+  }
+};
 YuanPlayer.prototype = {
   constructor: YuanPlayer,
   init: function (options) {
@@ -34,7 +39,6 @@ YuanPlayer.prototype = {
       var mediaElement = document.createElement('audio');
       this.mediaObject = mediaElement;
 
-      //mediaElement.src = this.src;
       mediaElement.controls = 'controls';
 
       this.addMediaSource();
@@ -48,14 +52,14 @@ YuanPlayer.prototype = {
     
     function updateDuration() {
       if (that.cssSelector && that.cssSelector.duration && !isNaN(media.duration)) {
-        document.querySelector(that.cssSelector.duration).innerText = that.formatTime(Math.floor(media.duration));
+        YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.duration), that.formatTime(Math.floor(media.duration)));
       }
     }
     media.addEventListener('durationchange', updateDuration, false);
     media.addEventListener('progress', updateDuration, false);
     media.addEventListener('timeupdate', function(){
       if (that.cssSelector && that.cssSelector.currentTime && !isNaN(media.currentTime)) {
-        document.querySelector(that.cssSelector.currentTime).innerText = that.formatTime(Math.floor(media.currentTime));
+        YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
       }
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
         that.scrollLyric(media.currentTime);
@@ -175,7 +179,7 @@ YuanPlayer.prototype = {
     for (var i = 0, l = items.length; i < l; i++) {
       var div = document.createElement('div');
       var content = items[i].split(']')[1];
-      (typeof div.textContent != 'undefined') ? (div.textContent = content) : (div.innerText = content);
+      YuanPlayer.helper.innerText(div, content);
       wrapContainer.appendChild(div);
     }
   },
