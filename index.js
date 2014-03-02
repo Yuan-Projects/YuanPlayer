@@ -5,6 +5,8 @@ function qualifyURL(url) {
   return a.href;
 }
 function initAll () {
+  yuanjs.id('controlbutton-container').style.display = 'block';
+  yuanjs.id('time-container').style.display = 'block';
   // Webm Sample: http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm
   // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
   var options = {
