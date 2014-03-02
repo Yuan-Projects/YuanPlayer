@@ -68,14 +68,15 @@ YuanPlayer.prototype = {
     if (newLyricIndex == oldPosition) return ;
 
     this.lyricCurrentPosition = newLyricIndex;
-    var wrapContainer = document.getElementById('lyric-wrapcontainer');
-    var marginTopValue = - newLyricIndex * 25;
-    wrapContainer.style.marginTop = '' + marginTopValue + 'px' ;
 
     // Hightlight the current lyric
     var lyricDivs = document.getElementById('lyric-wrapcontainer').getElementsByTagName('div');
     lyricDivs[oldPosition].style.fontWeight =  'normal';
     lyricDivs[newLyricIndex].style.fontWeight = 'bold';
+    
+    // Scroll the lyrics container
+    var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
+    document.getElementById('lyric-container').scrollTop = newScrollTop;
   },
   getNewLyricIndex: function (currentTime) {
     var index = 0;
