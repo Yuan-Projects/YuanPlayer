@@ -34,3 +34,9 @@ Mobile Browser
 
 Other Open Source Players
  * [jPlayer](http://jplayer.org/ "HTML5 Audio & Video for jQuery")
+
+
+References
+ * http://www.w3schools.com/tags/ref_av_dom.asp
+ * https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_HTML5_audio_and_video
+ * https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
