@@ -10,6 +10,7 @@ function YuanPlayer(options){
     timeArray:[],
     lyricArray: []
   };
+  this.eventHandlers = {};
   this.lyricCurrentPosition = 0;
   this.init(options);
 }
@@ -67,6 +68,7 @@ YuanPlayer.prototype = {
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
         that.scrollLyric(media.currentTime);
       }
+      that.trigger('timeupdate');
     }, false);
   },
   scrollLyric: function(currentTime){
@@ -329,5 +331,33 @@ YuanPlayer.prototype = {
       var temp = media.volume - 0.2;
       media.volume = (temp >= 0.0) ? temp : 0.0;
     }
+  },
+  on: function(event, callback) {
+    var Events = this.eventHandlers;
+    if (!Events[event]) {
+      Events[event] = [];
+    }
+    Events[event].push(callback);
+  },
+  off: function(event, callback) {
+    var Events = this.eventHandlers;
+    if (!Events[event]) return ;
+    if (callback) {
+      var index = Events[event].indexOf(callback);
+      if (index !== -1) {
+        Events[event].splice(index, 1);
+      }
+    } else {
+      Events[event] = [];
+    }
+  },
+  trigger: function  (event) {
+    var Events = this.eventHandlers;
+    if (!Events[event]) return ;
+    var args = Array.prototype.slice.call(arguments, 1);
+    var callbackArray = Events[event];
+    for (var i = callbackArray.length - 1; i >= 0; i--) {
+      callbackArray[i].apply(callbackArray[i], args);
+    };
   }
 };
