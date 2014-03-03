@@ -11,6 +11,8 @@ function initAll () {
   // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
   var options = {
     source:[
+      // http://stream13.qqmusic.qq.com/30411231.mp3
+      // http://192.168.1.101/test/to-the-future-myself.mp3
       { src: 'http://stream13.qqmusic.qq.com/30411231.mp3'}
     ],
     cssSelector: {
@@ -21,6 +23,15 @@ function initAll () {
   };
 
   var player = new YuanPlayer(options);
+  
+  player.on('timeupdate', function(){
+    //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
+    console.log('current:'+player.mediaObject.currentTime);
+  })
+  
+  setTimeout(function(){
+    player.off('timeupdate');
+  }, 5000)
 
   var playButton = document.getElementById('play-button');
   var pauseButton = document.getElementById('pause-button');

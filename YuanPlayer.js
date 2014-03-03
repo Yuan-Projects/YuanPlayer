@@ -61,8 +61,25 @@ YuanPlayer.prototype = {
         YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
       }
     }
-    media.addEventListener('durationchange', updateDuration, false);
-    media.addEventListener('progress', updateDuration, false);
+    media.addEventListener('abort', function() { that.trigger('abort'); }, false);
+    media.addEventListener('canplay', function() { that.trigger('canplay'); }, false);
+    media.addEventListener('canplaythrough', function() { that.trigger('canplaythrough'); }, false);
+    media.addEventListener('durationchange', function() { updateDuration(); that.trigger('durationchange'); }, false);
+    media.addEventListener('emptied', function() { that.trigger('emptied'); }, false);
+    media.addEventListener('ended', function() { that.trigger('ended'); }, false);
+    media.addEventListener('error', function() { that.trigger('error'); }, false);
+    media.addEventListener('loadeddata', function() { that.trigger('loadeddata'); }, false);
+    media.addEventListener('loadedmetadata', function() { that.trigger('loadedmetadata'); }, false);
+    media.addEventListener('loadstart', function() { that.trigger('loadstart'); }, false);
+    media.addEventListener('pause', function() { that.trigger('pause'); }, false);
+    media.addEventListener('play', function() { that.trigger('play'); }, false);
+    media.addEventListener('playing', function() { that.trigger('playing'); }, false);
+    media.addEventListener('progress', function() { updateDuration(); that.trigger('progress'); }, false);
+    media.addEventListener('ratechange', function() { that.trigger('ratechange'); }, false);
+    media.addEventListener('seeked', function() { that.trigger('seeked'); }, false);
+    media.addEventListener('seeking', function() { that.trigger('seeking'); }, false);
+    media.addEventListener('stalled', function() { that.trigger('stalled'); }, false);
+    media.addEventListener('suspend', function() { that.trigger('suspend'); }, false);
     media.addEventListener('timeupdate', function(){
       updateCurrentTime();
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
@@ -70,6 +87,8 @@ YuanPlayer.prototype = {
       }
       that.trigger('timeupdate');
     }, false);
+    media.addEventListener('volumechange', function() { that.trigger('volumechange'); }, false);
+    media.addEventListener('waiting', function() { that.trigger('waiting'); }, false);
   },
   scrollLyric: function(currentTime){
     var newLyricIndex = this.getNewLyricIndex(currentTime);
