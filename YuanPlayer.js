@@ -55,12 +55,15 @@ YuanPlayer.prototype = {
         YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.duration), that.formatTime(Math.floor(media.duration)));
       }
     }
+    function updateCurrentTime() {
+      if (that.cssSelector && that.cssSelector.currentTime && !isNaN(media.currentTime) && !isNaN(media.duration)) {
+        YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
+      }
+    }
     media.addEventListener('durationchange', updateDuration, false);
     media.addEventListener('progress', updateDuration, false);
     media.addEventListener('timeupdate', function(){
-      if (that.cssSelector && that.cssSelector.currentTime && !isNaN(media.currentTime)) {
-        YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
-      }
+      updateCurrentTime();
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
         that.scrollLyric(media.currentTime);
       }
