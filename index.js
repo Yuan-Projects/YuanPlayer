@@ -29,6 +29,10 @@ function initAll () {
     console.log('current:'+player.mediaObject.currentTime);
   })
   
+  player.on('error', function(){
+    alert('An error occured:' + player.errorMessage);
+  })
+  
   setTimeout(function(){
     player.off('timeupdate');
   }, 5000)

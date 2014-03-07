@@ -10,6 +10,8 @@ function YuanPlayer(options){
     timeArray:[],
     lyricArray: []
   };
+  this.errorCode = 0;
+  this.errorMessage = '';
   this.eventHandlers = {};
   this.lyricCurrentPosition = 0;
   this.init(options);
@@ -17,6 +19,32 @@ function YuanPlayer(options){
 YuanPlayer.helper = {
   innerText: function(element, text) {
     (typeof element.textContent != 'undefined') ? (element.textContent = text) : (element.innerText = text);
+  }
+};
+YuanPlayer.error = {
+  MEDIA_ERR_URLEMPTY: {
+    code: -2,
+    message: 'Media playback command not possible as no media is set.' 
+  },
+  MEDIA_ERR_UNKNOWN: {
+    code: -1,
+    message: 'An unknown error occurred.',
+  },
+  MEDIA_ERR_ABORTED: {
+    code: 1,
+    message: 'You aborted the video playback.'
+  },
+  MEDIA_ERR_NETWORK: {
+    code: 2,
+    message: 'A network error caused the video download to fail part-way.'
+  },
+  MEDIA_ERR_DECODE: {
+    code: 3,
+    message: 'The video playback was aborted due to a corruption problem or because the video used features your browser did not support.'
+  },
+  MEDIA_ERR_SRC_NOT_SUPPORTED: {
+    code: 4,
+    message: 'The video could not be loaded, either because the server or network failed or because the format is not supported.'
   }
 };
 YuanPlayer.prototype = {
@@ -51,6 +79,15 @@ YuanPlayer.prototype = {
     var media = this.mediaObject;
     if (!media) return ;
     
+    var t = window.setInterval(function(){
+      if (media.networkState === 3) {
+        that.errorCode = YuanPlayer.error.MEDIA_ERR_URLEMPTY.code;
+        that.errorMessage = YuanPlayer.error.MEDIA_ERR_URLEMPTY.message;
+        clearInterval(t);
+        that.trigger('error');
+      }
+    }, 100);
+    
     function updateDuration() {
       if (that.cssSelector && that.cssSelector.duration && !isNaN(media.duration)) {
         YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.duration), that.formatTime(Math.floor(media.duration)));
@@ -61,25 +98,93 @@ YuanPlayer.prototype = {
         YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
       }
     }
-    media.addEventListener('abort', function() { that.trigger('abort'); }, false);
-    media.addEventListener('canplay', function() { that.trigger('canplay'); }, false);
-    media.addEventListener('canplaythrough', function() { that.trigger('canplaythrough'); }, false);
-    media.addEventListener('durationchange', function() { updateDuration(); that.trigger('durationchange'); }, false);
-    media.addEventListener('emptied', function() { that.trigger('emptied'); }, false);
-    media.addEventListener('ended', function() { that.trigger('ended'); }, false);
-    media.addEventListener('error', function() { that.trigger('error'); }, false);
-    media.addEventListener('loadeddata', function() { that.trigger('loadeddata'); }, false);
-    media.addEventListener('loadedmetadata', function() { that.trigger('loadedmetadata'); }, false);
-    media.addEventListener('loadstart', function() { that.trigger('loadstart'); }, false);
-    media.addEventListener('pause', function() { that.trigger('pause'); }, false);
-    media.addEventListener('play', function() { that.trigger('play'); }, false);
-    media.addEventListener('playing', function() { that.trigger('playing'); }, false);
-    media.addEventListener('progress', function() { updateDuration(); that.trigger('progress'); }, false);
-    media.addEventListener('ratechange', function() { that.trigger('ratechange'); }, false);
-    media.addEventListener('seeked', function() { that.trigger('seeked'); }, false);
-    media.addEventListener('seeking', function() { that.trigger('seeking'); }, false);
-    media.addEventListener('stalled', function() { that.trigger('stalled'); }, false);
-    media.addEventListener('suspend', function() { that.trigger('suspend'); }, false);
+    media.addEventListener('abort', function() {
+      that.trigger('abort');
+      }, false);
+    media.addEventListener('canplay', function() {
+      that.trigger('canplay');
+      }, false);
+    media.addEventListener('canplaythrough', function() {
+      that.trigger('canplaythrough');
+      }, false);
+    media.addEventListener('durationchange', function() {
+      updateDuration();
+      that.trigger('durationchange');
+      }, false);
+    media.addEventListener('emptied', function() {
+      that.trigger('emptied');
+      }, false);
+    media.addEventListener('ended', function() {
+      that.trigger('ended');
+      }, false);
+    media.addEventListener('error', function(e) {
+      switch (e.target.error.code) {
+        case e.target.error.MEDIA_ERR_ABORTED:
+          that.errorCode = YuanPlayer.error.MEDIA_ERR_ABORTED.code;
+          that.errorMessage = YuanPlayer.error.MEDIA_ERR_ABORTED.message;
+          break;
+        case e.target.error.MEDIA_ERR_NETWORK:
+          that.errorCode = YuanPlayer.error.MEDIA_ERR_NETWORK.code;
+          that.errorMessage = YuanPlayer.error.MEDIA_ERR_NETWORK.message;
+          break;
+        case e.target.error.MEDIA_ERR_DECODE:
+          that.errorCode = YuanPlayer.error.MEDIA_ERR_DECODE.code;
+          that.errorMessage = YuanPlayer.error.MEDIA_ERR_DECODE.message;
+          break;
+        case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          that.errorCode = YuanPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED.code;
+          that.errorMessage = YuanPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED.message;
+          break;
+        default:
+          that.errorCode = YuanPlayer.error.MEDIA_ERR_UNKNOWN.code;
+          that.errorMessage = YuanPlayer.error.MEDIA_ERR_UNKNOWN.message;
+          break;
+      }
+      clearInterval(t);
+      that.trigger('error');
+    }, false);
+    media.addEventListener('loadeddata', function() {
+      that.trigger('loadeddata');
+      }, false);
+    media.addEventListener('loadedmetadata', function() {
+      that.trigger('loadedmetadata');
+      }, false);
+    media.addEventListener('loadstart', function() {
+      that.trigger('loadstart');
+      }, false);
+    media.addEventListener('pause', function() {
+      that.trigger('pause');
+      }, false);
+    media.addEventListener('play', function() {
+      that.trigger('play');
+      }, false);
+    media.addEventListener('playing', function() {
+      that.trigger('playing');
+      }, false);
+    media.addEventListener('progress', function() {
+      updateDuration();
+      that.trigger('progress');
+      }, false);
+    media.addEventListener('ratechange', function() {
+      that.trigger('ratechange');
+      }, false);
+    media.addEventListener('seeked', function() {
+      that.trigger('seeked');
+      }, false);
+    media.addEventListener('seeking', function() {
+      that.trigger('seeking');
+      }, false);
+    // Fixes for Android 2.2,this event will be triggered in Android 2.2 when the media file load failed with HTTP status 403.
+    media.addEventListener('stalled', function() {
+      that.trigger('stalled');
+      that.errorCode = YuanPlayer.error.MEDIA_ERR_URLEMPTY.code;
+      that.errorMessage = YuanPlayer.error.MEDIA_ERR_URLEMPTY.message;
+      that.trigger('error');
+      clearInterval(t);
+      }, false);
+    media.addEventListener('suspend', function() {
+      that.trigger('suspend');
+      }, false);
     media.addEventListener('timeupdate', function(){
       updateCurrentTime();
       if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
@@ -87,8 +192,12 @@ YuanPlayer.prototype = {
       }
       that.trigger('timeupdate');
     }, false);
-    media.addEventListener('volumechange', function() { that.trigger('volumechange'); }, false);
-    media.addEventListener('waiting', function() { that.trigger('waiting'); }, false);
+    media.addEventListener('volumechange', function() {
+      that.trigger('volumechange');
+      }, false);
+    media.addEventListener('waiting', function() {
+      that.trigger('waiting');
+      }, false);
   },
   scrollLyric: function(currentTime){
     var newLyricIndex = this.getNewLyricIndex(currentTime);
