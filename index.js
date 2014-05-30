@@ -1,9 +1,4 @@
-window.onload = initAll;
-function qualifyURL(url) {
-  var a = document.createElement('a');
-  a.href = url;
-  return a.href;
-}
+window.addEventListener("load", initAll, false);
 function initAll () {
   yuanjs.id('controlbutton-container').style.display = 'block';
   yuanjs.id('time-container').style.display = 'block';
@@ -23,16 +18,16 @@ function initAll () {
   };
 
   var player = new YuanPlayer(options);
-  
+
   player.on('timeupdate', function(){
     //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
     console.log('current:'+player.mediaObject.currentTime);
   })
-  
+
   player.on('error', function(){
     alert('An error occured:' + player.errorMessage);
   })
-  
+
   setTimeout(function(){
     player.off('timeupdate');
   }, 5000)
@@ -86,4 +81,9 @@ function initAll () {
     player.minusVolume();
   }
 
+}
+function qualifyURL(url) {
+  var a = document.createElement('a');
+  a.href = url;
+  return a.href;
 }
