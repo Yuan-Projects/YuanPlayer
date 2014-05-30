@@ -13,7 +13,7 @@ Features:
  * Volume--
  * Duration
  * Current Time
- 
+
 YuanPlayer Compatibility
 
 Browser
@@ -30,6 +30,7 @@ Mobile Browser
  * IE Mobile (Windows Phone 8.0: NOKIA Lumia 920)
  * IE 11 (Windows 8.1: Microsoft Surface)
  * Android browser (Android 4.2.2: SONY s36h)
+ * Internet Explorer (Xbox One)
 
 
 Other Open Source Players
