@@ -256,13 +256,12 @@ YuanPlayer.prototype = {
         lyricDiv.appendChild(wrapContainer);
 
         if (lyric.substr(0, 8) == 'https://' || lyric.substr(0, 7) == 'http://') {
-          yuanjs.ajax({url:lyric}).then(function(lyricText){
+          yuanjs.ajax({url:lyric, contentType: "text/plain"}).then(function(lyricText){
             var lyricItems = lyricText.responseText.split(/[\n\r]/g);
             lyricItems = that.parseLyricItems(lyricItems);
             lyricItems.sort(function(x,y){ return that.compareTimeSpan.call(that,x,y);});
             that.addLyricItems(lyricItems);
             that.logLyricInfo(lyricItems);
-            //debugger;
           },function(err){
             console.log('error:', err);
           });
