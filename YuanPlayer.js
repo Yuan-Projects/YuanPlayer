@@ -3,7 +3,11 @@ if(!Array.isArray) {
     return Object.prototype.toString.call(vArg) === "[object Array]";
   };
 }
-function YuanPlayer(options){
+function YuanPlayer(options) {
+  if (!YuanPlayer.helper.isHtml5AudioSupported()) {
+    throw new Error("Your browser does not support HTML5 Audio.");
+    return;
+  }
   this.container = 'yuanplayer';
   this.mediaObject = null;
   this.lyricObj = {
@@ -17,6 +21,9 @@ function YuanPlayer(options){
   this.init(options);
 }
 YuanPlayer.helper = {
+  isHtml5AudioSupported: function () {
+    return document.createElement("audio").play;
+  },
   innerText: function(element, text) {
     (typeof element.textContent != 'undefined') ? (element.textContent = text) : (element.innerText = text);
   }
@@ -28,7 +35,7 @@ YuanPlayer.error = {
   },
   MEDIA_ERR_UNKNOWN: {
     code: -1,
-    message: 'An unknown error occurred.',
+    message: 'An unknown error occurred.'
   },
   MEDIA_ERR_ABORTED: {
     code: 1,

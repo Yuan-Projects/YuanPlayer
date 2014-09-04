@@ -1,4 +1,5 @@
-window.addEventListener("load", initAll, false);
+//window.addEventListener("load", initAll, false);
+window.onload = initAll;
 function initAll () {
   yuanjs.id('controlbutton-container').style.display = 'block';
   yuanjs.id('time-container').style.display = 'block';
@@ -8,7 +9,7 @@ function initAll () {
     source:[
       // http://stream13.qqmusic.qq.com/30411231.mp3
       // http://192.168.1.101/test/to-the-future-myself.mp3
-      { src: 'http://stream13.qqmusic.qq.com/30411231.mp3'}
+      { src: 'http://127.0.0.1/30411231.mp3' }
     ],
     cssSelector: {
       'duration': '#duration-span',
@@ -16,8 +17,13 @@ function initAll () {
     },
     lyric: qualifyURL('to-the-future-myself.lrc')
   };
-
-  var player = new YuanPlayer(options);
+  try{
+    var player = new YuanPlayer(options);
+  } catch (e) {
+    alert(e.message);
+    return;
+  }
+  
 
   player.on('timeupdate', function(){
     //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
