@@ -27,6 +27,10 @@ html {
   padding-right: 5px;
 }
 
+#controlbutton-container span.disable {
+  background-color: gray;
+}
+
 #time-container {
   margin-left: auto;
   margin-right: auto;

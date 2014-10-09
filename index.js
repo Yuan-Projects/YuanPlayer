@@ -9,16 +9,21 @@ function initAll () {
     source:[
       // http://stream13.qqmusic.qq.com/30411231.mp3
       // http://192.168.1.101/test/to-the-future-myself.mp3
-      { src: 'http://127.0.0.1/30411231.mp3' }
+      //http://mediaelementjs.com/media/AirReview-Landmarks-02-ChasingCorporate.mp3
+      // http://listen.radionomy.com/abc-jazz
+      
+      { src: 'http://127.0.0.1/test/to-the-future-myself.mp3' }
     ],
     cssSelector: {
       'duration': '#duration-span',
       'currentTime': '#currentTime-span'
     },
+    loop: true,
     lyric: qualifyURL('to-the-future-myself.lrc')
   };
   try{
     var player = new YuanPlayer(options);
+    updateLoopButton();
   } catch (e) {
     alert(e.message);
     return;
@@ -33,6 +38,8 @@ function initAll () {
   player.on('error', function(){
     alert('An error occured:' + player.errorMessage);
   })
+  
+  player.on('loopchanged', updateLoopButton);
 
   setTimeout(function(){
     player.off('timeupdate');
@@ -47,6 +54,7 @@ function initAll () {
   var togglemuteButton = document.getElementById('togglemute-button');
   var volumeaddButton = document.getElementById('volumeadd-button');
   var volumeminusButton = document.getElementById('volumeminus-button');
+  var loopButton = document.getElementById("loop");
 
   playButton.addEventListener('click', playMedia, false);
   pauseButton.addEventListener('click', pauseMedia, false);
@@ -57,6 +65,7 @@ function initAll () {
   togglemuteButton.addEventListener('click', togglemuteMedia, false);
   volumeaddButton.addEventListener('click', volumeAddMedia, false);
   volumeminusButton.addEventListener('click', volumeMinusMedia, false);
+  loopButton.addEventListener("click", triggerLoop, false);
 
 
   function playMedia() {
@@ -85,6 +94,17 @@ function initAll () {
   }
   function volumeMinusMedia() {
     player.minusVolume();
+  }
+  
+  function triggerLoop() {
+    player.toggleLoop();
+    return false;
+  }
+  
+  function updateLoopButton(){
+    var isLoop = player.mediaObject.loop;
+    var loopButton = document.getElementById("loop");
+    loopButton.className = isLoop ? "" : "disable";
   }
 
 }
