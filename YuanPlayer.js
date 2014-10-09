@@ -76,6 +76,9 @@ YuanPlayer.prototype = {
       this.mediaObject = mediaElement;
 
       mediaElement.controls = 'controls';
+      if ( typeof this.loop != "undefined") {
+        mediaElement.loop = !!this.loop;
+      }
 
       this.addMediaSource();
       container.appendChild(mediaElement);
@@ -366,6 +369,13 @@ YuanPlayer.prototype = {
       media.pause();
       media.currentTime = 0;
     }
+  },
+  toggleLoop: function() {
+    var media = this.mediaObject;
+    if (media) {
+      media.loop = !media.loop;
+    }
+    this.trigger('loopchanged');
   },
   getMimeType: function (fileName) {
     var type = 'wav';
