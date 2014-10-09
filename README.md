@@ -13,6 +13,7 @@ Features:
  * Volume--
  * Duration
  * Current Time
+ * Live stream autio support
 
 YuanPlayer Compatibility
 
