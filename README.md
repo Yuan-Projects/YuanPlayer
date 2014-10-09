@@ -14,6 +14,7 @@ Features:
  * Duration
  * Current Time
  * Live stream autio support
+ * Toggle Loop
 
 YuanPlayer Compatibility
 
