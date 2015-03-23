@@ -23,6 +23,7 @@ function initAll () {
   };
   try{
     var player = new YuanPlayer(options);
+    player.loadLyricPlugin();
     updateLoopButton();
   } catch (e) {
     alert(e.message);

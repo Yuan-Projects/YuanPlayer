@@ -10,14 +10,11 @@ function YuanPlayer(options) {
   }
   this.container = 'yuanplayer';
   this.mediaObject = null;
-  this.lyricObj = {
-    timeArray:[],
-    lyricArray: []
-  };
+  
   this.errorCode = 0;
   this.errorMessage = '';
   this.eventHandlers = {};
-  this.lyricCurrentPosition = 0;
+  
   this.init(options);
 }
 YuanPlayer.helper = {
@@ -25,7 +22,7 @@ YuanPlayer.helper = {
     return document.createElement("audio").play;
   },
   innerText: function(element, text) {
-    (typeof element.textContent != 'undefined') ? (element.textContent = text) : (element.innerText = text);
+    (typeof element.textContent !== 'undefined') ? (element.textContent = text) : (element.innerText = text);
   }
 };
 YuanPlayer.error = {
@@ -62,7 +59,7 @@ YuanPlayer.prototype = {
     if(!this.container || !document.getElementById(this.container)) return ;
     this.addMediaElement();
     this.bindMediaEvents();
-    this.addLyric();
+    
   },
   initOptions: function(options) {
     for (var prop in options) {
@@ -76,7 +73,7 @@ YuanPlayer.prototype = {
       this.mediaObject = mediaElement;
 
       mediaElement.controls = 'controls';
-      if ( typeof this.loop != "undefined") {
+      if ( typeof this.loop !== "undefined") {
         mediaElement.loop = !!this.loop;
       }
 
@@ -197,9 +194,6 @@ YuanPlayer.prototype = {
       }, false);
     media.addEventListener('timeupdate', function(){
       updateCurrentTime();
-      if (that.lyric && that.lyricObj.timeArray.length && that.lyricObj.lyricArray.length) {
-        that.scrollLyric(media.currentTime);
-      }
       that.trigger('timeupdate');
     }, false);
     media.addEventListener('volumechange', function() {
@@ -209,81 +203,9 @@ YuanPlayer.prototype = {
       that.trigger('waiting');
       }, false);
   },
-  scrollLyric: function(currentTime){
-    var newLyricIndex = this.getNewLyricIndex(currentTime);
-    var oldPosition = this.lyricCurrentPosition;
-    if (newLyricIndex == oldPosition) return ;
-
-    this.lyricCurrentPosition = newLyricIndex;
-
-    // Hightlight the current lyric
-    var lyricDivs = document.getElementById('lyric-wrapcontainer').getElementsByTagName('div');
-    lyricDivs[oldPosition].style.fontWeight =  'normal';
-    lyricDivs[newLyricIndex].style.fontWeight = 'bold';
-    
-    // Scroll the lyrics container
-    var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
-    document.getElementById('lyric-container').scrollTop = newScrollTop;
-  },
-  getNewLyricIndex: function (currentTime) {
-    var index = 0;
-    var timeArray = this.lyricObj.timeArray;
-    var timeLength = timeArray.length;
-    if (timeLength) {
-      if(currentTime <= timeArray[0]) {
-        return 0;
-      }
-      if(currentTime >= timeArray[timeLength-1]) {
-        return timeLength - 1;
-      }
-      for (var i = 0; i < timeLength; i++) {
-        if (currentTime <= timeArray[i]) {
-          index = i - 1;
-          break;
-        }
-      }
-    }
-    return index;
-  },
-  addLyric: function() {
-    var that = this;
-    var lyric = this.lyric;
-    if (lyric) {
-      if (typeof lyric =='string') {
-        // Add container for lyric
-        var lyricDiv = document.createElement('div');
-        var wrapContainer = document.createElement('div');
-        lyricDiv.id = "lyric-container";
-        wrapContainer.id = "lyric-wrapcontainer";
-        document.body.appendChild(lyricDiv);
-        lyricDiv.appendChild(wrapContainer);
-
-        if (lyric.substr(0, 8) == 'https://' || lyric.substr(0, 7) == 'http://') {
-          yuanjs.ajax({url:lyric, contentType: "text/plain"}).then(function(lyricText){
-            var lyricItems = lyricText.responseText.split(/[\n\r]/g);
-            lyricItems = that.parseLyricItems(lyricItems);
-            lyricItems.sort(function(x,y){ return that.compareTimeSpan.call(that,x,y);});
-            that.addLyricItems(lyricItems);
-            that.logLyricInfo(lyricItems);
-          },function(err){
-            console.log('error:', err);
-          });
-        }
-
-      }
-    }
-  },
-  logLyricInfo: function(items){
-    var patt = /\[|\]/;
-    for (var i = 0; i < items.length; i++) {
-      var component = items[i].split(patt);
-      if (component[2] == '') {
-        // If no lyric
-      }
-      this.lyricObj.timeArray.push(this.parseTimeToSeconds(component[1]));
-      this.lyricObj.lyricArray.push(component[2]);
-    }
-  },
+  
+  
+  
   compareTimeSpan: function(x,y){
     var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2})\]/;
     var xTime = x.match(timePattern)[1], yTime = y.match(timePattern)[1];
@@ -299,32 +221,8 @@ YuanPlayer.prototype = {
     var secondPart = parseInt(bigPartComponent[1]);
     return minutePart * 60 + secondPart + '.' + component[1];
   },
-  parseLyricItems: function(items) {
-    var result = [];
-    var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2}\]/g;
-    for(var i = 0, l = items.length; i < l; i++) {
-      var thisItem = items[i];
-      var timeSpanArray = thisItem.match(timePattern);
-      if (timeSpanArray) {
-        var lyric = thisItem.split(timePattern).pop();
-        for (var j = 0, len = timeSpanArray.length; j < len; j++) {
-          result.push(timeSpanArray[j]+lyric);
-        }
-      };
-    }
-    return result;
-  },
-  addLyricItems: function (items) {
-    var lyricContainer = document.getElementById('lyric-container');
-    var wrapContainer = document.getElementById('lyric-wrapcontainer');
-
-    for (var i = 0, l = items.length; i < l; i++) {
-      var div = document.createElement('div');
-      var content = items[i].split(']')[1];
-      YuanPlayer.helper.innerText(div, content);
-      wrapContainer.appendChild(div);
-    }
-  },
+  
+  
   formatTime: function(timeInSeconds) {
     var result = "";
     var seconds = Math.floor(timeInSeconds),
@@ -422,12 +320,12 @@ YuanPlayer.prototype = {
     var media = this.mediaObject;
     if (!media) return;
     media.innerHTML = '';
-    if (typeof mediaParam == 'string') {
+    if (typeof mediaParam === 'string') {
       var sourceElement = document.createElement('source');
       sourceElement.src = mediaParam;
       sourceElement.type = this.getMimeType(mediaParam);
       media.appendChild(sourceElement);
-    } else if (typeof mediaParam == 'object'){
+    } else if (typeof mediaParam === 'object'){
       if (Array.isArray(mediaParam)) {
         for (var i = 0; i < mediaParam.length; i++) {
           this.setMediaItem(mediaParam[i]);
