@@ -6,7 +6,6 @@ if (typeof YuanPlayer === "function") {
     lyricArray: []
   };
   YuanPlayer.prototype.lyricCurrentPosition = 0;
-  //YuanPlayer.prototype.addLyric();
   YuanPlayer.prototype.addLyricItems = function (items) {
     var lyricContainer = document.getElementById('lyric-container');
     var wrapContainer = document.getElementById('lyric-wrapcontainer');
@@ -94,8 +93,8 @@ if (typeof YuanPlayer === "function") {
 
     // Hightlight the current lyric
     var lyricDivs = document.getElementById('lyric-wrapcontainer').getElementsByTagName('div');
-    lyricDivs[oldPosition].style.fontWeight =  'normal';
-    lyricDivs[newLyricIndex].style.fontWeight = 'bold';
+    lyricDivs[oldPosition].className =  '';
+    lyricDivs[newLyricIndex].className = 'highlight';
     
     // Scroll the lyrics container
     var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
