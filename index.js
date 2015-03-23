@@ -12,7 +12,7 @@ function initAll () {
       //http://mediaelementjs.com/media/AirReview-Landmarks-02-ChasingCorporate.mp3
       // http://listen.radionomy.com/abc-jazz
       
-      { src: 'http://thirdyires.imusicapp.cn/res/thirdparty/V/1007/mp3/00/08/68/1007000868010800.mp3?deviceid=1000010404539&qd=null' }
+      { src: '1007000868010800.mp3' }
     ],
     cssSelector: {
       'duration': '#duration-span',
