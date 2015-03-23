@@ -29,11 +29,16 @@ Browser
 Mobile Browser
  * Mobile safari (iOS 7.0: iPod touch, iPad)
  * Mobile safari (iOS 5.1: iPhone 4)
+ * Mobile Safari (iOS 8.0.2: iPad)
  * IE Mobile (Windows Phone 8.0: NOKIA Lumia 920)
+ * IE Mobile 11 (Windows Phone 8.1: Nokia Lumia 530)
  * IE 11 (Windows 8.1: Microsoft Surface)
  * Android browser (Android 4.2.2: SONY s36h)
+ * Android browser (Android 2.3.5: ZTE Q101T）
  * Internet Explorer (Xbox One)
 
+Known Issues:
+ * Volume is not settable on some mobile devices due to browser vendor policy.
 
 Other Open Source Players
  * [jPlayer](http://jplayer.org/ "HTML5 Audio & Video for jQuery")
