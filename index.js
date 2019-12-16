@@ -12,6 +12,15 @@ window.addEventListener('DOMContentLoaded', function(event) {
       lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
     },
     {
+      title: '守候',
+      artist: '徐瞑蕾',
+      source:[
+        { src: 'media/shouhou.m4a' }
+      ],
+      loop: false,
+      lyric: qualifyURL('lyrics/shouhou.lrc')
+    },
+    {
       title: '給未來的自己',
       artist: '梁静茹',
       source:[

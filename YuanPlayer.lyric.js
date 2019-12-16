@@ -19,7 +19,7 @@ if (typeof YuanPlayer === "function") {
   };
   YuanPlayer.prototype.parseLyricItems = function(items) {
     var result = [];
-    var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2}\]/g;
+    var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}\]/g;
     for(var i = 0, l = items.length; i < l; i++) {
       var thisItem = items[i];
       var timeSpanArray = thisItem.match(timePattern);

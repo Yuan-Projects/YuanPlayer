@@ -10,11 +10,11 @@ function YuanPlayer(options) {
   }
   this.container = 'yuanplayer';
   this.mediaObject = null;
-  
+
   this.errorCode = 0;
   this.errorMessage = '';
   this.eventHandlers = {};
-  
+
   this.init(options);
 }
 YuanPlayer.helper = {
@@ -28,7 +28,7 @@ YuanPlayer.helper = {
 YuanPlayer.error = {
   MEDIA_ERR_URLEMPTY: {
     code: -2,
-    message: 'Media playback command not possible as no media is set.' 
+    message: 'Media playback command not possible as no media is set.'
   },
   MEDIA_ERR_UNKNOWN: {
     code: -1,
@@ -59,7 +59,7 @@ YuanPlayer.prototype = {
     if(!this.container || !document.getElementById(this.container)) return ;
     this.addMediaElement();
     this.bindMediaEvents();
-    
+
   },
   initOptions: function(options) {
     for (var prop in options) {
@@ -85,7 +85,7 @@ YuanPlayer.prototype = {
     var that = this;
     var media = this.mediaObject;
     if (!media) return ;
-    
+
     var t = window.setInterval(function(){
       if (media.networkState === 3) {
         that.errorCode = YuanPlayer.error.MEDIA_ERR_URLEMPTY.code;
@@ -94,7 +94,7 @@ YuanPlayer.prototype = {
         that.trigger('error');
       }
     }, 100);
-    
+
     function updateDuration() {
       if (that.cssSelector && that.cssSelector.duration && !isNaN(media.duration)) {
         YuanPlayer.helper.innerText(document.querySelector(that.cssSelector.duration), that.formatTime(Math.floor(media.duration)));
@@ -203,11 +203,11 @@ YuanPlayer.prototype = {
       that.trigger('waiting');
       }, false);
   },
-  
-  
-  
+
+
+
   compareTimeSpan: function(x,y){
-    var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2})\]/;
+    var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2,3})\]/;
     var xTime = x.match(timePattern)[1], yTime = y.match(timePattern)[1];
     var xTimeInSeconds = this.parseTimeToSeconds(xTime), yTimeInSeconds = this.parseTimeToSeconds(yTime);
     //debugger;
@@ -221,8 +221,8 @@ YuanPlayer.prototype = {
     var secondPart = parseInt(bigPartComponent[1]);
     return minutePart * 60 + secondPart + '.' + component[1];
   },
-  
-  
+
+
   formatTime: function(timeInSeconds) {
     var result = "";
     var seconds = Math.floor(timeInSeconds),
