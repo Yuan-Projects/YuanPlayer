@@ -1,18 +1,34 @@
 window.addEventListener('DOMContentLoaded', function(event) {
   yuanjs.id('controlbutton-container').style.display = 'block';
   yuanjs.id('time-container').style.display = 'block';
-  var options = {
-    source:[
-      { src: 'media/1007000868010800.mp3' }
-    ],
+  var playlist = [
+    {
+      title: '再见中国海',
+      artist: '4 in love',
+      source:[
+        { src: 'media/zaijianzhongguohai.m4a' }
+      ],
+      loop: false,
+      lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
+    },
+    {
+      title: '给未来的自己',
+      artist: '梁静茹',
+      source:[
+        { src: 'media/1007000868010800.mp3' }
+      ],
+      loop: false,
+      lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
+    }
+  ];
+  var index = 0;
+  var options = Object.assign({}, playlist[index], {
     cssSelector: {
       'duration': '#duration-span',
       'currentTime': '#currentTime-span'
     },
-    loop: true,
-    lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
-  };
-  try{
+  });
+  try {
     var player = new YuanPlayer(options);
     player.loadLyricPlugin();
     updateLoopButton();
@@ -20,7 +36,6 @@ window.addEventListener('DOMContentLoaded', function(event) {
     alert(e.message);
     return;
   }
-
 
   player.on('timeupdate', function(){
     //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
