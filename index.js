@@ -1,25 +1,16 @@
-//window.addEventListener("load", initAll, false);
-window.onload = initAll;
-function initAll () {
+window.addEventListener('DOMContentLoaded', function(event) {
   yuanjs.id('controlbutton-container').style.display = 'block';
   yuanjs.id('time-container').style.display = 'block';
-  // Webm Sample: http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm
-  // MP3 Sample: http://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3
   var options = {
     source:[
-      // http://stream13.qqmusic.qq.com/30411231.mp3
-      // http://192.168.1.101/test/to-the-future-myself.mp3
-      //http://mediaelementjs.com/media/AirReview-Landmarks-02-ChasingCorporate.mp3
-      // http://listen.radionomy.com/abc-jazz
-      
-      { src: '1007000868010800.mp3' }
+      { src: 'media/1007000868010800.mp3' }
     ],
     cssSelector: {
       'duration': '#duration-span',
       'currentTime': '#currentTime-span'
     },
     loop: true,
-    lyric: qualifyURL('to-the-future-myself.lrc')
+    lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
   };
   try{
     var player = new YuanPlayer(options);
@@ -29,7 +20,7 @@ function initAll () {
     alert(e.message);
     return;
   }
-  
+
 
   player.on('timeupdate', function(){
     //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
@@ -39,7 +30,7 @@ function initAll () {
   player.on('error', function(){
     alert('An error occured:' + player.errorMessage);
   })
-  
+
   player.on('loopchanged', updateLoopButton);
 
   setTimeout(function(){
@@ -96,19 +87,20 @@ function initAll () {
   function volumeMinusMedia() {
     player.minusVolume();
   }
-  
+
   function triggerLoop() {
     player.toggleLoop();
     return false;
   }
-  
+
   function updateLoopButton(){
     var isLoop = player.mediaObject.loop;
     var loopButton = document.getElementById("loop");
     loopButton.className = isLoop ? "" : "disable";
   }
 
-}
+});
+
 function qualifyURL(url) {
   var a = document.createElement('a');
   a.href = url;
