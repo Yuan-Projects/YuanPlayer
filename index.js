@@ -37,20 +37,18 @@ window.addEventListener('DOMContentLoaded', function(event) {
     return;
   }
 
-  player.on('timeupdate', function(){
-    //logWidget.AddLogMessage('current:'+player.mediaObject.currentTime);
-    console.log('current:'+player.mediaObject.currentTime);
-  })
-
   player.on('error', function(){
     alert('An error occured:' + player.errorMessage);
   })
 
   player.on('loopchanged', updateLoopButton);
 
-  setTimeout(function(){
-    player.off('timeupdate');
-  }, 5000)
+  player.on('ended', function() {
+    index = index === playlist.length - 1 ? 0 : (index + 1);
+    player.setMedia(playlist[index].source);
+    player.mediaObject.load();
+    player.play();
+  });
 
   var playButton = document.getElementById('play-button');
   var pauseButton = document.getElementById('pause-button');
