@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', function(event) {
       lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
     },
     {
-      title: '给未来的自己',
+      title: '給未來的自己',
       artist: '梁静茹',
       source:[
         { src: 'media/1007000868010800.mp3' }
@@ -48,6 +48,13 @@ window.addEventListener('DOMContentLoaded', function(event) {
     player.setMedia(playlist[index].source);
     player.mediaObject.load();
     player.play();
+
+    player.lyric = playlist[index].lyric;
+    player.lyricObj = {
+      timeArray: [],
+      lyricArray: []
+    };
+    player.addLyric();
   });
 
   var playButton = document.getElementById('play-button');

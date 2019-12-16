@@ -43,19 +43,23 @@ if (typeof YuanPlayer === "function") {
       this.lyricObj.lyricArray.push(component[2]);
     }
   };
-  
+
   YuanPlayer.prototype.addLyric = function() {
     var that = this;
     var lyric = this.lyric;
     if (lyric) {
       if (typeof lyric === 'string') {
-        // Add container for lyric
-        var lyricDiv = document.createElement('div');
-        var wrapContainer = document.createElement('div');
-        lyricDiv.id = "lyric-container";
-        wrapContainer.id = "lyric-wrapcontainer";
-        document.body.appendChild(lyricDiv);
-        lyricDiv.appendChild(wrapContainer);
+        if (!document.getElementById('lyric-container')) {
+          // Add container for lyric
+          var lyricDiv = document.createElement('div');
+          var wrapContainer = document.createElement('div');
+          lyricDiv.id = "lyric-container";
+          wrapContainer.id = "lyric-wrapcontainer";
+          document.body.appendChild(lyricDiv);
+          lyricDiv.appendChild(wrapContainer);
+        } else {
+          document.getElementById('lyric-container').innerHTML = '<div id="lyric-wrapcontainer"></div>';
+        }
 
         if (lyric.substr(0, 8) === 'https://' || lyric.substr(0, 7) === 'http://') {
           yuanjs.ajax({url:lyric, contentType: "text/plain"}).then(function(lyricText){
@@ -72,7 +76,7 @@ if (typeof YuanPlayer === "function") {
       }
     }
   };
-  
+
   YuanPlayer.prototype.bindLyricEvents = function() {
     var that = this;
     var media = this.mediaObject;
@@ -83,7 +87,7 @@ if (typeof YuanPlayer === "function") {
       }
     }, false);
   };
-  
+
   YuanPlayer.prototype.scrollLyric = function(currentTime){
     var newLyricIndex = this.getNewLyricIndex(currentTime);
     var oldPosition = this.lyricCurrentPosition;
@@ -95,11 +99,11 @@ if (typeof YuanPlayer === "function") {
     var lyricDivs = document.getElementById('lyric-wrapcontainer').getElementsByTagName('div');
     lyricDivs[oldPosition].className =  '';
     lyricDivs[newLyricIndex].className = 'highlight';
-    
+
     // Scroll the lyrics container
     var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
     document.getElementById('lyric-container').scrollTop = newScrollTop;
-  }; 
+  };
   YuanPlayer.prototype.getNewLyricIndex = function (currentTime) {
     var index = 0;
     var timeArray = this.lyricObj.timeArray;
@@ -120,10 +124,10 @@ if (typeof YuanPlayer === "function") {
     }
     return index;
   };
-  
+
   YuanPlayer.prototype.loadLyricPlugin = function() {
     this.addLyric();
     this.bindLyricEvents();
   };
-          
+
 }
