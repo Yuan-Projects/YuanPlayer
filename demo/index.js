@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function(event) {
-  yuanjs.id('controlbutton-container').style.display = 'block';
-  yuanjs.id('time-container').style.display = 'block';
+  document.getElementById('controlbutton-container').style.display = 'block';
+  document.getElementById('time-container').style.display = 'block';
   var playlist = [
     {
       title: '再见中国海',

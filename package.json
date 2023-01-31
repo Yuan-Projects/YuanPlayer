@@ -4,7 +4,7 @@
   "description": "YuanPlayer",
   "main": "index.js",
   "scripts": {
-    "start": "live-server",
+    "start": "live-server --open=/demo/",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
