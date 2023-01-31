@@ -2,11 +2,11 @@
   "name": "@rainyjune/yuan-player",
   "version": "1.0.0",
   "description": "YuanPlayer",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "live-server --open=/demo/",
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "rimraf lib && rollup --config && copyfiles --flat src/YuanPlayer.lyric.css lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,7 +26,15 @@
   },
   "homepage": "https://github.com/Yuan-Projects/YuanPlayer#readme",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "copyfiles": "^2.4.1",
     "live-server": "^1.2.2",
+    "rimraf": "^4.1.2",
+    "rollup": "^3.12.0",
+    "rollup-plugin-typescript2": "^0.34.1",
     "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@rainyjune/yuanjs": "^0.1.1"
   }
 }
