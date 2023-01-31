@@ -1,0 +1,30 @@
+{
+  "name": "@rainyjune/yuan-player",
+  "version": "1.0.0",
+  "description": "YuanPlayer",
+  "main": "index.js",
+  "scripts": {
+    "init": "tsc --init",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuan-Projects/YuanPlayer.git"
+  },
+  "keywords": [
+    "music player",
+    "audio player",
+    "lyric",
+    "music"
+  ],
+  "author": "rainyjune <rainyjune@live.cn>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuan-Projects/YuanPlayer/issues"
+  },
+  "homepage": "https://github.com/Yuan-Projects/YuanPlayer#readme",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

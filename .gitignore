@@ -1,2 +1,3 @@
 *.komodoproject
 /nbproject/
+/node_modules/
