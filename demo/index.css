@@ -38,6 +38,15 @@ html {
   display: none;
 }
 
+.playlist-buttons {
+  text-align: center;
+  margin: 5px auto;
+}
+
+.playlist-buttons button {
+  margin: 5px;
+}
+
 div.no-script {
   background-color: yellow;
   text-align: center;

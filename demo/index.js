@@ -1,6 +1,9 @@
 window.addEventListener('DOMContentLoaded', function(event) {
   document.getElementById('controlbutton-container').style.display = 'block';
   document.getElementById('time-container').style.display = 'block';
+
+  var prevBtn = document.getElementById('play-prev-button');
+  var nextBtn = document.getElementById('play-next-button');
   var playlist = [
     {
       title: '再见中国海',
@@ -54,6 +57,32 @@ window.addEventListener('DOMContentLoaded', function(event) {
 
   player.on('ended', function() {
     index = index === playlist.length - 1 ? 0 : (index + 1);
+    playMusicAtIndex(index);
+
+    if (index === 0) {
+      prevBtn.disabled = true;
+    } else {
+      prevBtn.disabled = false;
+    }
+    if (index === playlist.length - 1) {
+      nextBtn.disabled = true;
+    } else {
+      nextBtn.disabled = false;
+    }
+  });
+
+
+  prevBtn.addEventListener('click', function(e) {
+    if (index === 0) return false;
+    playMusicAtIndex(--index);
+  });
+
+  nextBtn.addEventListener('click', function(e) {
+    if (index === playlist.length - 1) return false;
+    playMusicAtIndex(++index);
+  });
+
+  function playMusicAtIndex(index) {
     player.setMedia(playlist[index].source);
     player.mediaObject.load();
     player.play();
@@ -64,7 +93,7 @@ window.addEventListener('DOMContentLoaded', function(event) {
       lyricArray: []
     };
     player.addLyric();
-  });
+  }
 
   var playButton = document.getElementById('play-button');
   var pauseButton = document.getElementById('pause-button');
