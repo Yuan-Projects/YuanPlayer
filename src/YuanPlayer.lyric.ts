@@ -1,5 +1,5 @@
 /* global YuanPlayer, yuanjs */
-
+// @ts-nocheck
 if (typeof YuanPlayer === "function") {
   YuanPlayer.prototype.lyricObj = {
     timeArray:[],
