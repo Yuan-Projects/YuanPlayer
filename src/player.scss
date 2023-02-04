@@ -5,10 +5,23 @@
 
   position: relative;
   max-width: 500px;
+  /*
   min-height: 132px;
+  */
   background: #fff;
+  box-sizing: border-box;
 
-  ::before {
+  display: flex;
+  align-items: center;
+  padding: 1em;;
+  font-size: 1rem;
+  gap: 1em;
+
+  > * {
+    display: inline-block;
+  }
+
+  &::before {
     position: absolute;
     content: '';
     width: calc(100% + 4px);
@@ -25,9 +38,11 @@
     background: transparent;
     cursor: pointer;
     outline: none;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+    /*
     float: left;
+    */
   }
 
   path {
@@ -39,8 +54,12 @@
     width: 37px;
     text-align: center;
     font-size: 20px;
+    /*
     margin: 28.5px 0 18.5px 0;
+    */
+    /*
     float: left;
+    */
   }
 
   output {
@@ -48,13 +67,19 @@
     width: 32px;
     text-align: center;
     font-size: 20px;
+    /*
     margin: 10px 2.5% 0 5%;
+    */
+    /*
     float: left;
     clear: left;
+    */
   }
 
   .volume-slider {
+    /*
     margin: 10px 2.5%;
+    */
     width: 58%;
   }
 
@@ -75,18 +100,26 @@
   }
 
   .mute-icon {
+    /*
     margin: 0 2.5%;
+    */
   }
 
   input[type="range"] {
     position: relative;
     -webkit-appearance: none;
     width: 48%;
+    /*
     margin: 0;
+    */
     padding: 0;
     height: 19px;
+    /*
     margin: 30px 2.5% 20px 2.5%;
+    */
+    /*
     float: left;
+    */
     outline: none;
   }
   input[type="range"]::-webkit-slider-runnable-track {
@@ -177,6 +210,8 @@
   .yuan-player-play-icon {
     border: 0;
     background: transparent;
+    /*
     margin: 20px 2.5% 10px 2.5%;
+    */
   }
 }
