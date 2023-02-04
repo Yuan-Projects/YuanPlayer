@@ -4,7 +4,6 @@
   --buffered-width: 0%;
 
   position: relative;
-  max-width: 500px;
   /*
   min-height: 132px;
   */
@@ -12,7 +11,9 @@
   box-sizing: border-box;
 
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   padding: 1em;;
   font-size: 1rem;
   gap: 1em;
@@ -32,6 +33,17 @@
     z-index: -1;
   }
 
+  .controls-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+    .controls-row > * {
+      display: inline-block;
+    }
+  }
+
   button {
     padding: 0;
     border: 0;
@@ -40,6 +52,7 @@
     outline: none;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
     /*
     float: left;
     */
@@ -108,7 +121,6 @@
   input[type="range"] {
     position: relative;
     -webkit-appearance: none;
-    width: 48%;
     /*
     margin: 0;
     */
@@ -121,6 +133,7 @@
     float: left;
     */
     outline: none;
+    min-width: 200px;
   }
   input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
