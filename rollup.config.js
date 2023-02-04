@@ -21,4 +21,23 @@ export default [
     ],
     plugins: [nodeResolve({browser:true}), typescript()]
   },
+  {
+    input: 'src/lyric.ts',
+    output: [
+      {
+        file: 'lib/umd/YuanPlayerLyric.js',
+        format: 'umd',
+        name: 'YuanPlayerLyric'
+      },
+      {
+        file: 'lib/mjs/YuanPlayerLyric.js',
+        format: 'es',
+      },
+      {
+        file: 'lib/cjs/YuanPlayerLyric.js',
+        format: 'cjs',
+      },
+    ],
+    plugins: [nodeResolve({browser:true}), typescript()]
+  },
 ];
