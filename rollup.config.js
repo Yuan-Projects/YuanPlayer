@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default [
   {
-    input: 'src/YuanPlayer.ts',
+    input: 'src/index.ts',
     output: [
       {
         file: 'lib/umd/YuanPlayer.js',

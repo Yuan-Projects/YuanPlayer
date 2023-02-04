@@ -1,15 +1,9 @@
 // @ts-nocheck
-import * as yuanjs from '@rainyjune/yuanjs';
+import { ajax, isArray } from './utils';
 
-if(!Array.isArray) {
-  Array.isArray = function (vArg) {
-    return Object.prototype.toString.call(vArg) === "[object Array]";
-  };
-}
 function YuanPlayer(options) {
   if (!YuanPlayer.helper.isHtml5AudioSupported()) {
     throw new Error("Your browser does not support HTML5 Audio.");
-    return;
   }
   this.container = 'yuanplayer';
   this.mediaObject = null;
@@ -329,7 +323,7 @@ YuanPlayer.prototype = {
       sourceElement.type = this.getMimeType(mediaParam);
       media.appendChild(sourceElement);
     } else if (typeof mediaParam === 'object'){
-      if (Array.isArray(mediaParam)) {
+      if (isArray(mediaParam)) {
         for (var i = 0; i < mediaParam.length; i++) {
           this.setMediaItem(mediaParam[i]);
         }
@@ -468,7 +462,7 @@ YuanPlayer.prototype = {
         }
 
         if (lyric.substr(0, 8) === 'https://' || lyric.substr(0, 7) === 'http://') {
-          yuanjs.ajax({url:lyric, contentType: "text/plain"}).then(function(lyricText){
+          ajax({url:lyric, contentType: "text/plain"}).then(function(lyricText){
             var lyricItems = lyricText.responseText.split(/[\n\r]/g);
             lyricItems = that.parseLyricItems(lyricItems);
             lyricItems.sort(function(x,y){ return that.compareTimeSpan.call(that,x,y);});
