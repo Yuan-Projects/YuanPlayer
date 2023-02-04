@@ -1,5 +1,6 @@
 import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import styles from "rollup-plugin-styles";
 
 export default [
   {
@@ -19,7 +20,7 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins: [nodeResolve({browser:true}), typescript()]
+    plugins: [styles(), nodeResolve({browser:true}), typescript()]
   },
   {
     input: 'src/lyric.ts',
@@ -38,6 +39,6 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins: [nodeResolve({browser:true}), typescript()]
+    plugins: [styles(), nodeResolve({browser:true}), typescript()]
   },
 ];
