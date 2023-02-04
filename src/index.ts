@@ -1,20 +1,11 @@
 import { isArray, isHtml5AudioSupported, innerText } from './utils';
+import Emitter from './emitter';
 // @ts-check
 import Lottie from 'lottie-web/build/player/esm/lottie.min.js';
+import { CSSSelector, YuanPlayerOptions } from './index.d';
+import './player.scss';
 
-interface CSSSelector {
-  duration: string
-  durationTime: string
-  currentTime: string
-}
-
-interface YuanPlayerOptions {
-  useNativeControl: boolean
-  container: string | HTMLElement
-  cssSelector?: CSSSelector
-}
-
-class YuanPlayer {
+class YuanPlayer extends Emitter {
   container;
   mediaObject: any;
   errorCode: number;
@@ -51,6 +42,7 @@ class YuanPlayer {
     }
   };
   constructor(options: YuanPlayerOptions) {
+    super();
     if (!isHtml5AudioSupported()) {
       throw new Error("Your browser does not support HTML5 Audio.");
     }
@@ -499,34 +491,6 @@ class YuanPlayer {
       var temp = media.volume - 0.2;
       media.volume = (temp >= 0.0) ? temp : 0.0;
     }
-  }
-  on(event: string, callback: Function) {
-    var Events = this.eventHandlers;
-    if (!Events[event]) {
-      Events[event] = [];
-    }
-    Events[event].push(callback);
-  }
-  off(event: string, callback: Function) {
-    var Events = this.eventHandlers;
-    if (!Events[event]) return ;
-    if (callback) {
-      var index = Events[event].indexOf(callback);
-      if (index !== -1) {
-        Events[event].splice(index, 1);
-      }
-    } else {
-      Events[event] = [];
-    }
-  }
-  trigger(event: string) {
-    var Events = this.eventHandlers;
-    if (!Events[event]) return ;
-    var args = Array.prototype.slice.call(arguments, 1);
-    var callbackArray = Events[event];
-    for (var i = callbackArray.length - 1; i >= 0; i--) {
-      callbackArray[i].apply(callbackArray[i], args);
-    };
   }
 }
 
