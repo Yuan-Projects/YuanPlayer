@@ -1,14 +1,18 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="format-detection" content="telephone=no" />
     <title>YuanPlayer</title>
     <link rel="stylesheet" href="index.css" />
-    <link href="../lib/YuanPlayer.lyric.css" rel="stylesheet" type="text/css"/>
+    <style>
+
+    </style>
   </head>
   <body>
+    <div id="simplePlayerContainer"></div>
+    <!--
     <div id="yuanplayer"></div>
     <div id="time-container"><span id="currentTime-span">0:00</span>/<span id="duration-span">0:00</span></div>
     <div id="controlbutton-container"><span id="play-button">Play</span>&nbsp;<span id="pause-button">Pause</span>&nbsp;<span id="toggleplay-button">Toggle Play</span>&nbsp;<span id="stop-button">Stop</span>&nbsp;<span id="mute-button">Mute</span>&nbsp;<span id="unmute-button">Unmute</span>&nbsp;<span id="togglemute-button">Toggle Mute</span>&nbsp;<span id="volumeadd-button">Volume++</span>&nbsp;<span id="volumeminus-button">Volume--</span>
@@ -20,7 +24,19 @@
         <p>Please enable JavaScript first.</p>
       </div>
     </noscript>
-    <script src="../lib/umd/YuanPlayer.js"></script>
+    
+    <script src="../lib/umd/YuanPlayerLyric.js"></script>
     <script src="index.js"></script>
+    -->
+    <script src="../lib/umd/YuanPlayer.js"></script>
+    <script>
+      var simplePlayer = new YuanPlayer({
+        useNativeControl: false,
+        source:[
+          { src: 'media/zaijianzhongguohai.m4a' }
+        ],
+        container: document.querySelector('#simplePlayerContainer')
+      });
+    </script>
   </body>
 </html>

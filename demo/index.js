@@ -42,7 +42,8 @@ window.addEventListener('DOMContentLoaded', function(event) {
   });
   try {
     var player = new YuanPlayer(options);
-    player.loadLyricPlugin();
+    var lyricInstance = new YuanPlayerLyric(player.mediaObject, options.lyric);
+    lyricInstance.loadLyricPlugin();
     updateLoopButton();
   } catch (e) {
     alert(e.message);
@@ -87,12 +88,12 @@ window.addEventListener('DOMContentLoaded', function(event) {
     player.mediaObject.load();
     player.play();
 
-    player.lyric = playlist[index].lyric;
-    player.lyricObj = {
+    lyricInstance.lyric = playlist[index].lyric;
+    lyricInstance.lyricObj = {
       timeArray: [],
       lyricArray: []
     };
-    player.addLyric();
+    lyricInstance.addLyric();
   }
 
   var playButton = document.getElementById('play-button');
