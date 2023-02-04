@@ -1,68 +1,87 @@
-// @ts-nocheck
 import { isArray, isHtml5AudioSupported, innerText } from './utils';
 
-function YuanPlayer(options) {
-  if (!isHtml5AudioSupported()) {
-    throw new Error("Your browser does not support HTML5 Audio.");
-  }
-  this.container = 'yuanplayer';
-  this.mediaObject = null;
-
-  this.errorCode = 0;
-  this.errorMessage = '';
-  this.eventHandlers = {};
-
-  this.init(options);
+interface CSSSelector {
+  duration: string
+  durationTime: string
+  currentTime: string
 }
 
-YuanPlayer.error = {
-  MEDIA_ERR_URLEMPTY: {
-    code: -2,
-    message: 'Media playback command not possible as no media is set.'
-  },
-  MEDIA_ERR_UNKNOWN: {
-    code: -1,
-    message: 'An unknown error occurred.'
-  },
-  MEDIA_ERR_ABORTED: {
-    code: 1,
-    message: 'You aborted the video playback.'
-  },
-  MEDIA_ERR_NETWORK: {
-    code: 2,
-    message: 'A network error caused the video download to fail part-way.'
-  },
-  MEDIA_ERR_DECODE: {
-    code: 3,
-    message: 'The video playback was aborted due to a corruption problem or because the video used features your browser did not support.'
-  },
-  MEDIA_ERR_SRC_NOT_SUPPORTED: {
-    code: 4,
-    message: 'The video could not be loaded, either because the server or network failed or because the format is not supported.'
+interface YuanPlayerOptions {
+  container: string | HTMLElement
+  cssSelector?: CSSSelector
+}
+
+class YuanPlayer {
+  container;
+  mediaObject: any;
+  errorCode: number;
+  errorMessage: string;
+  eventHandlers: any;
+  loop = false;
+  cssSelector: CSSSelector;
+  source: Array<string>;
+  static error = {
+    MEDIA_ERR_URLEMPTY: {
+      code: -2,
+      message: 'Media playback command not possible as no media is set.'
+    },
+    MEDIA_ERR_UNKNOWN: {
+      code: -1,
+      message: 'An unknown error occurred.'
+    },
+    MEDIA_ERR_ABORTED: {
+      code: 1,
+      message: 'You aborted the video playback.'
+    },
+    MEDIA_ERR_NETWORK: {
+      code: 2,
+      message: 'A network error caused the video download to fail part-way.'
+    },
+    MEDIA_ERR_DECODE: {
+      code: 3,
+      message: 'The video playback was aborted due to a corruption problem or because the video used features your browser did not support.'
+    },
+    MEDIA_ERR_SRC_NOT_SUPPORTED: {
+      code: 4,
+      message: 'The video could not be loaded, either because the server or network failed or because the format is not supported.'
+    }
+  };
+  constructor(options: YuanPlayerOptions) {
+    if (!isHtml5AudioSupported()) {
+      throw new Error("Your browser does not support HTML5 Audio.");
+    }
+    this.container = 'yuanplayer';
+    this.mediaObject = null;
+
+    this.errorCode = 0;
+    this.errorMessage = '';
+    this.eventHandlers = {};
+
+    this.init(options);
   }
-};
-YuanPlayer.prototype = {
-  constructor: YuanPlayer,
-  init: function (options) {
+
+  init(options: any) {
     this.initOptions(options);
     // If no valid container exists, we do nothing.
     if(!this.container || !document.getElementById(this.container)) return ;
     this.addMediaElement();
     this.bindMediaEvents();
+  }
 
-  },
-  initOptions: function(options) {
-    for (var prop in options) {
+  initOptions(options: YuanPlayerOptions) {
+    for (const prop in options) {
+      // @ts-ignore
       this[prop] = options[prop];
     }
-  },
-  addMediaElement: function() {
+  }
+
+  addMediaElement() {
     var container = document.getElementById(this.container);
     if (container) {
       var mediaElement = document.createElement('audio');
       this.mediaObject = mediaElement;
 
-      mediaElement.controls = 'controls';
+      mediaElement.controls = true;
       if ( typeof this.loop !== "undefined") {
         mediaElement.loop = !!this.loop;
       }
@@ -70,8 +89,9 @@ YuanPlayer.prototype = {
       this.addMediaSource();
       container.appendChild(mediaElement);
     }
-  },
-  bindMediaEvents: function() {
+  }
+
+  bindMediaEvents() {
     var that = this;
     var media = this.mediaObject;
     if (!media) return ;
@@ -87,12 +107,18 @@ YuanPlayer.prototype = {
 
     function updateDuration() {
       if (that.cssSelector && that.cssSelector.duration && !isNaN(media.duration)) {
-        innerText(document.querySelector(that.cssSelector.duration), that.formatTime(Math.floor(media.duration)));
+        const element = document.querySelector(that.cssSelector.duration) as HTMLElement;
+        if (element) {
+          innerText(element, that.formatTime(Math.floor(media.duration)));
+        }
       }
     }
     function updateCurrentTime() {
       if (that.cssSelector && that.cssSelector.currentTime && !isNaN(media.currentTime) && !isNaN(media.duration)) {
-        innerText(document.querySelector(that.cssSelector.currentTime), that.formatTime(Math.floor(media.currentTime)));
+        const element = document.querySelector(that.cssSelector.currentTime) as HTMLElement;
+        if (element) {
+          innerText(element, that.formatTime(Math.floor(media.currentTime)));
+        }
       }
     }
     media.addEventListener('abort', function() {
@@ -114,7 +140,7 @@ YuanPlayer.prototype = {
     media.addEventListener('ended', function() {
       that.trigger('ended');
       }, false);
-    media.addEventListener('error', function(e) {
+    media.addEventListener('error', function(e: any) {
       switch (e.target.error.code) {
         case e.target.error.MEDIA_ERR_ABORTED:
           that.errorCode = YuanPlayer.error.MEDIA_ERR_ABORTED.code;
@@ -192,37 +218,55 @@ YuanPlayer.prototype = {
     media.addEventListener('waiting', function() {
       that.trigger('waiting');
       }, false);
-  },
+  }
 
-  formatTime: function(timeInSeconds) {
+  addMediaSource(){
+    var media = this.mediaObject;
+    var sources = this.source;
+    if (sources) {
+      this.setMedia(sources);
+    }
+  }
+
+  setMedia(mediaParam: any) {
+    var media = this.mediaObject;
+    if (!media) return;
+    media.innerHTML = '';
+    if (typeof mediaParam === 'string') {
+      var sourceElement = document.createElement('source');
+      sourceElement.src = mediaParam;
+      sourceElement.type = this.getMimeType(mediaParam);
+      media.appendChild(sourceElement);
+    } else if (typeof mediaParam === 'object'){
+      if (isArray(mediaParam)) {
+        for (var i = 0; i < mediaParam.length; i++) {
+          this.setMediaItem(mediaParam[i]);
+        }
+      } else {
+        this.setMediaItem(mediaParam);
+      }
+    }
+  }
+
+  formatTime(timeInSeconds: number): string {
     var result = "";
     var seconds = Math.floor(timeInSeconds),
         hours = Math.floor(seconds / 3600),
         minutes = Math.floor((seconds - (hours * 3600)) / 60),
         seconds = seconds - (hours * 3600) - (minutes * 60);
 
-    if (hours >0 && minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
-    result = hours ? (hours + ':') : '' + minutes + ':' + seconds;
+    const minutesStr = (hours >0 && minutes < 10) ? "0" + minutes : '' + minutes;
+    const secondsStr = (seconds < 10) ? "0" + seconds : '' + seconds;
+    result = hours ? (hours + ':') : '' + minutesStr + ':' + secondsStr;
     return result;
-  },
-  addMediaSource: function(){
-    var media = this.mediaObject;
-    var sources = this.source;
-    if (sources) {
-      this.setMedia(sources);
-    }
-  },
-  play: function(){
+  }
+
+  play(){
     if (this.mediaObject) {
       this.mediaObject.play();
     }
-  },
-  togglePlay: function() {
+  }
+  togglePlay() {
     var media = this.mediaObject;
     if (media) {
       if (media.paused) {
@@ -231,22 +275,22 @@ YuanPlayer.prototype = {
         media.pause();
       }
     }
-  },
-  stop: function(){
+  }
+  stop(){
     var media = this.mediaObject;
     if (media) {
       media.pause();
       media.currentTime = 0;
     }
-  },
-  toggleLoop: function() {
+  }
+  toggleLoop() {
     var media = this.mediaObject;
     if (media) {
       media.loop = !media.loop;
     }
     this.trigger('loopchanged');
-  },
-  getMimeType: function (fileName) {
+  }
+  getMimeType(fileName: string) {
     var type = 'wav';
     if (fileName) {
       var fileExtension = fileName.split('.').pop();
@@ -280,79 +324,61 @@ YuanPlayer.prototype = {
       }
     }
     return 'audio/' + type;
-  },
-  pause: function(){
+  }
+  pause(){
     var media = this.mediaObject;
     if (media) {
       media.pause();
     }
-  },
-  setMedia: function(mediaParam) {
-    var media = this.mediaObject;
-    if (!media) return;
-    media.innerHTML = '';
-    if (typeof mediaParam === 'string') {
-      var sourceElement = document.createElement('source');
-      sourceElement.src = mediaParam;
-      sourceElement.type = this.getMimeType(mediaParam);
-      media.appendChild(sourceElement);
-    } else if (typeof mediaParam === 'object'){
-      if (isArray(mediaParam)) {
-        for (var i = 0; i < mediaParam.length; i++) {
-          this.setMediaItem(mediaParam[i]);
-        }
-      } else {
-        this.setMediaItem(mediaParam);
-      }
-    }
-  },
-  setMediaItem: function (mediaObj) {
+  }
+
+  setMediaItem(mediaObj: any) {
     var media = this.mediaObject;
     var sourceElement = document.createElement('source');
     sourceElement.src = mediaObj.src;
     sourceElement.type = mediaObj.type ? mediaObj.type : this.getMimeType(mediaObj.src);
     media.appendChild(sourceElement);
-  },
-  mute: function() {
+  }
+  mute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = true;;
     }
-  },
-  unmute: function() {
+  }
+  unmute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = false;
     }
-  },
-  toggleMute: function() {
+  }
+  toggleMute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = !media.muted;
     }
-  },
-  addVolume: function() {
+  }
+  addVolume() {
     var media = this.mediaObject;
     if (media) {
       var temp = media.volume + 0.2;
       media.volume = (temp >= 1.0) ? 1.0 : temp;
     }
-  },
-  minusVolume: function() {
+  }
+  minusVolume() {
     var media = this.mediaObject;
     if (media) {
       var temp = media.volume - 0.2;
       media.volume = (temp >= 0.0) ? temp : 0.0;
     }
-  },
-  on: function(event, callback) {
+  }
+  on(event: string, callback: Function) {
     var Events = this.eventHandlers;
     if (!Events[event]) {
       Events[event] = [];
     }
     Events[event].push(callback);
-  },
-  off: function(event, callback) {
+  }
+  off(event: string, callback: Function) {
     var Events = this.eventHandlers;
     if (!Events[event]) return ;
     if (callback) {
@@ -363,8 +389,8 @@ YuanPlayer.prototype = {
     } else {
       Events[event] = [];
     }
-  },
-  trigger: function  (event) {
+  }
+  trigger(event: string) {
     var Events = this.eventHandlers;
     if (!Events[event]) return ;
     var args = Array.prototype.slice.call(arguments, 1);
@@ -373,6 +399,6 @@ YuanPlayer.prototype = {
       callbackArray[i].apply(callbackArray[i], args);
     };
   }
-};
+}
 
 export default YuanPlayer;
