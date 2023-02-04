@@ -28,7 +28,7 @@ class YuanPlayerLyric {
     }
   }
   parseLyricItems(items: any) {
-    var result = [];
+    var result: Array<any> = [];
     var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}\]/g;
     for(var i = 0, l = items.length; i < l; i++) {
       var thisItem = items[i];
