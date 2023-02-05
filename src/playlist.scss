@@ -1,0 +1,10 @@
+.yuanplay-playlist-container {
+  .music-item-container {
+    margin: 1rem auto;
+    cursor: pointer;
+  }
+
+  .music-item-container.active {
+    color: red;
+  }
+}

@@ -41,4 +41,23 @@ export default [
     ],
     plugins: [styles(), nodeResolve({browser:true}), typescript()]
   },
+  {
+    input: 'src/playlist.ts',
+    output: [
+      {
+        file: 'lib/umd/YuanPlayerPlayList.js',
+        format: 'umd',
+        name: 'YuanPlayerPlayList'
+      },
+      {
+        file: 'lib/mjs/YuanPlayerPlayList.js',
+        format: 'es',
+      },
+      {
+        file: 'lib/cjs/YuanPlayerPlayList.js',
+        format: 'cjs',
+      },
+    ],
+    plugins: [styles(), nodeResolve({browser:true}), typescript()]
+  },
 ];

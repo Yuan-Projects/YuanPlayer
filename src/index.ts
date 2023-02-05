@@ -40,6 +40,9 @@ class YuanPlayer extends Player {
       // Show play button again
       animation.playSegments([0, 14], true);
     });
+    this.on('play', () => {
+      animation.playSegments([14, 27], true);
+    })
 
     playButton.addEventListener('click', () => {
       if (this.mediaObject.paused) {
