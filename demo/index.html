@@ -16,6 +16,13 @@
     <h2>A player with the lyric panel</h2>
     <div id="APlayerLyricContainer"></div>
     <div id="APlayerLyricLyricContainer"></div>
+    <h2>A player with the play list</h2>
+    <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 3rem;">
+      <div id="APlayerLyricPlaylistContainer" style="border: 2px solid black; width: 400px; padding: 2rem;"></div>
+      <div id="APlayerWithPlayListContainer" style="width: 400px;"></div>
+    </div>
+    
+    
     <!--
     <div id="yuanplayer"></div>
     <div id="time-container"><span id="currentTime-span">0:00</span>/<span id="duration-span">0:00</span></div>
@@ -34,6 +41,7 @@
     -->
     <script src="../lib/umd/YuanPlayer.js"></script>
     <script src="../lib/umd/YuanPlayerLyric.js"></script>
+    <script src="../lib/umd/YuanPlayerPlayList.js"></script>
     <script>
       var simplePlayer = new YuanPlayer({
         useNativeControl: false,
@@ -55,6 +63,46 @@
         container: document.getElementById('APlayerLyricLyricContainer')
       });
       lyricInstance.loadLyricPlugin();
+
+
+      var playlist = [
+        {
+          title: '再见中国海',
+          artist: '4 in love',
+          source:[
+            { src: 'media/zaijianzhongguohai.m4a' }
+          ],
+          loop: false,
+          lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
+        },
+        {
+          title: '守候',
+          artist: '徐瞑蕾',
+          source:[
+            { src: 'media/shouhou.m4a' }
+          ],
+          loop: false,
+          lyric: qualifyURL('lyrics/shouhou.lrc')
+        },
+        {
+          title: '給未來的自己',
+          artist: '梁静茹',
+          source:[
+            { src: 'media/1007000868010800.mp3' }
+          ],
+          loop: false,
+          lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
+        }
+      ];
+      var playerWithPlaylist = new YuanPlayer({
+        source: playlist[0].source,
+        container: document.querySelector('#APlayerWithPlayListContainer')
+      });
+      var playListInstance = new YuanPlayerPlayList({
+        container: document.getElementById('APlayerLyricPlaylistContainer'),
+        list: playlist,
+        player: playerWithPlaylist
+      });
 
 
       function qualifyURL(url) {
