@@ -19,10 +19,9 @@ export default class Emitter {
       Events[event] = [];
     }
   }
-  trigger(event: string) {
+  trigger(event: string, ...args) {
     var Events = this.eventHandlers;
     if (!Events[event]) return ;
-    var args = Array.prototype.slice.call(arguments, 1);
     var callbackArray = Events[event];
     for (var i = callbackArray.length - 1; i >= 0; i--) {
       callbackArray[i].apply(callbackArray[i], args);
