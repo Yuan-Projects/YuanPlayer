@@ -11,7 +11,11 @@
     </style>
   </head>
   <body>
+    <h2>Simple player</h2>
     <div id="simplePlayerContainer"></div>
+    <h2>A player with the lyric panel</h2>
+    <div id="APlayerLyricContainer"></div>
+    <div id="APlayerLyricLyricContainer"></div>
     <!--
     <div id="yuanplayer"></div>
     <div id="time-container"><span id="currentTime-span">0:00</span>/<span id="duration-span">0:00</span></div>
@@ -29,6 +33,7 @@
     <script src="index.js"></script>
     -->
     <script src="../lib/umd/YuanPlayer.js"></script>
+    <script src="../lib/umd/YuanPlayerLyric.js"></script>
     <script>
       var simplePlayer = new YuanPlayer({
         useNativeControl: false,
@@ -37,6 +42,26 @@
         ],
         container: document.querySelector('#simplePlayerContainer')
       });
+
+      var playerWithLyric = new YuanPlayer({
+        source:[
+          { src: 'media/1007000868010800.mp3' }
+        ],
+        container: document.querySelector('#APlayerLyricContainer')
+      });
+      var lyricInstance = new YuanPlayerLyric({
+        lyric: qualifyURL('lyrics/to-the-future-myself.lrc'),
+        mediaObject: playerWithLyric.mediaObject,
+        container: document.getElementById('APlayerLyricLyricContainer')
+      });
+      lyricInstance.loadLyricPlugin();
+
+
+      function qualifyURL(url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.href;
+      }
     </script>
   </body>
 </html>
