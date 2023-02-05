@@ -11,6 +11,7 @@ export interface PlayListBaseOptions {
   container: HTMLElement
   //mediaObject: Object
   player: any
+  lyricObj?: any
   loop: 'none' | 'single' | 'random' | 'order'
   list: Array<PlayListItem>
 }

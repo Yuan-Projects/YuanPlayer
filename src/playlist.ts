@@ -43,8 +43,7 @@ export default class YuanPlayerPlayList extends PlayListBase {
 
       div.addEventListener('click', () => {
         this.index = index;
-        this.playAtIndex(index);
-        this.updateHighlight();
+        this.trigger('playMusicAtIndex', index);
       });
     });
     playlistContainer.appendChild(itemList);
@@ -57,13 +56,13 @@ export default class YuanPlayerPlayList extends PlayListBase {
 
     previousButton.addEventListener('click', () => {
       if (this.index === 0) return false;
-      this.playAtIndex(--this.index);
+      this.trigger('playMusicAtIndex', --this.index);
     });
     const nextButton = document.createElement('button');
     nextButton.textContent ='next';
     nextButton.addEventListener('click', () => {
       if (this.index === this.list.length - 1) return false;
-      this.playAtIndex(++this.index);
+      this.trigger('playMusicAtIndex', ++this.index);
     });
     opContainer.appendChild(nextButton);
 

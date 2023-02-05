@@ -44,6 +44,7 @@ class YuanPlayerLyric extends LyricBase {
   }
   addLyricItems(items: any) {
     var wrapContainer = this.container.querySelector('.lyric-wrapcontainer');
+    wrapContainer.innerHTML = '';
 
     for (var i = 0, l = items.length; i < l; i++) {
       var div = document.createElement('div');

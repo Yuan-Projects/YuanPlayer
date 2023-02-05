@@ -7,6 +7,7 @@ export default class PlayListBase extends Emitter {
   //loop = 'none';
   //mediaObject;
   player;
+  lyricObj;
   index = 0;
   list: Array<any> = [];
   modeIndex = 0;
@@ -15,6 +16,7 @@ export default class PlayListBase extends Emitter {
     this.container = options.container;
     this.modeIndex = PlayListBase.modes.indexOf(options.loop) > -1 ? PlayListBase.modes.indexOf(options.loop) : 0;
     this.player = options.player;
+    this.lyricObj = options.lyricObj;
     this.list = options.list;
 
     this.addEvents();
@@ -25,6 +27,12 @@ export default class PlayListBase extends Emitter {
     this.trigger('modeChanged');
   }
   addEvents() {
+    this.on('playMusicAtIndex', (index) => {
+      if (this.lyricObj) {
+        this.lyricObj.lyric = this.list[index].lyric;
+        this.lyricObj.addLyric();
+      }
+    });
     this.player.mediaObject.addEventListener('ended', () => {
       if (PlayListBase.modes[this.modeIndex] === 'none') {
         // Have played the last music
