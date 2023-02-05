@@ -98,17 +98,18 @@
         source: playlist[0].source,
         container: document.querySelector('#playercontainer3')
       });
-      var list3 = new YuanPlayerPlayList({
-        container: document.getElementById('listcontainer3'),
-        list: playlist,
-        player: player3
-      });
       var lyric3 = new YuanPlayerLyric({
         lyric: playlist[0].lyric,
         mediaObject: player3.mediaObject,
         container: document.getElementById('lyriccontainer3')
       });
       lyric3.loadLyricPlugin();
+      var list3 = new YuanPlayerPlayList({
+        container: document.getElementById('listcontainer3'),
+        list: playlist,
+        player: player3,
+        lyricObj: lyric3
+      });
 
       function qualifyURL(url) {
         var a = document.createElement('a');
