@@ -6,20 +6,42 @@
     <meta name="format-detection" content="telephone=no" />
     <title>YuanPlayer</title>
     <link rel="stylesheet" href="index.css" />
+    <style>
+.playicon {
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+    </style>
   </head>
   <body>
-    <h2>Simple player</h2>
+    <h2>Example 0: English dictionary</h2>
+    <div>
+      <p><strong>Petal</strong></p>
+      <p>noun [ C ]</p>
+      <div>UK <img onclick="dicPlayer.play();" src="images/speaker.png" alt="" class="playicon">  /ˈpet.əl/ US <img onclick="dicPlayer2.play();" src="images/speaker.png" alt="" class="playicon"> /ˈpet̬.əl/</div>
+    </div>
+    <div id="exampleEnglishDicPlayer"></div>
+    <div id="exampleEnglishDicPlayer2"></div>
+    <hr />
+
+    <h2>Example 1: A simple player</h2>
     <div id="simplePlayerContainer"></div>
-    <h2>A player with the lyric panel</h2>
+    <hr />
+
+    <h2>Example 2: A player with the lyric panel</h2>
     <div id="APlayerLyricContainer"></div>
     <div id="APlayerLyricLyricContainer"></div>
-    <h2>A player with the play list</h2>
+    <hr />
+
+    <h2>Example 3: A player with the play list</h2>
     <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 3rem;">
       <div id="APlayerLyricPlaylistContainer" style="border: 2px solid black; width: 400px; padding: 2rem;"></div>
       <div id="APlayerWithPlayListContainer" style="width: 400px;"></div>
     </div>
+    <hr />
 
-    <h2>A player with the play list and lyric panel</h2>
+    <h2>Example 4: A player with the play list and lyric panel</h2>
     <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 3rem;">
       <div id="listcontainer3" style="width: 400px; border: 1px solid black;"></div>
       <div style="display: flex; flex-direction: column;">
@@ -30,92 +52,6 @@
     <script src="../lib/umd/YuanPlayer.js"></script>
     <script src="../lib/umd/YuanPlayerLyric.js"></script>
     <script src="../lib/umd/YuanPlayerPlayList.js"></script>
-    <script>
-      var simplePlayer = new YuanPlayer({
-        useNativeControl: false,
-        source:[
-          { src: 'media/zaijianzhongguohai.m4a' }
-        ],
-        container: document.querySelector('#simplePlayerContainer')
-      });
-
-      var playerWithLyric = new YuanPlayer({
-        source:[
-          { src: 'media/1007000868010800.mp3' }
-        ],
-        container: document.querySelector('#APlayerLyricContainer')
-      });
-      var lyricInstance = new YuanPlayerLyric({
-        lyric: qualifyURL('lyrics/to-the-future-myself.lrc'),
-        mediaObject: playerWithLyric.mediaObject,
-        container: document.getElementById('APlayerLyricLyricContainer')
-      });
-      lyricInstance.loadLyricPlugin();
-
-
-      var playlist = [
-        {
-          title: '再见中国海',
-          artist: '4 in love',
-          imgUrl: 'http://p2.music.126.net/cbtvK52JoaIK0iZNJ2BtHQ==/109951165958877997.jpg?param=130y130',
-          source:[
-            { src: 'media/zaijianzhongguohai.m4a' }
-          ],
-          loop: false,
-          lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
-        },
-        {
-          title: '守候',
-          artist: '徐瞑蕾',
-          imgUrl: 'http://p2.music.126.net/Ijvh1PFFZz_ydSUTTeWfkw==/6627856093408607.jpg?param=130y130',
-          source:[
-            { src: 'media/shouhou.m4a' }
-          ],
-          loop: false,
-          lyric: qualifyURL('lyrics/shouhou.lrc')
-        },
-        {
-          title: '給未來的自己',
-          artist: '梁静茹',
-          source:[
-            { src: 'media/1007000868010800.mp3' }
-          ],
-          loop: false,
-          lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
-        }
-      ];
-      var playerWithPlaylist = new YuanPlayer({
-        source: playlist[0].source,
-        container: document.querySelector('#APlayerWithPlayListContainer')
-      });
-      var playListInstance = new YuanPlayerPlayList({
-        container: document.getElementById('APlayerLyricPlaylistContainer'),
-        list: playlist,
-        player: playerWithPlaylist
-      });
-
-      var player3 = new YuanPlayer({
-        source: playlist[0].source,
-        container: document.querySelector('#playercontainer3')
-      });
-      var lyric3 = new YuanPlayerLyric({
-        lyric: playlist[0].lyric,
-        mediaObject: player3.mediaObject,
-        container: document.getElementById('lyriccontainer3')
-      });
-      lyric3.loadLyricPlugin();
-      var list3 = new YuanPlayerPlayList({
-        container: document.getElementById('listcontainer3'),
-        list: playlist,
-        player: player3,
-        lyricObj: lyric3
-      });
-
-      function qualifyURL(url) {
-        var a = document.createElement('a');
-        a.href = url;
-        return a.href;
-      }
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>

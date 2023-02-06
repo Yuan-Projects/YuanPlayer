@@ -1,163 +1,98 @@
-window.addEventListener('DOMContentLoaded', function(event) {
-  document.getElementById('controlbutton-container').style.display = 'block';
-  document.getElementById('time-container').style.display = 'block';
+var dicPlayer = new YuanPlayer({
+  controls: false,
+  source:[
+    { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/uk_pron/u/ukp/ukper/ukperv_027.mp3' },
+    { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/uk_pron_ogg/u/ukp/ukper/ukperv_027.ogg' },
+  ],
+  container: document.querySelector('#exampleEnglishDicPlayer')
+});
 
-  var prevBtn = document.getElementById('play-prev-button');
-  var nextBtn = document.getElementById('play-next-button');
-  var playlist = [
-    {
-      title: '再见中国海',
-      artist: '4 in love',
-      source:[
-        { src: 'media/zaijianzhongguohai.m4a' }
-      ],
-      loop: false,
-      lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
-    },
-    {
-      title: '守候',
-      artist: '徐瞑蕾',
-      source:[
-        { src: 'media/shouhou.m4a' }
-      ],
-      loop: false,
-      lyric: qualifyURL('lyrics/shouhou.lrc')
-    },
-    {
-      title: '給未來的自己',
-      artist: '梁静茹',
-      source:[
-        { src: 'media/1007000868010800.mp3' }
-      ],
-      loop: false,
-      lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
-    }
-  ];
-  var index = 0;
-  var options = Object.assign({}, playlist[index], {
-    cssSelector: {
-      'duration': '#duration-span',
-      'currentTime': '#currentTime-span'
-    },
-  });
-  try {
-    var player = new YuanPlayer(options);
-    var lyricInstance = new YuanPlayerLyric(player.mediaObject, options.lyric);
-    lyricInstance.loadLyricPlugin();
-    updateLoopButton();
-  } catch (e) {
-    alert(e.message);
-    return;
+var dicPlayer2 = new YuanPlayer({
+  controls: false,
+  source:[
+    { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/us_pron/e/eus/eus73/eus73520.mp3' },
+    { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/us_pron_ogg/e/eus/eus73/eus73520.ogg' },
+  ],
+  container: document.querySelector('#exampleEnglishDicPlayer2')
+});
+
+var simplePlayer = new YuanPlayer({
+  source:[
+    { src: 'media/zaijianzhongguohai.m4a' }
+  ],
+  container: document.querySelector('#simplePlayerContainer')
+});
+
+var playerWithLyric = new YuanPlayer({
+  source:[
+    { src: 'media/1007000868010800.mp3' }
+  ],
+  container: document.querySelector('#APlayerLyricContainer')
+});
+var lyricInstance = new YuanPlayerLyric({
+  lyric: qualifyURL('lyrics/to-the-future-myself.lrc'),
+  mediaObject: playerWithLyric.mediaObject,
+  container: document.getElementById('APlayerLyricLyricContainer')
+});
+lyricInstance.loadLyricPlugin();
+
+
+var playlist = [
+  {
+    title: '再见中国海',
+    artist: '4 in love',
+    imgUrl: 'http://p2.music.126.net/cbtvK52JoaIK0iZNJ2BtHQ==/109951165958877997.jpg?param=130y130',
+    source:[
+      { src: 'media/zaijianzhongguohai.m4a' }
+    ],
+    loop: false,
+    lyric: qualifyURL('lyrics/zaijianzhongguohai.lrc')
+  },
+  {
+    title: '守候',
+    artist: '徐瞑蕾',
+    imgUrl: 'http://p2.music.126.net/Ijvh1PFFZz_ydSUTTeWfkw==/6627856093408607.jpg?param=130y130',
+    source:[
+      { src: 'media/shouhou.m4a' }
+    ],
+    loop: false,
+    lyric: qualifyURL('lyrics/shouhou.lrc')
+  },
+  {
+    title: '給未來的自己',
+    artist: '梁静茹',
+    source:[
+      { src: 'media/1007000868010800.mp3' }
+    ],
+    loop: false,
+    lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
   }
+];
+var playerWithPlaylist = new YuanPlayer({
+  source: playlist[0].source,
+  container: document.querySelector('#APlayerWithPlayListContainer')
+});
+var playListInstance = new YuanPlayerPlayList({
+  container: document.getElementById('APlayerLyricPlaylistContainer'),
+  list: playlist,
+  player: playerWithPlaylist
+});
 
-  player.on('error', function(){
-    alert('An error occured:' + player.errorMessage);
-  })
-
-  player.on('loopchanged', updateLoopButton);
-
-  player.on('ended', function() {
-    index = index === playlist.length - 1 ? 0 : (index + 1);
-    playMusicAtIndex(index);
-
-    if (index === 0) {
-      prevBtn.disabled = true;
-    } else {
-      prevBtn.disabled = false;
-    }
-    if (index === playlist.length - 1) {
-      nextBtn.disabled = true;
-    } else {
-      nextBtn.disabled = false;
-    }
-  });
-
-
-  prevBtn.addEventListener('click', function(e) {
-    if (index === 0) return false;
-    playMusicAtIndex(--index);
-  });
-
-  nextBtn.addEventListener('click', function(e) {
-    if (index === playlist.length - 1) return false;
-    playMusicAtIndex(++index);
-  });
-
-  function playMusicAtIndex(index) {
-    player.setMedia(playlist[index].source);
-    player.mediaObject.load();
-    player.play();
-
-    lyricInstance.lyric = playlist[index].lyric;
-    lyricInstance.lyricObj = {
-      timeArray: [],
-      lyricArray: []
-    };
-    lyricInstance.addLyric();
-  }
-
-  var playButton = document.getElementById('play-button');
-  var pauseButton = document.getElementById('pause-button');
-  var togglePlayButton = document.getElementById('toggleplay-button');
-  var stopButton = document.getElementById('stop-button');
-  var muteButton = document.getElementById('mute-button');
-  var unmuteButton = document.getElementById('unmute-button');
-  var togglemuteButton = document.getElementById('togglemute-button');
-  var volumeaddButton = document.getElementById('volumeadd-button');
-  var volumeminusButton = document.getElementById('volumeminus-button');
-  var loopButton = document.getElementById("loop");
-
-  playButton.addEventListener('click', playMedia, false);
-  pauseButton.addEventListener('click', pauseMedia, false);
-  togglePlayButton.addEventListener('click', togglePlayMedia, false);
-  stopButton.addEventListener('click', stopMedia, false);
-  muteButton.addEventListener('click', muteMedia, false);
-  unmuteButton.addEventListener('click', unmuteMedia, false);
-  togglemuteButton.addEventListener('click', togglemuteMedia, false);
-  volumeaddButton.addEventListener('click', volumeAddMedia, false);
-  volumeminusButton.addEventListener('click', volumeMinusMedia, false);
-  loopButton.addEventListener("click", triggerLoop, false);
-
-
-  function playMedia() {
-    player.play();
-  }
-  function pauseMedia() {
-    player.pause();
-  }
-  function togglePlayMedia() {
-    player.togglePlay();
-  }
-  function stopMedia() {
-    player.stop();
-  }
-  function muteMedia() {
-    player.mute();
-  }
-  function unmuteMedia() {
-    player.unmute();
-  }
-  function togglemuteMedia() {
-    player.toggleMute();
-  }
-  function volumeAddMedia() {
-    player.addVolume();
-  }
-  function volumeMinusMedia() {
-    player.minusVolume();
-  }
-
-  function triggerLoop() {
-    player.toggleLoop();
-    return false;
-  }
-
-  function updateLoopButton(){
-    var isLoop = player.mediaObject.loop;
-    var loopButton = document.getElementById("loop");
-    loopButton.className = isLoop ? "" : "disable";
-  }
-
+var player3 = new YuanPlayer({
+  source: playlist[0].source,
+  container: document.querySelector('#playercontainer3')
+});
+var lyric3 = new YuanPlayerLyric({
+  lyric: playlist[0].lyric,
+  mediaObject: player3.mediaObject,
+  container: document.getElementById('lyriccontainer3')
+});
+lyric3.loadLyricPlugin();
+var list3 = new YuanPlayerPlayList({
+  container: document.getElementById('listcontainer3'),
+  list: playlist,
+  player: player3,
+  lyricObj: lyric3
 });
 
 function qualifyURL(url) {
