@@ -1,6 +1,6 @@
 import { isArray, isHtml5AudioSupported, innerText } from './utils';
 import Emitter from './emitter';
-import { CSSSelector, YuanPlayerOptions } from './index.d';
+import { CSSSelector, YuanPlayerOptions, PlayerControls } from './index.d';
 
 class Player extends Emitter {
   container;
@@ -10,7 +10,7 @@ class Player extends Emitter {
   eventHandlers: any;
   loop = false;
   source: Array<string>;
-  useNativeControl: false;
+  controls: PlayerControls = 'default';
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -68,17 +68,25 @@ class Player extends Emitter {
   }
 
   addMediaElement() {
-    this.container.classList.add('yuan-player-container')
+    //this.container.classList.add('yuan-player-container');
+    const div = document.createElement('div');
+    div.classList.add('yuan-player-container');
     var mediaElement = document.createElement('audio');
     this.mediaObject = mediaElement;
 
-    mediaElement.controls = !!this.useNativeControl;
+    mediaElement.controls = this.controls === 'system' || this.controls === true;
     if ( typeof this.loop !== "undefined") {
       mediaElement.loop = !!this.loop;
     }
 
     this.addMediaSource();
-    this.container.appendChild(mediaElement);
+    //this.container.appendChild(mediaElement);
+
+    div.appendChild(mediaElement);
+    this.container.appendChild(div);
+    if (this.controls !== false) {
+      div.style.display = 'flex';
+    }
   }
 
   bindMediaEvents() {

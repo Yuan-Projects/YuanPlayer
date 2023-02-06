@@ -8,7 +8,7 @@ import './player.scss';
 class YuanPlayer extends Player {
   constructor(options: YuanPlayerOptions) {
     super(options);
-    if (!this.useNativeControl) {
+    if (this.controls === 'default') {
       this.renderPlayerUI();
     }
   }
@@ -133,8 +133,9 @@ class YuanPlayer extends Player {
     });
     row2.appendChild(muteButton);
 
-    this.container.appendChild(row1);
-    this.container.appendChild(row2);
+    const divContainer = this.container.querySelector('.yuan-player-container');
+    divContainer.appendChild(row1);
+    divContainer.appendChild(row2);
   }
 }
 

@@ -4,8 +4,10 @@ export interface CSSSelector {
   currentTime: string
 }
 
+export type PlayerControls = "system" | "default" | boolean;
+
 export interface YuanPlayerOptions {
-  useNativeControl: boolean
+  controls: PlayerControls
   container: string | HTMLElement
   cssSelector?: CSSSelector
 }
