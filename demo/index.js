@@ -16,27 +16,6 @@ var dicPlayer2 = new YuanPlayer({
   container: document.querySelector('#exampleEnglishDicPlayer2')
 });
 
-var simplePlayer = new YuanPlayer({
-  source:[
-    { src: 'media/zaijianzhongguohai.m4a' }
-  ],
-  container: document.querySelector('#simplePlayerContainer')
-});
-
-var playerWithLyric = new YuanPlayer({
-  source:[
-    { src: 'media/1007000868010800.mp3' }
-  ],
-  container: document.querySelector('#APlayerLyricContainer')
-});
-var lyricInstance = new YuanPlayerLyric({
-  lyric: qualifyURL('lyrics/to-the-future-myself.lrc'),
-  mediaObject: playerWithLyric.mediaObject,
-  container: document.getElementById('APlayerLyricLyricContainer')
-});
-lyricInstance.loadLyricPlugin();
-
-
 var playlist = [
   {
     title: '再见中国海',
@@ -68,35 +47,72 @@ var playlist = [
     lyric: qualifyURL('lyrics/to-the-future-myself.lrc')
   }
 ];
-var playerWithPlaylist = new YuanPlayer({
-  source: playlist[0].source,
-  container: document.querySelector('#APlayerWithPlayListContainer')
-});
-var playListInstance = new YuanPlayerPlayList({
-  container: document.getElementById('APlayerLyricPlaylistContainer'),
-  list: playlist,
-  player: playerWithPlaylist
-});
 
-var player3 = new YuanPlayer({
-  source: playlist[0].source,
-  container: document.querySelector('#playercontainer3')
-});
-var lyric3 = new YuanPlayerLyric({
-  lyric: playlist[0].lyric,
-  mediaObject: player3.mediaObject,
-  container: document.getElementById('lyriccontainer3')
-});
-lyric3.loadLyricPlugin();
-var list3 = new YuanPlayerPlayList({
-  container: document.getElementById('listcontainer3'),
-  list: playlist,
-  player: player3,
-  lyricObj: lyric3
+fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
+  lyricArr.forEach((lyric, index) => {
+    playlist[index].lyric = lyric;
+  })
+}).then(function() {
+  var simplePlayer = new YuanPlayer({
+    source: playlist[0].source,
+    container: document.querySelector('#simplePlayerContainer')
+  });
+  
+  var playerWithLyric = new YuanPlayer({
+    source: playlist[2].source,
+    container: document.querySelector('#APlayerLyricContainer')
+  });
+  
+  var lyricInstance = new YuanPlayerLyric({
+    lyric: playlist[2].lyric,
+    mediaObject: playerWithLyric.mediaObject,
+    container: document.getElementById('APlayerLyricLyricContainer')
+  });
+  lyricInstance.loadLyricPlugin();
+
+
+  var playerWithPlaylist = new YuanPlayer({
+    source: playlist[0].source,
+    container: document.querySelector('#APlayerWithPlayListContainer')
+  });
+  var playListInstance = new YuanPlayerPlayList({
+    container: document.getElementById('APlayerLyricPlaylistContainer'),
+    list: playlist,
+    player: playerWithPlaylist
+  });
+
+  var player3 = new YuanPlayer({
+    source: playlist[0].source,
+    container: document.querySelector('#playercontainer3')
+  });
+  var lyric3 = new YuanPlayerLyric({
+    lyric: playlist[0].lyric,
+    mediaObject: player3.mediaObject,
+    container: document.getElementById('lyriccontainer3')
+  });
+  lyric3.loadLyricPlugin();
+  var list3 = new YuanPlayerPlayList({
+    container: document.getElementById('listcontainer3'),
+    list: playlist,
+    player: player3,
+    lyricObj: lyric3
+  });
 });
 
 function qualifyURL(url) {
   var a = document.createElement('a');
   a.href = url;
   return a.href;
+}
+
+async function fetchLyrics(urls) {
+  try {
+    const fetchArr = urls.map(url => {
+      return fetch(url).then(res => res.text())
+    });
+    const lyrics = await Promise.all(fetchArr);
+    return lyrics;
+  } catch (err) {
+    console.log(err);
+  }
 }
