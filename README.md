@@ -43,6 +43,8 @@ Known Issues:
 Other Open Source Players
  * [jPlayer](http://jplayer.org/ "HTML5 Audio & Video for jQuery")
  * [APlayer](https://github.com/DIYgod/APlayer)
+ * [react-jinke-music-player](https://github.com/lijinke666/react-music-player)
+ * [madzadev/audio-player](https://github.com/madzadev/audio-player)
 
 
 References
