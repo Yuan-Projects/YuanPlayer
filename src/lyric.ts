@@ -4,20 +4,11 @@ import { LyricBaseOptions } from './lyric.d';
 import './lyric.scss';
 
 class YuanPlayerLyric extends LyricBase {
-  lyricObj: {
-    timeArray: Array<any>,
-    lyricArray: Array<any>
-  } = {
-    timeArray: [],
-    lyricArray: []
-  };
-  lyric: any;
-  lyricCurrentPosition = 0;
-  mediaObject: any;
   constructor(otpions: LyricBaseOptions) {
     super(otpions);
     this.addContainer();
     this.on('lyricFetched', (lyricItems) => {
+      this.container.querySelector('.yuanplayer-lyric-container')!.scrollTop = 0;
       this.addLyricItems(lyricItems);
     });
     this.on('timeupdated', (currentTime) => {
@@ -54,7 +45,7 @@ class YuanPlayerLyric extends LyricBase {
     }
   }
 
-  scrollLyric(currentTime:any) {
+  scrollLyric(currentTime: number) {
     var newLyricIndex = this.getNewLyricIndex(currentTime);
     var oldPosition = this.lyricCurrentPosition;
     if (newLyricIndex === oldPosition) return ;
@@ -72,27 +63,6 @@ class YuanPlayerLyric extends LyricBase {
       // lyric-wrapcontainer
       this.container.querySelector('.yuanplayer-lyric-container')!.scrollTop = newScrollTop;
     }
-  }
-
-  getNewLyricIndex(currentTime:any) {
-    var index = 0;
-    var timeArray = this.lyricObj.timeArray;
-    var timeLength = timeArray.length;
-    if (timeLength) {
-      if(currentTime <= timeArray[0]) {
-        return 0;
-      }
-      if(currentTime >= timeArray[timeLength-1]) {
-        return timeLength - 1;
-      }
-      for (var i = 0; i < timeLength; i++) {
-        if (currentTime <= timeArray[i]) {
-          index = i - 1;
-          break;
-        }
-      }
-    }
-    return index;
   }
 }
 

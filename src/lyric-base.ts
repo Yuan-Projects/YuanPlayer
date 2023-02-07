@@ -72,7 +72,9 @@ class LyricBase extends Emitter {
       lyricItems.sort((x: any, y: any) => {
         return this.compareTimeSpan.call(this, x, y);
       });
-      // TODO
+      this.lyricObj.lyricArray.length = 0;
+      this.lyricObj.timeArray.length = 0;
+      this.lyricCurrentPosition = 0;
       this.trigger("lyricFetched", lyricItems);
       this.logLyricInfo(lyricItems);
     }
@@ -95,6 +97,27 @@ class LyricBase extends Emitter {
       },
       false
     );
+  }
+
+  getNewLyricIndex(currentTime:any) {
+    var index = 0;
+    var timeArray = this.lyricObj.timeArray;
+    var timeLength = timeArray.length;
+    if (timeLength) {
+      if(currentTime <= timeArray[0]) {
+        return 0;
+      }
+      if(currentTime >= timeArray[timeLength-1]) {
+        return timeLength - 1;
+      }
+      for (var i = 0; i < timeLength; i++) {
+        if (currentTime <= timeArray[i]) {
+          index = i - 1;
+          break;
+        }
+      }
+    }
+    return index;
   }
 
   loadLyricPlugin() {
