@@ -4,7 +4,7 @@ import styles from "rollup-plugin-styles";
 
 export default [
   {
-    input: 'src/index.ts',
+    input: 'src/core/index.ts',
     output: [
       {
         file: 'lib/umd/YuanPlayer.js',
@@ -23,38 +23,19 @@ export default [
     plugins: [styles(), nodeResolve({browser:true}), typescript()]
   },
   {
-    input: 'src/lyric.ts',
+    input: 'src/themes/yuan/index.ts',
     output: [
       {
-        file: 'lib/umd/YuanPlayerLyric.js',
+        file: 'lib/umd/YuanPlayerThemeYuan.js',
         format: 'umd',
-        name: 'YuanPlayerLyric'
+        name: 'YuanPlayerThemeYuan'
       },
       {
-        file: 'lib/mjs/YuanPlayerLyric.js',
+        file: 'lib/mjs/YuanPlayerThemeYuan.js',
         format: 'es',
       },
       {
-        file: 'lib/cjs/YuanPlayerLyric.js',
-        format: 'cjs',
-      },
-    ],
-    plugins: [styles(), nodeResolve({browser:true}), typescript()]
-  },
-  {
-    input: 'src/playlist.ts',
-    output: [
-      {
-        file: 'lib/umd/YuanPlayerPlayList.js',
-        format: 'umd',
-        name: 'YuanPlayerPlayList'
-      },
-      {
-        file: 'lib/mjs/YuanPlayerPlayList.js',
-        format: 'es',
-      },
-      {
-        file: 'lib/cjs/YuanPlayerPlayList.js',
+        file: 'lib/cjs/YuanPlayerThemeYuan.js',
         format: 'cjs',
       },
     ],
