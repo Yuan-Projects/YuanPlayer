@@ -1,11 +1,14 @@
 import Emitter from "./emitter";
-import { LyricBaseOptions } from "./lyric.d";
+import type { LyricObject, LyricOptions } from "./lyric.d";
 
-class LyricBase extends Emitter {
-  lyricObj: {
-    timeArray: Array<any>;
-    lyricArray: Array<any>;
-  } = {
+/**
+ * The Lyric panel base class.
+ * It does not contain UI logic and should be extended by a theme file to implement a custom lyric panel.
+ */
+class Lyric extends Emitter {
+  static themes = {};
+  theme = '';
+  lyricObj: LyricObject = {
     timeArray: [],
     lyricArray: []
   };
@@ -13,11 +16,12 @@ class LyricBase extends Emitter {
   lyricCurrentPosition = 0;
   mediaObject: any;
   container: any;
-  constructor(options: LyricBaseOptions) {
+  constructor(options: LyricOptions) {
     super();
     this.mediaObject = options.mediaObject;
     this.lyric = options.lyric;
     this.container = options.container;
+    this.theme = options.theme;
   }
   parseLyricItems(items: any) {
     var result: Array<any> = [];
@@ -126,4 +130,4 @@ class LyricBase extends Emitter {
   }
 }
 
-export default LyricBase;
+export default Lyric;

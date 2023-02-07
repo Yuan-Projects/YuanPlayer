@@ -7,7 +7,7 @@ export interface PlayListItem {
   lyric: string
 }
 
-export interface PlayListBaseOptions {
+export interface PlayListOptions {
   container: HTMLElement
   //mediaObject: Object
   player: any

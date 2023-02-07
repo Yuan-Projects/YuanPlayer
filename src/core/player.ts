@@ -1,7 +1,12 @@
-import { isArray, isHtml5AudioSupported, innerText } from './utils';
+import { isArray, isHtml5AudioSupported } from './utils';
 import Emitter from './emitter';
-import { CSSSelector, YuanPlayerOptions, PlayerControls } from './index.d';
+import type { YuanPlayerOptions, PlayerControls } from './player.d';
 
+/**
+ * Render the <audio> tag into a specific DOM element
+ * And add listeners for media playback events
+ * This file does not contains the player UI
+ */
 class Player extends Emitter {
   container;
   mediaObject: any;
@@ -42,7 +47,6 @@ class Player extends Emitter {
     if (!isHtml5AudioSupported()) {
       throw new Error("Your browser does not support HTML5 Audio.");
     }
-    this.container = 'yuanplayer';
     this.mediaObject = null;
 
     this.errorCode = 0;
@@ -68,7 +72,6 @@ class Player extends Emitter {
   }
 
   addMediaElement() {
-    //this.container.classList.add('yuan-player-container');
     const div = document.createElement('div');
     div.classList.add('yuan-player-container');
     var mediaElement = document.createElement('audio');

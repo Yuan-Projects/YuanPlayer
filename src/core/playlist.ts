@@ -1,28 +1,32 @@
 import Emitter from "./emitter";
-import { PlayListBaseOptions } from "./playlist.d";
+import type { PlayListOptions } from "./playlist.d";
 
-export default class PlayListBase extends Emitter {
+/**
+ * The PlayList base class should be extended by a theme file to implement the play list UI
+ */
+class PlayList extends Emitter {
+  static themes = {};
+  theme = '';
   static modes = ['none', 'single', 'random', 'order'];
   container;
-  //loop = 'none';
-  //mediaObject;
   player;
   lyricObj;
   index = 0;
   list: Array<any> = [];
   modeIndex = 0;
-  constructor(options: PlayListBaseOptions) {
+  constructor(options: PlayListOptions) {
     super();
     this.container = options.container;
-    this.modeIndex = PlayListBase.modes.indexOf(options.loop) > -1 ? PlayListBase.modes.indexOf(options.loop) : 0;
+    this.modeIndex = PlayList.modes.indexOf(options.loop) > -1 ? PlayList.modes.indexOf(options.loop) : 0;
     this.player = options.player;
     this.lyricObj = options.lyricObj;
     this.list = options.list;
+    this.theme = options.theme;
 
     this.addEvents();
   }
   switchModes() {
-    const newVal = (++this.modeIndex) % PlayListBase.modes.length;
+    const newVal = (++this.modeIndex) % PlayList.modes.length;
     this.modeIndex = newVal;
     this.trigger('modeChanged');
   }
@@ -34,7 +38,7 @@ export default class PlayListBase extends Emitter {
       }
     });
     this.player.mediaObject.addEventListener('ended', () => {
-      if (PlayListBase.modes[this.modeIndex] === 'none') {
+      if (PlayList.modes[this.modeIndex] === 'none') {
         // Have played the last music
         if (this.index === this.list.length - 1) {
           // Reach the end;
@@ -43,12 +47,12 @@ export default class PlayListBase extends Emitter {
           this.index++;
           // Play the next one in the list
         }
-      } else if (PlayListBase.modes[this.modeIndex] === 'random') {
+      } else if (PlayList.modes[this.modeIndex] === 'random') {
         this.index = Math.floor(Math.random() * this.list.length);
         // Play the new one
-      } else if (PlayListBase.modes[this.modeIndex] === 'single') {
+      } else if (PlayList.modes[this.modeIndex] === 'single') {
         // Play current one
-      } else if (PlayListBase.modes[this.modeIndex] === 'order') {
+      } else if (PlayList.modes[this.modeIndex] === 'order') {
         if (this.index === this.list.length - 1) {
           // Reach the end;
           this.index = 0;
@@ -62,3 +66,5 @@ export default class PlayListBase extends Emitter {
     });
   }
 }
+
+export default PlayList;
