@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "live-server --open=/demo/ --wait=3000",
-    "build": "rimraf lib && rollup --config && copyfiles --flat src/YuanPlayer.lyric.css lib",
+    "build": "rimraf lib && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
