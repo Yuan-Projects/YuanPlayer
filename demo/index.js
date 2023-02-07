@@ -1,4 +1,8 @@
-var dicPlayer = new YuanPlayer({
+YuanPlayer.use(YuanPlayerThemeYuan);
+
+const { Player, Lyric, PlayList } = YuanPlayer;
+var dicPlayer = Player({
+  theme: 'yuan',
   controls: false,
   source:[
     { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/uk_pron/u/ukp/ukper/ukperv_027.mp3' },
@@ -7,7 +11,8 @@ var dicPlayer = new YuanPlayer({
   container: document.querySelector('#exampleEnglishDicPlayer')
 });
 
-var dicPlayer2 = new YuanPlayer({
+var dicPlayer2 = Player({
+  theme: 'yuan',
   controls: false,
   source:[
     { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/us_pron/e/eus/eus73/eus73520.mp3' },
@@ -53,17 +58,20 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
     playlist[index].lyric = lyric;
   })
 }).then(function() {
-  var simplePlayer = new YuanPlayer({
+  var simplePlayer = Player({
+    theme: 'yuan',
     source: playlist[0].source,
     container: document.querySelector('#simplePlayerContainer')
   });
   
-  var playerWithLyric = new YuanPlayer({
+  var playerWithLyric = Player({
+    theme: 'yuan',
     source: playlist[2].source,
     container: document.querySelector('#APlayerLyricContainer')
   });
   
-  var lyricInstance = new YuanPlayerLyric({
+  var lyricInstance = Lyric({
+    theme: 'yuan',
     lyric: playlist[2].lyric,
     mediaObject: playerWithLyric.mediaObject,
     container: document.getElementById('APlayerLyricLyricContainer')
@@ -71,27 +79,32 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
   lyricInstance.loadLyricPlugin();
 
 
-  var playerWithPlaylist = new YuanPlayer({
+  var playerWithPlaylist = Player({
+    theme: 'yuan',
     source: playlist[0].source,
     container: document.querySelector('#APlayerWithPlayListContainer')
   });
-  var playListInstance = new YuanPlayerPlayList({
+  var playListInstance = PlayList({
+    theme: 'yuan',
     container: document.getElementById('APlayerLyricPlaylistContainer'),
     list: playlist,
     player: playerWithPlaylist
   });
 
-  var player3 = new YuanPlayer({
+  var player3 = Player({
+    theme: 'yuan',
     source: playlist[0].source,
     container: document.querySelector('#playercontainer3')
   });
-  var lyric3 = new YuanPlayerLyric({
+  var lyric3 = Lyric({
+    theme: 'yuan',
     lyric: playlist[0].lyric,
     mediaObject: player3.mediaObject,
     container: document.getElementById('lyriccontainer3')
   });
   lyric3.loadLyricPlugin();
-  var list3 = new YuanPlayerPlayList({
+  var list3 = PlayList({
+    theme: 'yuan',
     container: document.getElementById('listcontainer3'),
     list: playlist,
     player: player3,
