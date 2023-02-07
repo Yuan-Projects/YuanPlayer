@@ -37,7 +37,6 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@rainyjune/yuanjs": "^0.1.1",
     "lottie-web": "^5.10.2"
   }
 }
