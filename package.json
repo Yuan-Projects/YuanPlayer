@@ -5,6 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "build:core": "npm run build && rimraf core && copyfiles src/core/package.json -f core && copyfiles lib/cjs/YuanPlayer.js lib/mjs/YuanPlayer.js lib/umd/YuanPlayer.js core",
+    "build:theme-yuan": "npm run build && rimraf theme-yuan && copyfiles src/themes/yuan/package.json -f theme-yuan && copyfiles lib/cjs/YuanPlayerThemeYuan.js lib/mjs/YuanPlayerThemeYuan.js lib/umd/YuanPlayerThemeYuan.js theme-yuan",
+    "build:theme-monday": "npm run build && rimraf theme-monday && copyfiles src/themes/blueMonday/package.json -f theme-monday && copyfiles lib/cjs/YuanPlayerThemeBlueMonday.js lib/mjs/YuanPlayerThemeBlueMonday.js lib/umd/YuanPlayerThemeBlueMonday.js theme-monday",
     "start": "live-server --open=/demo/ --wait=3000",
     "build": "rimraf lib && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -29,8 +32,10 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "copyfiles": "^2.4.1",
     "live-server": "^1.2.2",
+    "node-sass": "^8.0.0",
     "rimraf": "^4.1.2",
     "rollup": "^3.12.0",
+    "rollup-plugin-ejs": "^4.0.0",
     "rollup-plugin-styles": "^4.0.0",
     "rollup-plugin-typescript2": "^0.34.1",
     "sass": "^1.58.0",

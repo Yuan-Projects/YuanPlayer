@@ -1,3 +1,6 @@
 *.komodoproject
 /nbproject/
 /node_modules/
+/theme-yuan/
+/theme-monday/
+/core/
