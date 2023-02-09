@@ -40,7 +40,10 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins: [styles(), nodeResolve({browser:true}), typescript()]
+    plugins: [styles(), nodeResolve({browser:true}), ejs({
+      include: ['**/*.ejs', '**/*.html'],
+      inlineStyles: false
+    }), typescript()]
   },
   {
     input: 'src/themes/blueMonday/index.ts',
