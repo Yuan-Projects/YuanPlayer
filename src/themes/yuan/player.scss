@@ -1,24 +1,24 @@
 .yuanplayer-yuan-container {
+  /* Font */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+
   --seek-before-width: 0%;
   --volume-before-width: 100%;
   --buffered-width: 0%;
 
   position: relative;
 
+  box-sizing: border-box;
   max-width: 500px;
   margin: 0 auto;
-  /*
-  min-height: 132px;
-  */
-  background: #fff;
-  box-sizing: border-box;
+  padding: 1em;;
 
-  display: none;
+  background: #fff;
+
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  padding: 1em;;
-  font-size: 1rem;
   gap: 1em;
 
   > * {
@@ -56,13 +56,15 @@
     width: 32px;
     height: 32px;
     flex-shrink: 0;
-    /*
-    float: left;
-    */
   }
 
   path {
     stroke: #007db5;
+  }
+
+  .play-icon {
+    border: 0;
+    background: transparent;
   }
 
   .time {
@@ -70,12 +72,6 @@
     width: 37px;
     text-align: center;
     font-size: 20px;
-    /*
-    margin: 28.5px 0 18.5px 0;
-    */
-    /*
-    float: left;
-    */
   }
 
   output {
@@ -83,19 +79,9 @@
     width: 32px;
     text-align: center;
     font-size: 20px;
-    /*
-    margin: 10px 2.5% 0 5%;
-    */
-    /*
-    float: left;
-    clear: left;
-    */
   }
 
   .volume-slider {
-    /*
-    margin: 10px 2.5%;
-    */
     width: 58%;
   }
 
@@ -112,7 +98,7 @@
   }
 
   .volume-slider::before {
-    width: var(--volume-before-width);
+    width: var(--volume-before-width) !important;
   }
 
   .mute-icon {
@@ -124,17 +110,9 @@
   input[type="range"] {
     position: relative;
     -webkit-appearance: none;
-    /*
     margin: 0;
-    */
     padding: 0;
     height: 19px;
-    /*
-    margin: 30px 2.5% 20px 2.5%;
-    */
-    /*
-    float: left;
-    */
     outline: none;
     min-width: 200px;
   }
@@ -223,11 +201,4 @@
     background: #007db5;
   }
 
-  .yuan-player-play-icon {
-    border: 0;
-    background: transparent;
-    /*
-    margin: 20px 2.5% 10px 2.5%;
-    */
-  }
 }

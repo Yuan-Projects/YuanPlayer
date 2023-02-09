@@ -1,4 +1,7 @@
+// imports the Lottie library 
 import Lottie from 'lottie-web/build/player/esm/lottie.min.js';
+// @ts-ignore
+import playerTpl from './player.ejs';
 import { YuanPlayerOptions } from '../../core/player.d';
 import './player.scss';
 
@@ -6,6 +9,8 @@ function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {
       super(options);
+      // previous muted state
+      this.muted = false;
       if (this.controls === 'default') {
         this.renderPlayerUI();
       }
@@ -13,130 +18,127 @@ function getClass(Base) {
   
     renderPlayerUI() {
       const div = document.createElement('div');
-      div.classList.add('yuanplayer-yuan-container')
-      const row1 = document.createElement('div');
-      row1.classList.add('controls-row')
-      const row2 = document.createElement('div');
-      row2.classList.add('controls-row')
-  
+      div.innerHTML = playerTpl();
+      this.container.appendChild(div);
+
       // Play/Pause button
-      const playButton = document.createElement('button');
-      playButton.classList.add('yuan-player-play-icon');
+      // variable for the button that will contain both icons
+      const playIconContainer = div.querySelector('.play-icon');
   
+      // loads the animation that transitions the play icon into the pause icon into the referenced button, using Lottie’s loadAnimation() method
+      // [0, 14] => play icon
+      // [14, 27] => pause icon
       const animation = Lottie.loadAnimation({
-        container: playButton,
+        container: playIconContainer,
         path: 'https://maxst.icons8.com/vue-static/landings/animated-icons/icons/pause/pause.json',
         renderer: 'svg',
         loop: false,
         autoplay: false,
         name: "Demo Animation",
       });
-  
       animation.goToAndStop(14, true);
-  
-      row1.appendChild(playButton);
-  
+      // adds an event listener to the button so that when it is clicked, the the player toggles between play and pause
+      playIconContainer?.addEventListener('click', () => {
+        if (this.mediaObject.paused) {
+          this.mediaObject.play();
+        } else {
+          this.mediaObject.pause();
+        }
+      });
+
       this.on('ended', () => {
         // Show play button again
         animation.playSegments([0, 14], true);
       });
+      this.on('pause', () => {
+        animation.playSegments([0, 14], true);
+      });
       this.on('play', () => {
         animation.playSegments([14, 27], true);
-      })
-  
-      playButton.addEventListener('click', () => {
-        if (this.mediaObject.paused) {
-          animation.playSegments([14, 27], true);
-          this.mediaObject.play();
-        } else {
-          animation.playSegments([0, 14], true);
-          this.mediaObject.pause();
-        }
       });
-  
+
       // Current time and duration
-  
-      const currentTimeElement = document.createElement('span');
-      currentTimeElement.classList.add('time');
-      currentTimeElement.textContent = '0:00';
-      row1.appendChild(currentTimeElement);
-  
+      const currentTimeElement = div.querySelector('.current-time');
+      currentTimeElement!.textContent = this.formatTime(Math.floor(this.mediaObject.currentTime));
+
+      const durationChangeHandler = () => {
+        this.displayAudioDuration();
+        this.setSliderMax();
+      };
+      this.on('durationchange', durationChangeHandler);
+      this.on('loadedmetadata', durationChangeHandler);
+
       this.on('timeupdate', () => {
         const second = Math.floor(this.mediaObject.currentTime);
-        currentTimeElement.textContent = this.formatTime(second);
-        seekSlider.value = String(second / this.mediaObject.duration * 100);
+        currentTimeElement!.textContent = this.formatTime(second);
+        this.setSliderValue();
       });
-  
-      const seekSlider = document.createElement('input');
-      seekSlider.type = 'range';
-      seekSlider.max = '100';
-      seekSlider.value = '0';
-      seekSlider.classList.add('seek-slider');
-      row1.appendChild(seekSlider);
-  
-      seekSlider.addEventListener('change', () => {
-        // @ts-ignore
-        this.mediaObject.currentTime = parseFloat(seekSlider.value * this.mediaObject.duration / 100);
+
+      const seekSlider = div.querySelector('.seek-slider') as HTMLInputElement;
+
+      seekSlider?.addEventListener('input', () => {
+        this.mediaObject.currentTime = parseInt(seekSlider.value);
       });
-  
-  
-      const durationElement = document.createElement('span');
-      durationElement.classList.add('time');
-      durationElement.textContent = '0:00';
-      row1.appendChild(durationElement);
-  
-      this.on('durationchange', () => {
-        durationElement.textContent = this.formatTime(Math.floor(this.mediaObject.duration));
+
+      this.setVolumeOutput();
+
+      const volumeSlider = div.querySelector('.volume-slider');
+      this.setVolumeSlider();
+      volumeSlider?.addEventListener('input', (e) => {
+        const value = (e.target as HTMLInputElement).value;
+        this.mediaObject.volume = (parseFloat(value) / 100);
       });
-  
-      const volumeOutput = document.createElement('output');
-      volumeOutput.textContent = String(this.mediaObject.volume * 100); // '100';
-      row2.appendChild(volumeOutput);
-  
-      const volumeSlider = document.createElement('input');
-      volumeSlider.type = 'range';
-      volumeSlider.max = '100';
-      volumeSlider.value = String(this.mediaObject.volume * 100); //'0';
-      volumeSlider.classList.add('volume-slider');
-      row2.appendChild(volumeSlider);
-  
-      volumeSlider.addEventListener('input', () => {
-        const value = volumeSlider.value;
-        const newVolume = parseFloat(value) / 100;
-        this.mediaObject.volume = newVolume;
-        volumeOutput.textContent = String(parseInt(value));
-      });
-  
-      // TODO
-      this.on('volumechange', () => {
-        console.log('volumechange:', this.mediaObject.volume)
-      })
-  
-      const muteButton = document.createElement('button');
-      muteButton.classList.add('mute-icon');
-      const muteAnimation = Lottie.loadAnimation({
-        container: muteButton,
+
+      const muteIconContainer = div.querySelector('.mute-icon');
+      muteIconContainer?.classList.add('mute-icon');
+      this.muteAnimation = Lottie.loadAnimation({
+        container: muteIconContainer,
         path: 'https://maxst.icons8.com/vue-static/landings/animated-icons/icons/mute/mute.json',
         renderer: 'svg',
         loop: false,
         autoplay: false,
         name: "Mute Animation",
       });
-      muteButton.addEventListener('click',  () => {
-        if (this.mediaObject.muted) {
-          this.unmute();
-          muteAnimation.playSegments([15, 25], true);
-        } else {
-          this.mute();
-          muteAnimation.playSegments([0, 15], true);
-        }
+      muteIconContainer?.addEventListener('click',  () => {
+        this.toggleMute();
       });
-      row2.appendChild(muteButton);
-  
-      div.appendChild(row1);
-      div.appendChild(row2);
-      this.container.appendChild(div);
-      div.style.display = 'block';
+
+      this.on('volumechange', () => {
+        this.setVolumeOutput();
+        this.setVolumeSlider();
+        if (this.mediaObject.muted !== this.muted) {
+          this.setVolumeIcon();
+        }
+        this.muted = this.mediaObject.muted;
+      });
+    }
+    displayAudioDuration() {
+      const durationElement = this.container.querySelector('.duration');
+      durationElement!.textContent = this.formatTime(Math.floor(this.mediaObject.duration));
+    }
+    setSliderMax() {
+      const seekSlider = this.container.querySelector('.seek-slider');
+      seekSlider.max = Math.floor(this.mediaObject.duration);
+    }
+    setSliderValue() {
+      const seekSlider = this.container.querySelector('.seek-slider');
+      seekSlider.value = Math.floor(this.mediaObject.currentTime);
+      this.container.querySelector('.yuanplayer-yuan-container').style.setProperty('--seek-before-width', `${seekSlider.value / seekSlider.max * 100}%`);
+    }
+    setVolumeOutput() {
+      const volumeOutput = this.container.querySelector('.volume-out')
+      volumeOutput.textContent = String(Math.trunc(this.mediaObject.volume * 100));
+    }
+    setVolumeSlider() {
+      const volumeSlider = this.container.querySelector('.volume-slider');
+      volumeSlider.value = String(this.mediaObject.volume * 100); //'0';
+    }
+    setVolumeIcon() {
+      if (this.mediaObject.muted) {
+        this.muteAnimation.playSegments([0, 15], true);
+      } else {
+        this.muteAnimation.playSegments([15, 25], true);
+      }
     }
   }
 }
