@@ -1,6 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import styles from "rollup-plugin-styles";
+import ejs from 'rollup-plugin-ejs';
 
 export default [
   {
@@ -40,5 +41,27 @@ export default [
       },
     ],
     plugins: [styles(), nodeResolve({browser:true}), typescript()]
+  },
+  {
+    input: 'src/themes/blueMonday/index.ts',
+    output: [
+      {
+        file: 'lib/umd/YuanPlayerThemeBlueMonday.js',
+        format: 'umd',
+        name: 'YuanPlayerThemeBlueMonday'
+      },
+      {
+        file: 'lib/mjs/YuanPlayerThemeBlueMonday.js',
+        format: 'es',
+      },
+      {
+        file: 'lib/cjs/YuanPlayerThemeBlueMonday.js',
+        format: 'cjs',
+      },
+    ],
+    plugins: [styles(),   nodeResolve({browser:true}), ejs({
+      include: ['**/*.ejs', '**/*.html'],
+      inlineStyles: false
+    }), typescript()]
   },
 ];
