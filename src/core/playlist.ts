@@ -21,7 +21,6 @@ class PlayList extends Emitter {
     this.player = options.player;
     this.lyricObj = options.lyricObj;
     this.list = options.list;
-    this.theme = options.theme;
 
     this.addEvents();
   }

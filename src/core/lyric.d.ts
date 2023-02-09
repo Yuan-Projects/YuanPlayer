@@ -1,5 +1,4 @@
 export interface LyricOptions {
-  theme: string
   lyric: string
   mediaObject: Object,
   container: HTMLElement

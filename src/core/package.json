@@ -1,0 +1,35 @@
+{
+  "name": "yuanplayer-core",
+  "version": "0.0.1-alpha-1",
+  "description": "YuanPlayer",
+  "type": "module",
+  "main": "lib/cjs/YuanPlayer.js",
+  "module": "lib/mjs/YuanPlayer.js",
+  "exports": {
+    ".": {
+      "require": "./lib/cjs/YuanPlayer.js",
+      "import": "./lib/mjs/YuanPlayer.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuan-Projects/YuanPlayer.git"
+  },
+  "keywords": [
+    "music player",
+    "audio player",
+    "lyric",
+    "music"
+  ],
+  "author": "rainyjune <rainyjune@live.cn>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuan-Projects/YuanPlayer/issues"
+  },
+  "homepage": "https://github.com/Yuan-Projects/YuanPlayer#readme",
+  "devDependencies": {
+  }
+}

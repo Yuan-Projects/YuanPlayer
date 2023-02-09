@@ -21,7 +21,6 @@ class Lyric extends Emitter {
     this.mediaObject = options.mediaObject;
     this.lyric = options.lyric;
     this.container = options.container;
-    this.theme = options.theme;
   }
   parseLyricItems(items: any) {
     var result: Array<any> = [];
