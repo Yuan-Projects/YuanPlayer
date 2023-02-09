@@ -1,9 +1,12 @@
-.yuan-player-container {
+.yuanplayer-yuan-container {
   --seek-before-width: 0%;
   --volume-before-width: 100%;
   --buffered-width: 0%;
 
   position: relative;
+
+  max-width: 500px;
+  margin: 0 auto;
   /*
   min-height: 132px;
   */

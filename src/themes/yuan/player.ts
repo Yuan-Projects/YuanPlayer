@@ -12,6 +12,8 @@ function getClass(Base) {
     }
   
     renderPlayerUI() {
+      const div = document.createElement('div');
+      div.classList.add('yuanplayer-yuan-container')
       const row1 = document.createElement('div');
       row1.classList.add('controls-row')
       const row2 = document.createElement('div');
@@ -131,9 +133,10 @@ function getClass(Base) {
       });
       row2.appendChild(muteButton);
   
-      const divContainer = this.container.querySelector('.yuan-player-container');
-      divContainer.appendChild(row1);
-      divContainer.appendChild(row2);
+      div.appendChild(row1);
+      div.appendChild(row2);
+      this.container.appendChild(div);
+      div.style.display = 'block';
     }
   }
 }
