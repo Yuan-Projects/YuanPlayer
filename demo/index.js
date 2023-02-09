@@ -1,4 +1,5 @@
 YuanPlayer.use(YuanPlayerThemeYuan);
+YuanPlayer.use(YuanPlayerThemeBlueMonday);
 
 const { Player, Lyric, PlayList } = YuanPlayer;
 var dicPlayer = Player({
@@ -110,6 +111,18 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
     player: player3,
     lyricObj: lyric3
   });
+});
+
+var blueMondayPlayer1 = Player({
+  theme: 'blueMonday',
+  source: playlist[0].source,
+  container: document.querySelector('#blueMondayPlayerContainer1')
+});
+var playListInstance = PlayList({
+  theme: 'blueMonday',
+  container: document.getElementById('blueMondayPlayListContainer1'),
+  list: playlist,
+  player: blueMondayPlayer1
 });
 
 function qualifyURL(url) {
