@@ -39,6 +39,28 @@ function getClass(Base) {
       const currentTimeElement = div.querySelector('.jp-current-time');
       const durationElement = div.querySelector('.jp-duration');
       const audioContainer = div.querySelector('.jp-audio');
+      const seekSlider = div.querySelector('.jp-seek-bar');
+      const volumeSlider = div.querySelector('.jp-volume-bar');
+      const muteButton = div.querySelector('.jp-mute');
+      const volumeMaxButton = div.querySelector('.jp-volume-max');
+
+      volumeMaxButton?.addEventListener('click', () => {
+        this.mediaObject.volume = 1;
+        this.unmute();
+      });
+      muteButton?.addEventListener('click', () => {
+        this.toggleMute();
+      });
+
+      volumeSlider?.addEventListener('click', (e) => {
+        const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(volumeSlider).width);
+        this.mediaObject.volume = perc;
+      });
+
+      seekSlider?.addEventListener('click', (e) => {
+        const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(seekSlider).width);
+        this.mediaObject.currentTime = this.mediaObject.duration * perc;
+      });
 
       this.on('play', () => {
         audioContainer?.classList.add('jp-state-playing');
@@ -57,7 +79,23 @@ function getClass(Base) {
         if (currentTimeElement) {
           currentTimeElement.textContent = this.formatTime(second);
         }
+        this.container.querySelector('.jp-play-bar').style.width = `${this.mediaObject.currentTime / this.mediaObject.duration * 100}%`;
       });
+      this.on('volumechange', () => {
+        this.updateVolume();
+      });
+      this.updateVolume();
+    }
+    updateVolume() {
+      const audioContainer = this.container.querySelector('.jp-audio');
+      if (this.mediaObject.muted) {
+        audioContainer.classList.add('jp-state-muted');
+      } else {
+        audioContainer.classList.remove('jp-state-muted');
+      }
+      const ele = this.container.querySelector('.jp-volume-bar-value');
+      const val = Math.trunc(this.mediaObject.volume * 100);
+      ele.style.width = this.mediaObject.muted ? '0%' : val + "%";
     }
   }
 }
