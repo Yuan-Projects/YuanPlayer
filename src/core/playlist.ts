@@ -20,6 +20,9 @@ class PlayList extends Emitter {
     this.lyricObj = options.lyricObj;
     this.list = options.list;
 
+    // circular reference
+    this.player.setPlaylistObject(this);
+
     this.addEvents();
   }
   switchModes() {

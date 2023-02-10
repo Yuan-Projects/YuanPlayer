@@ -363,6 +363,9 @@ class Player extends Emitter {
       this.playlist.playPreviousTrack();
     }
   }
+  setPlaylistObject(playlistObject) {
+    this.playlist = playlistObject;
+  }
 }
 
 export default Player;

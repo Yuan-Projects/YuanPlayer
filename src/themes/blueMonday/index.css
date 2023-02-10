@@ -37,7 +37,7 @@
    background-color: #eee; }
  
  .jp-audio {
-   width: 420px; }
+   min-width: 420px; }
  
  .jp-audio-stream {
    width: 182px; }

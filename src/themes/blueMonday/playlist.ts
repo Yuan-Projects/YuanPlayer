@@ -8,7 +8,6 @@ function getClass(Base) {
       super(options);
   
       this.on('playMusicAtIndex', (index) => {
-        this.playAtIndex(index);
         this.updateHighlight();
       });
       this.renderUI();
@@ -28,17 +27,10 @@ function getClass(Base) {
             // do nothing
             return;
           }
-          this.playAtIndex(target.getAttribute('data-index'));
+          this.index = target.getAttribute('data-index');
+          this.playAtIndex(this.index);
         }
-      })
-    }
-  
-    playAtIndex(index) {
-      index = parseInt(index);
-      this.index = index;
-      this.player.setMedia(this.list[index].source);
-      this.player.mediaObject.load();
-      this.player.play();
+      });
       this.updateHighlight();
     }
   
@@ -68,8 +60,16 @@ function getClass(Base) {
     updateHighlight() {
       const playlistCOntainer = this.container.querySelector('.jp-playlist');
       if (!playlistCOntainer) return ;
-      playlistCOntainer.querySelector('.jp-playlist-current')?.classList.remove('jp-playlist-current');
-      playlistCOntainer.querySelector(`[data-index="${this.index}"]`).classList.add('jp-playlist-current');
+      const highlightEl = playlistCOntainer.querySelector('li.jp-playlist-current');
+      if (highlightEl) {
+        highlightEl.classList.remove('jp-playlist-current');
+        highlightEl.querySelector('a.jp-playlist-current').classList.remove('jp-playlist-current');
+      }
+      const newHighlightEl = playlistCOntainer.querySelectorAll('li')[this.index];
+      if (newHighlightEl) {
+        newHighlightEl.classList.add('jp-playlist-current');
+        newHighlightEl.querySelector('a.jp-playlist-item').classList.add('jp-playlist-current');
+      }
     }
   }
 }

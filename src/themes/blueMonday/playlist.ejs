@@ -2,7 +2,7 @@
   <div class="jp-playlist">
     <ul style="display: block;">
       <% locals.tracks.forEach(function(track, index){ %>
-        <li class="jp-playlist-current">
+        <li>
           <div>
             <a href="javascript:;" class="jp-playlist-item-remove" style="display: none;">×</a>
             <a href="javascript:;" class="jp-playlist-item" data-index="<%= index %>" tabindex="0"><%= track.title %></a>
