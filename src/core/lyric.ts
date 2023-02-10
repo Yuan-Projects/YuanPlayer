@@ -6,8 +6,6 @@ import type { LyricObject, LyricOptions } from "./lyric.d";
  * It does not contain UI logic and should be extended by a theme file to implement a custom lyric panel.
  */
 class Lyric extends Emitter {
-  static themes = {};
-  theme = '';
   lyricObj: LyricObject = {
     timeArray: [],
     lyricArray: []

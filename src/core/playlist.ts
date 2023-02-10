@@ -5,8 +5,6 @@ import type { PlayListOptions } from "./playlist.d";
  * The PlayList base class should be extended by a theme file to implement the play list UI
  */
 class PlayList extends Emitter {
-  static themes = {};
-  theme = '';
   static modes = ['none', 'single', 'random', 'order'];
   container;
   player;
@@ -30,12 +28,6 @@ class PlayList extends Emitter {
     this.trigger('modeChanged');
   }
   addEvents() {
-    this.on('playMusicAtIndex', (index) => {
-      if (this.lyricObj) {
-        this.lyricObj.lyric = this.list[index].lyric;
-        this.lyricObj.addLyric();
-      }
-    });
     this.player.mediaObject.addEventListener('ended', () => {
       if (PlayList.modes[this.modeIndex] === 'none') {
         // Have played the last music
@@ -60,9 +52,31 @@ class PlayList extends Emitter {
           // Play the next one in the list
         }
       }
-      //playMusicAtIndex(index);
-      this.trigger('playMusicAtIndex', this.index);
+      this.playAtIndex(this.index);
     });
+  }
+  playNextTrack() {
+    if (this.index === this.list.length - 1) return false;
+    this.index++;
+    this.playAtIndex(this.index);
+  }
+  playPreviousTrack() {
+    if (this.index === 0) return false;
+    this.index--;
+    this.playAtIndex(this.index);
+  }
+  playAtIndex(index: number = this.index) {
+    if (this.player) {
+      this.player.setMedia(this.list[index].source);
+      this.player.mediaObject.load();
+      this.player.play();
+    }
+
+    if (this.lyricObj) {
+      this.lyricObj.lyric = this.list[index].lyric;
+      this.lyricObj.addLyric();
+    }
+    this.trigger('playMusicAtIndex', index);
   }
 }
 

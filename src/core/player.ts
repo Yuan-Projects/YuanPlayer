@@ -16,6 +16,7 @@ class Player extends Emitter {
   loop = false;
   source: Array<string>;
   controls: PlayerControls = 'default';
+  playlist: any;
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -350,6 +351,16 @@ class Player extends Emitter {
     if (media) {
       var temp = media.volume - 0.2;
       media.volume = (temp >= 0.0) ? temp : 0.0;
+    }
+  }
+  playNextTrack() {
+    if (this.playlist) {
+      this.playlist.playNextTrack();
+    }
+  }
+  playPreviousTrack() {
+    if (this.playlist) {
+      this.playlist.playPreviousTrack();
     }
   }
 }

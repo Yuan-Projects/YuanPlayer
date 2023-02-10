@@ -1,4 +1,4 @@
-import { YuanPlayerOptions } from '../../core/player.d';
+import type { YuanPlayerOptions } from '../../core/player.d';
 // @ts-ignore
 import playerTpl from './player.ejs';
 import './index.css';

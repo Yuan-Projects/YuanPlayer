@@ -7,7 +7,6 @@ function getClass(Base) {
       super(options);
   
       this.on('playMusicAtIndex', (index) => {
-        this.playAtIndex(index);
         this.updateHighlight();
       });
       this.renderUI();
@@ -43,7 +42,7 @@ function getClass(Base) {
   
         div.addEventListener('click', () => {
           this.index = index;
-          this.trigger('playMusicAtIndex', index);
+          this.playAtIndex(index);
         });
       });
       playlistContainer.appendChild(itemList);
@@ -55,14 +54,12 @@ function getClass(Base) {
       opContainer.appendChild(previousButton);
   
       previousButton.addEventListener('click', () => {
-        if (this.index === 0) return false;
-        this.trigger('playMusicAtIndex', --this.index);
+        this.playPreviousTrack();
       });
       const nextButton = document.createElement('button');
       nextButton.textContent ='next';
       nextButton.addEventListener('click', () => {
-        if (this.index === this.list.length - 1) return false;
-        this.trigger('playMusicAtIndex', ++this.index);
+        this.playNextTrack();
       });
       opContainer.appendChild(nextButton);
   
@@ -81,13 +78,6 @@ function getClass(Base) {
       this.updateHighlight();
   
       this.renderModeIcon();
-    }
-  
-    playAtIndex(index) {
-      this.player.setMedia(this.list[index].source);
-      this.player.mediaObject.load();
-      this.player.play();
-      this.updateHighlight();
     }
   
     renderModeIcon() {
