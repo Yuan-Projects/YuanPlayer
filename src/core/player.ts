@@ -352,6 +352,10 @@ class Player extends Emitter {
       media.volume = (temp >= 0.0) ? temp : 0.0;
     }
   }
+  unload() {
+    this.stop();
+    this.mediaObject.innerHTML = '';
+  }
 }
 
 export default Player;

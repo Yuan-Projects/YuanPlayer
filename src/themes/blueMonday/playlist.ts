@@ -12,6 +12,11 @@ function getClass(Base) {
       });
       this.renderUI();
       this.on('modeChanged', this.renderModeIcon.bind(this));
+      this.on('shuffledChanged', () => {
+        this.updateShuffleIcon();
+        this.container.querySelector('.yuanplayer-bluemonday-playlist').innerHTML = tpl({tracks: this.list});
+        this.updateHighlight();
+      });
 
       const previousButton = this.player.container.querySelector('.jp-previous');
       previousButton?.addEventListener('click', () => {
@@ -21,10 +26,22 @@ function getClass(Base) {
       nextButton?.addEventListener('click', () => {
         this.playNextTrack();
       });
+      const repeatButton = this.player.container.querySelector('.jp-repeat');
+      repeatButton?.addEventListener('click', () => {
+        this.toggleRepeatAllMode();
+      });
+      const shuffleButton = this.player.container.querySelector('.jp-shuffle');
+      shuffleButton?.addEventListener('click', () => {
+        if (this.shuffled) {
+          this.restore();
+        } else {
+          this.shuffle();
+        }
+      });
     }
     renderUI() {
       const div = document.createElement('div');
-      div.textContent = 'playlist';
+      div.className = 'yuanplayer-bluemonday-playlist';
       
       div.innerHTML = tpl({tracks: this.list});
       this.container.appendChild(div);
@@ -42,28 +59,34 @@ function getClass(Base) {
       });
       this.updateHighlight();
     }
-  
-    renderModeIcon() {
-      const element = this.container.querySelector('.yuanplayer-mode-container');
-      if (!element) return;
-      let text = '';
-      // 'none' | 'single' | 'random' | 'order'
-      switch(Base.modes[this.modeIndex]) {
-        case 'single':
-          text = 'repeat_one_on';
-          break;
-        case 'random':
-          text = 'shuffle_on';
-          break;
-        case 'order':
-          text = 'repeat_on';
-          break;
-        case 'none':
-        default:
-          text = 'repeat';
-          break;
+    toggleRepeatAllMode() {
+      if (Base.modes[this.modeIndex] === 'all') {
+        this.setMode('off');
+      } else {
+        this.setMode('all');
       }
-      element.textContent = text;
+    }
+
+    updateShuffleIcon() {
+      if (!this.player) return;
+      const playerContainer = this.player.container;
+      const audioContainer = playerContainer.querySelector('.jp-audio');
+      if (this.shuffled) {
+        audioContainer.classList.add('jp-state-shuffled');
+      } else {
+        audioContainer.classList.remove('jp-state-shuffled');
+      }
+    }
+
+    renderModeIcon() {
+      if (!this.player) return;
+      const playerContainer = this.player.container;
+      const audioContainer = playerContainer.querySelector('.jp-audio');
+      if (Base.modes[this.modeIndex] === 'all') {
+        audioContainer.classList.add('jp-state-looped');
+      } else {
+        audioContainer.classList.remove('jp-state-looped');
+      }
     }
   
     updateHighlight() {
