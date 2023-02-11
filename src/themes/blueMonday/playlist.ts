@@ -12,6 +12,15 @@ function getClass(Base) {
       });
       this.renderUI();
       this.on('modeChanged', this.renderModeIcon.bind(this));
+
+      const previousButton = this.player.container.querySelector('.jp-previous');
+      previousButton?.addEventListener('click', () => {
+        this.playPreviousTrack();
+      });
+      const nextButton = this.player.container.querySelector('.jp-next');
+      nextButton?.addEventListener('click', () => {
+        this.playNextTrack();
+      });
     }
     renderUI() {
       const div = document.createElement('div');

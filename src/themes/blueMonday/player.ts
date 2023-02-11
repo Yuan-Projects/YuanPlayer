@@ -27,15 +27,6 @@ function getClass(Base) {
         this.stop();
       });
 
-      const previousButton = div.querySelector('.jp-previous');
-      previousButton?.addEventListener('click', () => {
-        this.playPreviousTrack();
-      });
-      const nextButton = div.querySelector('.jp-next');
-      nextButton?.addEventListener('click', () => {
-        this.playNextTrack();
-      });
-
       const currentTimeElement = div.querySelector('.jp-current-time');
       const durationElement = div.querySelector('.jp-duration');
       const audioContainer = div.querySelector('.jp-audio');
