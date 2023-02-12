@@ -111,18 +111,27 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
     player: player3,
     lyricObj: lyric3
   });
-});
 
-var blueMondayPlayer1 = Player({
-  theme: 'blueMonday',
-  source: playlist[0].source,
-  container: document.querySelector('#blueMondayPlayerContainer1')
-});
-var playListInstance = PlayList({
-  theme: 'blueMonday',
-  container: document.getElementById('blueMondayPlayListContainer1'),
-  list: playlist,
-  player: blueMondayPlayer1
+  var blueMondayPlayer1 = Player({
+    theme: 'blueMonday',
+    source: playlist[0].source,
+    container: document.querySelector('#blueMondayPlayerContainer1')
+  });
+  var blueMondayLyric1 = Lyric({
+    theme: 'blueMonday',
+    lyric: playlist[0].lyric,
+    mediaObject: blueMondayPlayer1.mediaObject,
+    container: document.getElementById('blueMondayLyricContainer1')
+  });
+  blueMondayLyric1.loadLyricPlugin();
+  window.blueMondayPlayListInstance = PlayList({
+    theme: 'blueMonday',
+    container: document.getElementById('blueMondayPlayListContainer1'),
+    list: playlist,
+    player: blueMondayPlayer1,
+    lyricObj: blueMondayLyric1
+  });
+
 });
 
 function qualifyURL(url) {
