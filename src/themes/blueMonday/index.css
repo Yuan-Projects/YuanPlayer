@@ -394,6 +394,10 @@
  
  div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
    color: #0d88c1; }
+
+div.jp-type-playlist div.jp-playlist li:hover a.jp-playlist-item-remove {
+  display: inline !important;
+}
  
  div.jp-type-playlist div.jp-playlist span.jp-free-media {
    float: right;
@@ -547,6 +551,14 @@
    display: block;
    text-align: center;
    font-weight: bold; }
+
+
+.jp-playlist-empty {
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  padding: 10px;
+}
  
  /* @end */
  

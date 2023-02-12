@@ -1,0 +1,37 @@
+.yuanplayer-lyric-bluemonday-container {
+  max-width: 500px;
+  box-sizing: border-box;
+  margin-top: 0;
+  border-radius: 5px;
+  text-align: center;
+  height: 100px;
+  border: 1px solid blue;
+  overflow: hidden;
+  padding-top: 50px;
+  margin-left:  auto;
+  margin-right: auto;
+  background: #ccc;
+  font-size: 14px;
+
+  div {
+    margin-bottom: 5px;
+    min-height: 1em; /* Make the empty lyric container visible. */
+  }
+
+  /* Make all lyric items relative to the container */
+  .lyric-wrapcontainer {
+    position:  relative;
+  }
+
+  .highlight {
+    font-weight: bold;
+    color: #0d88c1;
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  .yuanplayer-lyric-bluemonday-container {
+    width: 90%;
+  }
+}

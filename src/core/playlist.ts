@@ -55,19 +55,24 @@ class PlayList extends Emitter {
     this.trigger('shuffledChanged');
   }
   add(trackItem) {
-    this.originalList.push(trackItem);
-    this.list.push(trackItem);
+    const item = {
+      ...trackItem,
+      id: trackItem.id ?? this.trackItemId++
+    }
+    this.originalList.push(item);
+    this.list.push(item);
+    this.trigger('trackAdded', item);
   }
   remove(trackItemId) {
     let indexToBeRemoved;
     for (let i = 0; i < this.originalList.length; i++) {
-      if (this.originalList[i].id === trackItemId) {
+      if (this.originalList[i].id == trackItemId) {
         this.originalList.splice(i, 1);
         break;
       }
     }
     for (let i = 0; i < this.list.length; i++) {
-      if (this.list[i].id === trackItemId) {
+      if (this.list[i].id == trackItemId) {
         indexToBeRemoved = i;
         this.list.splice(i, 1);
         break;
@@ -82,19 +87,17 @@ class PlayList extends Emitter {
         // if it's the last one, use the previous one.
         if (indexToBeRemoved === this.list.length) {
           this.index--;
-        } else {
-          // try to move onto the next one in the list,
-          this.index++;
         }
+        this.updatePlayerLyric(this.index);
       } else {
         // If no one item left in the lists, reset the player object
         this.player.unload(); // TODO
+        this.lyricObj.unload(); // TODO
       }
-    } else {
-      if (indexToBeRemoved < this.index) {
-        this.index--;
-      }
+    } else if (indexToBeRemoved < this.index) {
+      this.index--;
     }
+    this.trigger('trackRemoved', trackItemId);
   }
   switchModes() {
     const newVal = (++this.modeIndex) % PlayList.modes.length;
@@ -143,17 +146,23 @@ class PlayList extends Emitter {
   }
   playAtIndex(index: number = this.index) {
     if (index > this.list.length - 1) return false;
+    this.updatePlayerLyric(index);
+    if (this.player) {
+      this.player.play();
+    }
+    this.trigger('playMusicAtIndex', index);
+  }
+  updatePlayerLyric(index) {
+    if (index > this.list.length - 1) return false;
     if (this.player) {
       this.player.setMedia(this.list[index].source);
       this.player.mediaObject.load();
-      this.player.play();
     }
 
     if (this.lyricObj) {
       this.lyricObj.lyric = this.list[index].lyric;
       this.lyricObj.addLyric();
     }
-    this.trigger('playMusicAtIndex', index);
   }
 }
 

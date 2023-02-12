@@ -1,6 +1,8 @@
 import { PlayListOptions } from "../../core/playlist.d";
 // @ts-ignore
 import tpl from './playlist.ejs';
+// @ts-ignore
+import itemTpl from './playlistItem.ejs';
 
 function getClass(Base) {
   return class YuanPlayerPlayList extends Base {
@@ -16,6 +18,24 @@ function getClass(Base) {
         this.updateShuffleIcon();
         this.container.querySelector('.yuanplayer-bluemonday-playlist').innerHTML = tpl({tracks: this.list});
         this.updateHighlight();
+      });
+      this.on('trackRemoved', (trackItemId) => {
+        const ele = this.container.querySelector(`a[data-trackid="${trackItemId}"]`).parentNode.parentNode;
+        ele.parentNode.removeChild(ele);
+        if (this.list.length === 0) {
+          this.container.querySelector('.jp-playlist').innerHTML = '<div class="jp-playlist-empty">The playlist is empty.</div>';
+        }
+        this.updateHighlight();
+      });
+      this.on('trackAdded', (trackItem) => {
+        debugger;
+        if (this.list.length === 1) {
+          this.container.querySelector('.jp-playlist').removeChild(this.container.querySelector('.jp-playlist-empty'));
+        }
+        const ul = this.container.querySelector('.jp-playlist ul');
+        const li = document.createElement('li');
+        li.innerHTML = itemTpl({index: this.list.length - 1, track: trackItem});
+        ul.appendChild(li);
       });
 
       const previousButton = this.player.container.querySelector('.jp-previous');
@@ -53,8 +73,11 @@ function getClass(Base) {
             // do nothing
             return;
           }
-          this.index = target.getAttribute('data-index');
+          this.index = parseInt(target.getAttribute('data-index') || '');
           this.playAtIndex(this.index);
+        }
+        if (target?.classList?.contains('jp-playlist-item-remove')) {
+          this.remove(target.parentNode?.querySelector('.jp-playlist-item')?.getAttribute('data-trackid'));
         }
       });
       this.updateHighlight();
