@@ -152,6 +152,13 @@ class PlayList extends Emitter {
     }
     this.trigger('playMusicAtIndex', index);
   }
+  playTrackById(trackId: string | number) {
+    const index = this.list.findIndex((track) => track.id == trackId);
+    if (index > -1) {
+      this.index = index;
+      this.playAtIndex(index);
+    }
+  }
   updatePlayerLyric(index) {
     if (index > this.list.length - 1) return false;
     if (this.player) {

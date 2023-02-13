@@ -70,11 +70,12 @@ function getClass(Base) {
         const target = e.target as HTMLElement;
         if (target?.classList?.contains('jp-playlist-item')) {
           if (target.classList.contains('jp-playlist-current')) {
-            // do nothing
+            if (this.player.isPlaying() === false) {
+              this.player.play();
+            }
             return;
           }
-          this.index = parseInt(target.getAttribute('data-index') || '');
-          this.playAtIndex(this.index);
+          this.playTrackById(target.getAttribute('data-trackid') || '');
         }
         if (target?.classList?.contains('jp-playlist-item-remove')) {
           this.remove(target.parentNode?.querySelector('.jp-playlist-item')?.getAttribute('data-trackid'));
