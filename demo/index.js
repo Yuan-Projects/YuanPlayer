@@ -24,6 +24,16 @@ var dicPlayer2 = Player({
 
 var playlist = [
   {
+    title: 'Let it go',
+    artist: 'Idina Menzel',
+    imgUrl: 'https://y.qq.com/music/photo_new/T002R300x300M000000nmCPL1H8bES_1.jpg?max_age=2592000',
+    source:[
+      { src: 'media/letitgo.m4a' }
+    ],
+    loop: false,
+    lyric: qualifyURL('lyrics/letitgo.lrc')
+  },
+  {
     title: '再见中国海',
     artist: '4 in love',
     imgUrl: 'http://p2.music.126.net/cbtvK52JoaIK0iZNJ2BtHQ==/109951165958877997.jpg?param=130y130',
@@ -46,6 +56,7 @@ var playlist = [
   {
     title: '給未來的自己',
     artist: '梁静茹',
+    imgUrl: 'https://y.qq.com/music/photo_new/T002R300x300M000002oy2Mp3I8Rgo_1.jpg?max_age=2592000',
     source:[
       { src: 'media/1007000868010800.mp3' }
     ],
