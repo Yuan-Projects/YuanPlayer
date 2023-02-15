@@ -1,9 +1,11 @@
-YuanPlayer.use(YuanPlayerThemeYuan);
-YuanPlayer.use(YuanPlayerThemeBlueMonday);
+const YPlayerObj = YuanPlayer.use(YuanPlayerThemeYuan);
+const BMPlayerObj = YuanPlayer.use(YuanPlayerThemeBlueMonday);
 
 const { Player, Lyric, PlayList } = YuanPlayer;
-var dicPlayer = Player({
-  theme: 'yuan',
+const YPlayer = YPlayerObj.Player, YLyric = YPlayerObj.Lyric, YPlayList = YPlayerObj.PlayList;
+const BMPlayer = BMPlayerObj.Player, BMLyric = BMPlayerObj.Lyric, BMPlayList = BMPlayerObj.PlayList;
+
+var dicPlayer = new Player({
   controls: false,
   source:[
     { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/uk_pron/u/ukp/ukper/ukperv_027.mp3' },
@@ -12,8 +14,7 @@ var dicPlayer = Player({
   container: document.querySelector('#exampleEnglishDicPlayer')
 });
 
-var dicPlayer2 = Player({
-  theme: 'yuan',
+var dicPlayer2 = new Player({
   controls: false,
   source:[
     { src: 'https://dictionary.cambridge.org/media/english-chinese-simplified/us_pron/e/eus/eus73/eus73520.mp3' },
@@ -70,20 +71,17 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
     playlist[index].lyric = lyric;
   })
 }).then(function() {
-  var simplePlayer = Player({
-    theme: 'yuan',
+  var simplePlayer = new YPlayer({
     source: playlist[0].source,
     container: document.querySelector('#simplePlayerContainer')
   });
   
-  var playerWithLyric = Player({
-    theme: 'yuan',
+  var playerWithLyric = new YPlayer({
     source: playlist[2].source,
     container: document.querySelector('#APlayerLyricContainer')
   });
   
-  var lyricInstance = Lyric({
-    theme: 'yuan',
+  var lyricInstance = new YLyric({
     lyric: playlist[2].lyric,
     mediaObject: playerWithLyric.mediaObject,
     container: document.getElementById('APlayerLyricLyricContainer')
@@ -91,52 +89,44 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
   lyricInstance.loadLyricPlugin();
 
 
-  var playerWithPlaylist = Player({
-    theme: 'yuan',
+  var playerWithPlaylist = new YPlayer({
     source: playlist[0].source,
     container: document.querySelector('#APlayerWithPlayListContainer')
   });
-  var playListInstance = PlayList({
-    theme: 'yuan',
+  var playListInstance = new YPlayList({
     container: document.getElementById('APlayerLyricPlaylistContainer'),
     list: playlist,
     player: playerWithPlaylist
   });
 
-  var player3 = Player({
-    theme: 'yuan',
+  var player3 = new YPlayer({
     source: playlist[0].source,
     container: document.querySelector('#playercontainer3')
   });
-  var lyric3 = Lyric({
-    theme: 'yuan',
+  var lyric3 = new YLyric({
     lyric: playlist[0].lyric,
     mediaObject: player3.mediaObject,
     container: document.getElementById('lyriccontainer3')
   });
   lyric3.loadLyricPlugin();
-  var list3 = PlayList({
-    theme: 'yuan',
+  var list3 = new YPlayList({
     container: document.getElementById('listcontainer3'),
     list: playlist,
     player: player3,
     lyricObj: lyric3
   });
 
-  var blueMondayPlayer1 = Player({
-    theme: 'blueMonday',
+  var blueMondayPlayer1 = new BMPlayer({
     source: playlist[0].source,
     container: document.querySelector('#blueMondayPlayerContainer1')
   });
-  var blueMondayLyric1 = Lyric({
-    theme: 'blueMonday',
+  var blueMondayLyric1 = new BMLyric({
     lyric: playlist[0].lyric,
     mediaObject: blueMondayPlayer1.mediaObject,
     container: document.getElementById('blueMondayLyricContainer1')
   });
   blueMondayLyric1.loadLyricPlugin();
-  window.blueMondayPlayListInstance = PlayList({
-    theme: 'blueMonday',
+  window.blueMondayPlayListInstance = new BMPlayList({
     container: document.getElementById('blueMondayPlayListContainer1'),
     list: playlist,
     player: blueMondayPlayer1,
