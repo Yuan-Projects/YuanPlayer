@@ -11,7 +11,7 @@ function getClass(Base) {
       super(options);
       // previous muted state
       this.muted = false;
-      if (this.controls === 'default') {
+      if (!this.nativeControls) {
         this.renderPlayerUI();
       }
     }

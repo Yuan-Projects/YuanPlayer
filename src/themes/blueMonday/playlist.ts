@@ -28,7 +28,6 @@ function getClass(Base) {
         this.updateHighlight();
       });
       this.on('trackAdded', (trackItem) => {
-        debugger;
         if (this.list.length === 1) {
           this.container.querySelector('.jp-playlist').removeChild(this.container.querySelector('.jp-playlist-empty'));
         }

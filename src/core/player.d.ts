@@ -4,10 +4,17 @@ export interface CSSSelector {
   currentTime: string
 }
 
-export type PlayerControls = "system" | "default" | boolean;
+export interface MediaItem {
+  poster?: string
+  title?: string
+  duration?: string | number
+  track?: Array<object>
+  src: string | Array<string>
+}
 
 export interface YuanPlayerOptions {
-  controls: PlayerControls
+  nativeControls?: boolean
   container: string | HTMLElement
+  media: MediaItem
   cssSelector?: CSSSelector
 }

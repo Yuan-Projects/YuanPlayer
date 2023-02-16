@@ -1,6 +1,6 @@
 import { isArray, isHtml5AudioSupported } from './utils';
 import Emitter from './emitter';
-import type { YuanPlayerOptions, PlayerControls } from './player.d';
+import type { MediaItem, YuanPlayerOptions } from './player.d';
 
 /**
  * Render the <audio> tag into a specific DOM element
@@ -8,14 +8,14 @@ import type { YuanPlayerOptions, PlayerControls } from './player.d';
  * This file does not contains the player UI
  */
 class Player extends Emitter {
-  container;
-  mediaObject: any;
+  container: HTMLElement;
+  mediaObject: HTMLAudioElement;
   errorCode: number;
   errorMessage: string;
-  eventHandlers: any;
+  eventHandlers: object;
   loop = false;
-  source: Array<string>;
-  controls: PlayerControls = 'default';
+  media: MediaItem;
+  nativeControls = false;
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -47,7 +47,6 @@ class Player extends Emitter {
     if (!isHtml5AudioSupported()) {
       throw new Error("Your browser does not support HTML5 Audio.");
     }
-    this.mediaObject = null;
 
     this.errorCode = 0;
     this.errorMessage = '';
@@ -56,7 +55,7 @@ class Player extends Emitter {
     this.init(options);
   }
 
-  init(options: any) {
+  init(options: YuanPlayerOptions) {
     this.initOptions(options);
     // If no valid container exists, we do nothing.
     if(!this.container) return ;
@@ -73,24 +72,19 @@ class Player extends Emitter {
 
   addMediaElement() {
     const div = document.createElement('div');
-    div.classList.add('yuan-player-container');
     var mediaElement = document.createElement('audio');
     mediaElement.preload = "metadata";
     this.mediaObject = mediaElement;
 
-    mediaElement.controls = this.controls === 'system' || this.controls === true;
+    mediaElement.controls = !!this.nativeControls;
     if ( typeof this.loop !== "undefined") {
       mediaElement.loop = !!this.loop;
     }
 
     this.addMediaSource();
-    //this.container.appendChild(mediaElement);
 
     div.appendChild(mediaElement);
     this.container.appendChild(div);
-    if (this.controls !== false) {
-      div.style.display = 'box';
-    }
   }
 
   bindMediaEvents() {
@@ -206,30 +200,23 @@ class Player extends Emitter {
   }
 
   addMediaSource(){
-    var sources = this.source;
-    if (sources) {
-      this.setMedia(sources);
+    if (!this.media || !this.media.src) return false;
+
+    this.mediaObject.innerHTML = '';
+    this.mediaObject.removeAttribute('src');
+    let src = this.media.src;
+    if (typeof src === 'string') {
+      src = [src];
+    }
+    for (var i = 0; i < src.length; i++) {
+      this.addSourceElement(src[i]);
     }
   }
 
-  setMedia(mediaParam: any) {
-    var media = this.mediaObject;
-    if (!media) return;
-    media.innerHTML = '';
-    if (typeof mediaParam === 'string') {
-      var sourceElement = document.createElement('source');
-      sourceElement.src = mediaParam;
-      sourceElement.type = this.getMimeType(mediaParam);
-      media.appendChild(sourceElement);
-    } else if (typeof mediaParam === 'object'){
-      if (isArray(mediaParam)) {
-        for (var i = 0; i < mediaParam.length; i++) {
-          this.setMediaItem(mediaParam[i]);
-        }
-      } else {
-        this.setMediaItem(mediaParam);
-      }
-    }
+  public setMedia(media: MediaItem) {
+    this.media = media;
+    this.addMediaSource();
+    this.mediaObject.load();
   }
 
   formatTime(secs: number): string {
@@ -239,7 +226,7 @@ class Player extends Emitter {
     return `${minutes}:${returnedSeconds}`;
   }
 
-  play() {
+  public play() {
     if (this.mediaObject) {
       this.mediaObject.play();
     }
@@ -257,7 +244,7 @@ class Player extends Emitter {
       }
     }
   }
-  stop(){
+  public stop(){
     var media = this.mediaObject;
     if (media) {
       media.pause();
@@ -306,27 +293,26 @@ class Player extends Emitter {
     }
     return 'audio/' + type;
   }
-  pause(){
+  public pause(){
     var media = this.mediaObject;
     if (media) {
       media.pause();
     }
   }
 
-  setMediaItem(mediaObj: any) {
-    var media = this.mediaObject;
+  addSourceElement(src: string) {
     var sourceElement = document.createElement('source');
-    sourceElement.src = mediaObj.src;
-    sourceElement.type = mediaObj.type ? mediaObj.type : this.getMimeType(mediaObj.src);
-    media.appendChild(sourceElement);
+    sourceElement.src = src;
+    sourceElement.type = this.getMimeType(src);
+    this.mediaObject.appendChild(sourceElement);
   }
-  mute() {
+  public mute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = true;;
     }
   }
-  unmute() {
+  public unmute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = false;
@@ -338,23 +324,26 @@ class Player extends Emitter {
       media.muted = !media.muted;
     }
   }
-  addVolume() {
-    var media = this.mediaObject;
-    if (media) {
-      var temp = media.volume + 0.2;
-      media.volume = (temp >= 1.0) ? 1.0 : temp;
-    }
+  /**
+   * This method is used to control the volume of the media being played.
+   * Silence: 0
+   * Half: 0.5
+   * Maximum: 1
+   * @param ratio - Number (0 to 1) defining the ratio of maximum volume.
+   */
+  public volume(ratio: number) {
+    this.mediaObject.volume = (ratio >= 1.0) ? 1.0 : ratio;
   }
-  minusVolume() {
-    var media = this.mediaObject;
-    if (media) {
-      var temp = media.volume - 0.2;
-      media.volume = (temp >= 0.0) ? temp : 0.0;
-    }
-  }
-  unload() {
+  /**
+   * This method is used to clear the media and stop playback.
+   * If a media file is downloading at the time, the download will be cancelled.
+   */
+  public clearMedia() {
+    if (!this.mediaObject) return false;
     this.stop();
     this.mediaObject.innerHTML = '';
+    this.mediaObject.src = '';
+    this.trigger('clearmedia');
   }
 }
 

@@ -7,7 +7,7 @@ function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {
       super(options);
-      if (this.controls === 'default') {
+      if (!this.nativeControls) {
         this.renderPlayerUI();
       }
     }
@@ -55,6 +55,11 @@ function getClass(Base) {
 
       this.on('play', () => {
         audioContainer?.classList.add('jp-state-playing');
+      });
+      this.on('clearmedia', () => {
+        audioContainer?.classList.remove('jp-state-playing');
+        durationElement!.textContent = this.formatTime(Math.floor(0));
+        this.container.querySelector('.jp-play-bar').style.width = `0%`;
       });
       this.on('pause', () => {
         audioContainer?.classList.remove('jp-state-playing');

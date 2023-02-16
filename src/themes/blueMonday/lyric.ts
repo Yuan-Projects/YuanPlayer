@@ -8,7 +8,6 @@ function getClass(Base) {
       super(otpions);
       this.addContainer();
       this.on('lyricFetched', (lyricItems) => {
-        debugger;
         this.container.querySelector('.yuanplayer-lyric-bluemonday-container')!.scrollTop = 0;
         this.addLyricItems(lyricItems);
       });

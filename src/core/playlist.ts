@@ -91,7 +91,7 @@ class PlayList extends Emitter {
         this.updatePlayerLyric(this.index);
       } else {
         // If no one item left in the lists, reset the player object
-        this.player.unload(); // TODO
+        this.player.clearMedia(); // TODO
         this.lyricObj.unload(); // TODO
       }
     } else if (indexToBeRemoved < this.index) {
@@ -162,8 +162,7 @@ class PlayList extends Emitter {
   updatePlayerLyric(index) {
     if (index > this.list.length - 1) return false;
     if (this.player) {
-      this.player.setMedia(this.list[index].source);
-      this.player.mediaObject.load();
+      this.player.setMedia(this.list[index]);
     }
 
     if (this.lyricObj) {
