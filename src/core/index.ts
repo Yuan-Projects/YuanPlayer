@@ -1,4 +1,4 @@
-import Player from "./player";
+import Player from "./playerui";
 import Lyric from "./lyric";
 import PlayList from "./playlist";
 

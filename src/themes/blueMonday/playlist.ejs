@@ -1,18 +1,18 @@
-<div class="jp-type-playlist">
-  <div class="jp-playlist">
+<div class="yuan-type-playlist">
+  <div class="yuan-playlist">
     <% if (locals.tracks.length) { %>
     <ul style="display: block;">
       <% locals.tracks.forEach(function(track, index){ %>
         <li>
           <div>
-            <a href="javascript:;" class="jp-playlist-item-remove" style="display: none;">×</a>
-            <a href="javascript:;" class="jp-playlist-item" data-index="<%= index %>" data-trackid="<%= track.id %>" tabindex="0"><%= track.title %></a>
+            <a href="javascript:;" class="yuan-playlist-item-remove" style="display: none;">×</a>
+            <a href="javascript:;" class="yuan-playlist-item" data-index="<%= index %>" data-trackid="<%= track.id %>" tabindex="0"><%= track.title %></a>
           </div>
         </li>
       <% }); %>
     </ul>
     <% } else { %>
-      <div class="jp-playlist-empty">The playlist is empty.</div>
+      <div class="yuan-playlist-empty">The playlist is empty.</div>
     <% } %>
   </div>
 </div>

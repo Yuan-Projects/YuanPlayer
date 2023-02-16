@@ -1,4 +1,4 @@
-import { isArray, isHtml5AudioSupported } from './utils';
+import { isHtml5AudioSupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
 
@@ -55,7 +55,7 @@ class Player extends Emitter {
     this.init(options);
   }
 
-  init(options: YuanPlayerOptions) {
+  private init(options: YuanPlayerOptions) {
     this.initOptions(options);
     // If no valid container exists, we do nothing.
     if(!this.container) return ;
@@ -63,14 +63,14 @@ class Player extends Emitter {
     this.bindMediaEvents();
   }
 
-  initOptions(options: YuanPlayerOptions) {
+  private initOptions(options: YuanPlayerOptions) {
     for (const prop in options) {
       // @ts-ignore
       this[prop] = options[prop];
     }
   }
 
-  addMediaElement() {
+  private addMediaElement() {
     const div = document.createElement('div');
     var mediaElement = document.createElement('audio');
     mediaElement.preload = "metadata";
@@ -87,7 +87,7 @@ class Player extends Emitter {
     this.container.appendChild(div);
   }
 
-  bindMediaEvents() {
+  private bindMediaEvents() {
     var that = this;
     var media = this.mediaObject;
     if (!media) return ;
@@ -142,7 +142,7 @@ class Player extends Emitter {
       }, false);
   }
 
-  addMediaSource(){
+  private addMediaSource(){
     if (!this.media || !this.media.src) return false;
 
     this.mediaObject.innerHTML = '';
@@ -156,28 +156,42 @@ class Player extends Emitter {
     }
   }
 
+  /**
+   * Defines the media to play.
+   * @param media 
+   */
   public setMedia(media: MediaItem) {
     this.media = media;
     this.addMediaSource();
     this.mediaObject.load();
   }
 
-  formatTime(secs: number): string {
+  public formatTime(secs: number): string {
     const minutes = Math.floor(secs / 60);
     const seconds = Math.floor(secs % 60);
     const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${minutes}:${returnedSeconds}`;
   }
 
+  /**
+   * Plays the media file.
+   */
   public play() {
     if (this.mediaObject) {
       this.mediaObject.play();
     }
   }
-  isPlaying() {
+  /**
+   * moves the play-head to a new position
+   * @param percent
+   */
+  public playHead(percent: number) {
+    this.mediaObject.currentTime = percent * this.mediaObject.duration;
+  }
+  public isPlaying() {
     return this.mediaObject && !this.mediaObject.paused;
   }
-  togglePlay() {
+  protected togglePlay() {
     var media = this.mediaObject;
     if (media) {
       if (media.paused) {
@@ -187,6 +201,9 @@ class Player extends Emitter {
       }
     }
   }
+  /**
+   * Stop the media and reset the play-head to the start of the media.
+   */
   public stop(){
     var media = this.mediaObject;
     if (media) {
@@ -194,14 +211,14 @@ class Player extends Emitter {
       media.currentTime = 0;
     }
   }
-  toggleLoop() {
+  public toggleLoop() {
     var media = this.mediaObject;
     if (media) {
       media.loop = !media.loop;
     }
     this.trigger('loopchanged');
   }
-  getMimeType(fileName: string) {
+  protected getMimeType(fileName: string) {
     var type = 'wav';
     if (fileName) {
       var fileExtension = fileName.split('.').pop();
@@ -236,32 +253,49 @@ class Player extends Emitter {
     }
     return 'audio/' + type;
   }
+  /**
+   * Pause the media.
+   */
   public pause(){
     var media = this.mediaObject;
     if (media) {
       media.pause();
     }
   }
+  // TODO
+  public pauseOthers() {
 
-  addSourceElement(src: string) {
+  }
+  // TODO
+  public tellOthers() {
+
+  }
+
+  private addSourceElement(src: string) {
     var sourceElement = document.createElement('source');
     sourceElement.src = src;
     sourceElement.type = this.getMimeType(src);
     this.mediaObject.appendChild(sourceElement);
   }
+  /**
+   * Mutes the media's sounds
+   */
   public mute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = true;;
     }
   }
+  /**
+   * Unmutes the media's sounds.
+   */
   public unmute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = false;
     }
   }
-  toggleMute() {
+  protected toggleMute() {
     var media = this.mediaObject;
     if (media) {
       media.muted = !media.muted;
@@ -287,6 +321,14 @@ class Player extends Emitter {
     this.mediaObject.innerHTML = '';
     this.mediaObject.src = '';
     this.trigger('clearmedia');
+  }
+  // TODO
+  /**
+   * Removes YuanPlayer.
+   * All event and interface bindings created are removed.
+   */
+  public destroy() {
+    this.trigger('destroy');
   }
 }
 

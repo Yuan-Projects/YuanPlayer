@@ -1,7 +1,27 @@
 export interface CSSSelector {
-  duration: string
-  durationTime: string
-  currentTime: string
+  videoPlay?: string
+  play?: string
+  pause?: string
+  stop?: string
+  seekBar?: string
+  playBar?: string
+  mute?: string
+  unmute?: string
+  volumeBar?: string
+  volumeBarValue?: string
+  volumeMax?: string
+  playbackRateBar?: string
+  playbackRateBarValue?: string
+  currentTime?: string
+  duration?: string
+  title?: string
+  fullScreen?: string
+  restoreScreen?: string
+  repeat?: string
+  repeatOff?: string
+  gui?: string
+  noSolution?: string
+  shuffle?: string
 }
 
 export interface MediaItem {
@@ -13,8 +33,10 @@ export interface MediaItem {
 }
 
 export interface YuanPlayerOptions {
+  useStateClassSkin?: boolean
   nativeControls?: boolean
   container: string | HTMLElement
   media: MediaItem
+  cssSelectorAncestor?: string
   cssSelector?: CSSSelector
 }
