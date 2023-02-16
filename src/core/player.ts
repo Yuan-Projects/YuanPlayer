@@ -101,25 +101,11 @@ class Player extends Emitter {
       }
     }, 100);
 
-    media.addEventListener('abort', function() {
-      that.trigger('abort');
-      }, false);
-    media.addEventListener('canplay', function() {
-      that.trigger('canplay');
-      }, false);
-    media.addEventListener('canplaythrough', function() {
-      that.trigger('canplaythrough');
-      }, false);
-    media.addEventListener('durationchange', function() {
-      //updateDuration();
-      that.trigger('durationchange');
-      }, false);
-    media.addEventListener('emptied', function() {
-      that.trigger('emptied');
-      }, false);
-    media.addEventListener('ended', function() {
-      that.trigger('ended');
-      }, false);
+    const mediaEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting'];
+    mediaEvents.forEach(event => {
+      media.addEventListener(event, () => this.trigger(event), false);
+    });
+
     media.addEventListener('error', function(e: any) {
       switch (e.target.error.code) {
         case e.target.error.MEDIA_ERR_ABORTED:
@@ -146,37 +132,6 @@ class Player extends Emitter {
       clearInterval(t);
       that.trigger('error');
     }, false);
-    media.addEventListener('loadeddata', function() {
-      that.trigger('loadeddata');
-      }, false);
-    media.addEventListener('loadedmetadata', function() {
-      that.trigger('loadedmetadata');
-      }, false);
-    media.addEventListener('loadstart', function() {
-      that.trigger('loadstart');
-      }, false);
-    media.addEventListener('pause', function() {
-      that.trigger('pause');
-      }, false);
-    media.addEventListener('play', function() {
-      that.trigger('play');
-      }, false);
-    media.addEventListener('playing', function() {
-      that.trigger('playing');
-      }, false);
-    media.addEventListener('progress', function() {
-      //updateDuration();
-      that.trigger('progress');
-      }, false);
-    media.addEventListener('ratechange', function() {
-      that.trigger('ratechange');
-      }, false);
-    media.addEventListener('seeked', function() {
-      that.trigger('seeked');
-      }, false);
-    media.addEventListener('seeking', function() {
-      that.trigger('seeking');
-      }, false);
     // Fixes for Android 2.2,this event will be triggered in Android 2.2 when the media file load failed with HTTP status 403.
     media.addEventListener('stalled', function() {
       that.trigger('stalled');
@@ -184,18 +139,6 @@ class Player extends Emitter {
       that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;
       that.trigger('error');
       clearInterval(t);
-      }, false);
-    media.addEventListener('suspend', function() {
-      that.trigger('suspend');
-      }, false);
-    media.addEventListener('timeupdate', function(){
-      that.trigger('timeupdate');
-    }, false);
-    media.addEventListener('volumechange', function() {
-      that.trigger('volumechange');
-      }, false);
-    media.addEventListener('waiting', function() {
-      that.trigger('waiting');
       }, false);
   }
 
