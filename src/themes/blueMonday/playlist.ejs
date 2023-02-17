@@ -1,6 +1,5 @@
 <div class="yuan-type-playlist">
   <div class="yuan-playlist">
-    <% if (locals.tracks.length) { %>
     <ul style="display: block;">
       <% locals.tracks.forEach(function(track, index){ %>
         <li class="yuan-playlist-item">
@@ -11,8 +10,6 @@
         </li>
       <% }); %>
     </ul>
-    <% } else { %>
-      <div class="yuan-playlist-empty">The playlist is empty.</div>
-    <% } %>
+    <div class="yuan-playlist-empty" style="display: <%= locals.tracks.length ? 'none' : 'block'  %>;">The playlist is empty.</div>
   </div>
 </div>

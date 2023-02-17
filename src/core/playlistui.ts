@@ -3,7 +3,7 @@ import type { CSSSelector, PlayListOptions } from './playlist.d';
 
 export default class PlayListUI extends PlayList {
   cssSelector: CSSSelector = {
-    remove: '.yuan-playlist-remove',
+    remove: '.yuan-playlist-item-remove',
     next: '.yuan-next',
     previous: '.yuan-previous',
     shuffle: '.yuan-shuffle',
@@ -32,15 +32,23 @@ export default class PlayListUI extends PlayList {
         // TODO
       });
       this._highlightItem();
+      this.on('remove', (index) => {
+        this.container.querySelectorAll(this.cssSelector.item || '')[index]?.remove();
+        this._highlightItem();
+      })
       this.on('select', (index) => {
         this._highlightItem(index);
       });
       this.container.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
-        if (this.cssSelector.item && target.matches(this.cssSelector?.item)) {
-          this.play(); // TODO
-        } else if (this.cssSelector.remove && target.matches(this.cssSelector?.remove)) {
-          this.remove();// TODO
+        if (this.isMatchedWithSelector(target, this.cssSelector.remove)) {
+          const itemElement = this.findItemElement(target);
+          const index = this.findDomIndex(itemElement);
+          this.remove(index);// TODO
+        } else if (this.isMatchedWithSelector(target, this.cssSelector.item)) {
+          const itemElement = this.findItemElement(target);
+          const index = this.findDomIndex(itemElement);
+          this.play(index); // TODO
         } else if (this.cssSelector.next && target.matches(this.cssSelector?.next)) {
           this.next();
         } else if (this.cssSelector.previous && target.matches(this.cssSelector?.previous)) {
@@ -51,7 +59,35 @@ export default class PlayListUI extends PlayList {
       });
     }, 0);
   }
-  private _highlightItem(index = this.index) {
+  private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
+    if (!cssSelector) return false;
+    do {
+      if (dom.matches(cssSelector)) {
+        return true;
+      }
+      dom = dom.parentNode;
+    } while (dom !== rootElement);
+    return false;
+  }
+  protected findDomIndex(element: HTMLElement): number {
+    const allItemElements = this.container.querySelectorAll(this.cssSelector.item || '');
+    for (let i = 0; i < allItemElements.length; i++) {
+      if (allItemElements[i] === element) {
+        return i;
+      }
+    }
+    return 0;
+  }
+  protected findItemElement(dom) {
+    do {
+      if (dom.matches(this.cssSelector.item)) {
+        return dom;
+      }
+      dom = dom.parentNode;
+    } while (dom !== this.container);
+    return null;
+  }
+  protected _highlightItem(index = this.index) {
     this.container.querySelector(this.cssSelector.item +'.'+this.stateClass.currentItem)?.classList.remove(this.stateClass.currentItem);
     const itemElements = this.container.querySelectorAll(this.cssSelector.item || '');
     if (itemElements.length) {

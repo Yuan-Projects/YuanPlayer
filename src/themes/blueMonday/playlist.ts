@@ -1,4 +1,4 @@
-import { PlayListOptions } from "../../core/playlist.d";
+import type { PlayListOptions } from "../../core/playlist.d";
 // @ts-ignore
 import tpl from './playlist.ejs';
 // @ts-ignore
@@ -19,26 +19,43 @@ function getClass(Base) {
       this.container.appendChild(div);
     }
     addEventListeners() {
-      this.on('shuffledChanged', () => {
+      const player = this.player;
+      this.container.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (player.cssSelector.repeat && target.matches(player.cssSelector?.repeat)) {
+          this.toggleMode();
+        }
+      });
+      this.on('shuffledchanged', () => {
         this.container.querySelector('.yuanplayer-bluemonday-playlist').innerHTML = tpl({tracks: this.list});
       });
-      this.on('trackRemoved', (trackItemId) => {
-        const ele = this.container.querySelector(`a[data-trackid="${trackItemId}"]`).parentNode.parentNode;
-        ele.parentNode.removeChild(ele);
-        if (this.list.length === 0) {
-          this.container.querySelector('.yuan-playlist').innerHTML = '<div class="yuan-playlist-empty">The playlist is empty.</div>';
-        }
-        this.updateHighlight();
+      this.on('remove', (trackItemId) => {
+        this.updateList();
       });
-      this.on('trackAdded', (trackItem) => {
-        if (this.list.length === 1) {
-          this.container.querySelector('.yuan-playlist').removeChild(this.container.querySelector('.yuan-playlist-empty'));
-        }
-        const ul = this.container.querySelector('.yuan-playlist ul');
+      this.on('add', (trackItem) => {
+        this.updateList();
+        let ul = this.container.querySelector('.yuan-playlist ul');
         const li = document.createElement('li');
+        li.classList.add('yuan-playlist-item');
         li.innerHTML = itemTpl({index: this.list.length - 1, track: trackItem});
         ul.appendChild(li);
+        this.updateList();
       });
+    }
+    updateList() {
+      if (this.list.length === 0) {
+        this.container.querySelector('.yuan-playlist-empty').style.display = 'block';
+      } else {
+        this.container.querySelector('.yuan-playlist-empty').style.display = 'none';
+      }
+      this._highlightItem();
+    }
+    toggleMode() {
+      if (this.modeIndex === 0) {
+        this.setMode('all');
+      } else {
+        this.setMode('off');
+      }
     }
   }
 }

@@ -152,6 +152,7 @@ class PlayList extends Emitter {
         }
         if (this.originalList.length) {
           if (index === this.index) {
+            this.player.stop();// stop current playback
             this.index = (index < this.originalList.length) ? this.index : this.originalList.length - 1; // To cope when last element being selected when it was removed
             this.select(this.index);
           } else if (index < this.index) {
@@ -163,6 +164,7 @@ class PlayList extends Emitter {
           this.player.clearMedia(); // TODO
           this.lyricObj.unload(); // TODO
         }
+        this.trigger('remove', index);
       }
     }
     /*

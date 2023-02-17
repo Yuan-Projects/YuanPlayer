@@ -2,8 +2,8 @@ export interface PlayListItem {
   id?: string | number
   title?: string
   artist?: string
-  imgUrl?: string
-  source: Array<any>
+  poster?: string
+  src: Array<any>
   lyric?: string
 }
 
