@@ -209,6 +209,7 @@ class Player extends Emitter {
     if (media) {
       media.pause();
       media.currentTime = 0;
+      this.trigger('stop');
     }
   }
   public toggleLoop() {

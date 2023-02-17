@@ -112,7 +112,11 @@ export default class PlayerUI extends Player {
           domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(second);
         }
         if (this.cssSelector.playBar) {
-          (domElement.querySelector(this.cssSelector.playBar) as HTMLElement)!.style.width = `${this.mediaObject.currentTime / this.mediaObject.duration * 100}%`;
+          const element = (domElement.querySelector(this.cssSelector.playBar) as HTMLElement);
+          if (element) {
+            const perc = isFinite(this.mediaObject.duration) ? this.mediaObject.currentTime / this.mediaObject.duration : 0;
+            element.style.width = `${perc * 100}%`;
+          }
         }
       });
       this.on('play', () => {

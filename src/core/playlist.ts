@@ -43,6 +43,9 @@ class PlayList extends Emitter {
    * @param playNow - Cause the first item to play automatically.
    */
   public shuffle(shuffled?: undefined | boolean, playNow?: boolean): void {
+    if (this.player) {
+      this.player.stop();
+    }
     if (shuffled === undefined) {
       // Toggle shuffle state
       if (this.shuffled) {
