@@ -8,7 +8,7 @@
     "build:core": "npm run build && rimraf core && copyfiles src/core/package.json -f core && copyfiles lib/cjs/YuanPlayer.js lib/mjs/YuanPlayer.js lib/umd/YuanPlayer.js core",
     "build:theme-yuan": "npm run build && rimraf theme-yuan && copyfiles src/themes/yuan/package.json -f theme-yuan && copyfiles lib/cjs/YuanPlayerThemeYuan.js lib/mjs/YuanPlayerThemeYuan.js lib/umd/YuanPlayerThemeYuan.js theme-yuan",
     "build:theme-monday": "npm run build && rimraf theme-monday && copyfiles src/themes/blueMonday/package.json -f theme-monday && copyfiles lib/cjs/YuanPlayerThemeBlueMonday.js lib/mjs/YuanPlayerThemeBlueMonday.js lib/umd/YuanPlayerThemeBlueMonday.js theme-monday",
-    "start": "live-server --open=/demo/ --wait=3000",
+    "start": "live-server --open=/demo/ --wait=3000 --ignore=src .",
     "build": "rimraf lib && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
