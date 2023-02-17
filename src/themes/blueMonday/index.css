@@ -381,8 +381,8 @@
  div.yuan-type-playlist div.yuan-playlist a:hover {
    color: #0d88c1; }
  
- div.yuan-type-playlist div.yuan-playlist a.yuan-playlist-current {
-   color: #0d88c1; }
+ div.yuan-type-playlist div.yuan-playlist .yuan-playlist-current a {
+   color: #0d88c1 !important; }
  
  div.yuan-type-playlist div.yuan-playlist a.yuan-playlist-item-remove {
    float: right;

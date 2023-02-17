@@ -3,10 +3,10 @@
     <% if (locals.tracks.length) { %>
     <ul style="display: block;">
       <% locals.tracks.forEach(function(track, index){ %>
-        <li>
+        <li class="yuan-playlist-item">
           <div>
             <a href="javascript:;" class="yuan-playlist-item-remove" style="display: none;">×</a>
-            <a href="javascript:;" class="yuan-playlist-item" data-index="<%= index %>" data-trackid="<%= track.id %>" tabindex="0"><%= track.title %></a>
+            <a href="javascript:;" data-index="<%= index %>" data-trackid="<%= track.id %>" tabindex="0"><%= track.title %></a>
           </div>
         </li>
       <% }); %>

@@ -27,8 +27,7 @@ export default class PlayerUI extends Player {
     repeat: ".yuan-repeat",
     repeatOff: ".yuan-repeat-off",
     gui: ".yuan-gui",
-    noSolution: ".yuan-no-solution",
-    shuffle: '.yuan-shuffle'
+    noSolution: ".yuan-no-solution"
   };
   protected stateClass = {
     playing: "yuan-state-playing",
@@ -36,8 +35,7 @@ export default class PlayerUI extends Player {
     muted: "yuan-state-muted",
     looped: "yuan-state-looped",
     fullScreen: "yuan-state-full-screen",
-    noVolume: "yuan-state-no-volume",
-    shuffled: "yuan-state-shuffled"
+    noVolume: "yuan-state-no-volume"
   };
   constructor(options: YuanPlayerOptions) {
     super(options);
@@ -51,7 +49,7 @@ export default class PlayerUI extends Player {
       this.addEventListeners();
     }
   }
-  addEventListeners() {
+  private addEventListeners() {
     setTimeout(() => {
       const domElement = document.querySelector(this.cssSelectorAncestor);
       if (!domElement) return false;
@@ -74,9 +72,6 @@ export default class PlayerUI extends Player {
         } else if (this.cssSelector.repeat && target.matches(this.cssSelector.repeat)) {
           // TODO
           domElement.classList.toggle(this.stateClass.looped);
-        } else if (this.cssSelector.shuffle && target.matches(this.cssSelector.shuffle)) {
-          // TODO
-          domElement.classList.toggle(this.stateClass.shuffled);
         } else if (this.cssSelector.volumeMax && target.matches(this.cssSelector.volumeMax)) {
           this.volume(1);
           this.unmute();
