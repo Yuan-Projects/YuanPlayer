@@ -33,7 +33,6 @@ function getClass(Base) {
         this.updateList();
       });
       this.on('add', (trackItem) => {
-        this.updateList();
         let ul = this.container.querySelector('.yuan-playlist ul');
         const li = document.createElement('li');
         li.classList.add('yuan-playlist-item');

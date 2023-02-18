@@ -5,14 +5,11 @@ import './lyric.scss';
 function getClass(Base) {
   return class YuanPlayerLyric extends Base {
     constructor(otpions: LyricOptions) {
+      otpions.cssSelectorAncestor = '.yuanplayer-lyric-container';
       super(otpions);
       this.addContainer();
-      this.on('lyricFetched', (lyricItems) => {
-        this.container.querySelector('.yuanplayer-lyric-container')!.scrollTop = 0;
+      this.on('lyricfetched', (lyricItems) => {
         this.addLyricItems(lyricItems);
-      });
-      this.on('timeupdated', (currentTime) => {
-        this.scrollLyric(currentTime);
       });
     }
     addContainer() {
@@ -39,29 +36,10 @@ function getClass(Base) {
   
       for (var i = 0, l = items.length; i < l; i++) {
         var div = document.createElement('div');
+        div.classList.add(this.cssSelector.item);
         var content = items[i].split(']')[1];
         innerText(div, content);
         wrapContainer?.appendChild(div);
-      }
-    }
-  
-    scrollLyric(currentTime: number) {
-      var newLyricIndex = this.getNewLyricIndex(currentTime);
-      var oldPosition = this.lyricCurrentPosition;
-      if (newLyricIndex === oldPosition) return ;
-    
-      this.lyricCurrentPosition = newLyricIndex;
-    
-      // Hightlight the current lyric
-      var lyricDivs = this.container.querySelector('.lyric-wrapcontainer')?.getElementsByTagName('div');
-      if (lyricDivs) {
-        lyricDivs[oldPosition].className =  '';
-        lyricDivs[newLyricIndex].className = 'highlight';
-  
-        // Scroll the lyrics container
-        var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
-        // lyric-wrapcontainer
-        this.container.querySelector('.yuanplayer-lyric-container')!.scrollTop = newScrollTop;
       }
     }
   }

@@ -5,18 +5,10 @@ import './lyric.scss';
 function getClass(Base) {
   return class YuanPlayerLyric extends Base {
     constructor(otpions: LyricOptions) {
+      otpions.cssSelectorAncestor = '.yuanplayer-lyric-bluemonday-container';
       super(otpions);
       this.addContainer();
-      this.on('lyricFetched', (lyricItems) => {
-        this.container.querySelector('.yuanplayer-lyric-bluemonday-container')!.scrollTop = 0;
-        this.addLyricItems(lyricItems);
-      });
-      this.on('timeupdated', (currentTime) => {
-        this.scrollLyric(currentTime);
-      });
-      this.on('reset', () => {
-        this.container.querySelector('.lyric-wrapcontainer').innerHTML = '<div>No lyric available.</div>';
-      });
+      this.addEvents();
     }
     addContainer() {
       if (typeof this.lyric === 'string') {
@@ -28,43 +20,27 @@ function getClass(Base) {
           wrapContainer.classList.add('lyric-wrapcontainer');
           this.container.appendChild(lyricDiv);
           lyricDiv.appendChild(wrapContainer);
-        } else {
-          const lyricContainer = this.container.querySelector('.yuanplayer-lyric-bluemonday-container');
-          if (lyricContainer) {
-            lyricContainer.innerHTML = '<div id="lyric-wrapcontainer"></div>';
-          }
+
+          const emptyElement = document.createElement('div');
+          emptyElement.classList.add(this.cssSelector.noContent);
+          emptyElement.textContent = 'No lyric available.';
+          lyricDiv.appendChild(emptyElement);
         }
       }
     }
+    addEvents() {
+      this.on('lyricfetched', (lyricItems) => {
+        this.addLyricItems(lyricItems);
+      });
+    }
     addLyricItems(items: any) {
-      var wrapContainer = this.container.querySelector('.lyric-wrapcontainer');
-      wrapContainer.innerHTML = '';
-  
+      var wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  
       for (var i = 0, l = items.length; i < l; i++) {
         var div = document.createElement('div');
+        div.classList.add(this.cssSelector.item);
         var content = items[i].split(']')[1];
         innerText(div, content);
         wrapContainer?.appendChild(div);
-      }
-    }
-  
-    scrollLyric(currentTime: number) {
-      var newLyricIndex = this.getNewLyricIndex(currentTime);
-      var oldPosition = this.lyricCurrentPosition;
-      if (newLyricIndex === oldPosition) return ;
-    
-      this.lyricCurrentPosition = newLyricIndex;
-    
-      // Hightlight the current lyric
-      var lyricDivs = this.container.querySelector('.lyric-wrapcontainer')?.getElementsByTagName('div');
-      if (lyricDivs) {
-        lyricDivs[oldPosition].className =  '';
-        lyricDivs[newLyricIndex].className = 'highlight';
-  
-        // Scroll the lyrics container
-        var newScrollTop = lyricDivs[newLyricIndex].offsetTop;
-        // lyric-wrapcontainer
-        this.container.querySelector('.yuanplayer-lyric-bluemonday-container')!.scrollTop = newScrollTop;
       }
     }
   }

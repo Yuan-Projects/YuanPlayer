@@ -1,5 +1,5 @@
 import Player from "./playerui";
-import Lyric from "./lyric";
+import Lyric from "./lyricui";
 import PlayList from "./playlistui";
 
 const YuanPlayer = {

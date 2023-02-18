@@ -10,17 +10,17 @@ class Lyric extends Emitter {
     timeArray: [],
     lyricArray: []
   };
-  lyric: any;
+  lyric: string;
   lyricCurrentPosition = 0;
   mediaObject: any;
-  container: any;
+  container: HTMLElement;
   constructor(options: LyricOptions) {
     super();
     this.mediaObject = options.mediaObject;
     this.lyric = options.lyric;
     this.container = options.container;
   }
-  parseLyricItems(items: any) {
+  private parseLyricItems(items: Array<any>): Array<any> {
     var result: Array<any> = [];
     var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}\]/g;
     for (var i = 0, l = items.length; i < l; i++) {
@@ -35,7 +35,7 @@ class Lyric extends Emitter {
     }
     return result;
   }
-  logLyricInfo(items: any) {
+  private logLyricInfo(items: Array<any>) {
     var patt = /\[|\]/;
     for (var i = 0; i < items.length; i++) {
       var component = items[i].split(patt);
@@ -45,9 +45,10 @@ class Lyric extends Emitter {
       this.lyricObj.timeArray.push(this.parseTimeToSeconds(component[1]));
       this.lyricObj.lyricArray.push(component[2]);
     }
+    this.trigger("lyricfetched", items);
   }
 
-  compareTimeSpan(x: any, y: any): number {
+  private compareTimeSpan(x: any, y: any): number {
     var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2,3})\]/;
     var xTime = x.match(timePattern)[1],
       yTime = y.match(timePattern)[1];
@@ -56,7 +57,7 @@ class Lyric extends Emitter {
     return xTimeInSeconds - yTimeInSeconds;
   }
 
-  parseTimeToSeconds(timeString: string): number {
+  private parseTimeToSeconds(timeString: string): number {
     var component = timeString.split(".");
     var bigPart = component[0];
     var bigPartComponent = bigPart.split(":");
@@ -65,7 +66,7 @@ class Lyric extends Emitter {
     return parseFloat(minutePart * 60 + secondPart + "." + component[1]);
   }
 
-  addLyric() {
+  private addLyric() {
     var lyric = this.lyric;
     if (lyric) {
       var lyricItems = lyric.split(/[\n\r]/g);
@@ -76,12 +77,11 @@ class Lyric extends Emitter {
       this.lyricObj.lyricArray.length = 0;
       this.lyricObj.timeArray.length = 0;
       this.lyricCurrentPosition = 0;
-      this.trigger("lyricFetched", lyricItems);
       this.logLyricInfo(lyricItems);
     }
   }
 
-  bindLyricEvents() {
+  private bindLyricEvents() {
     var that = this;
     var media = this.mediaObject;
     if (!media) return;
@@ -100,7 +100,7 @@ class Lyric extends Emitter {
     );
   }
 
-  getNewLyricIndex(currentTime:any) {
+  protected getNewLyricIndex(currentTime:any): number {
     var index = 0;
     var timeArray = this.lyricObj.timeArray;
     var timeLength = timeArray.length;
@@ -121,17 +121,17 @@ class Lyric extends Emitter {
     return index;
   }
 
-  loadLyricPlugin() {
+  public loadLyricPlugin() {
     this.addLyric();
     this.bindLyricEvents();
   }
-  reset() {
+  private reset() {
     this.lyric = '';
     this.lyricObj.lyricArray.length = 0;
     this.lyricObj.timeArray.length = 0;
     this.lyricCurrentPosition = 0;
   }
-  unload() {
+  public unload() {
     this.reset();
     this.trigger('reset');
   }

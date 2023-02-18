@@ -1,7 +1,9 @@
 export interface LyricOptions {
   lyric: string
-  mediaObject: Object,
+  mediaObject: object,
   container: HTMLElement
+  cssSelector?: object
+  cssSelectorAncestor: string
 }
 
 export interface LyricObject {
