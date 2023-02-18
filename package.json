@@ -10,6 +10,7 @@
     "build:theme-monday": "npm run build && rimraf theme-monday && copyfiles src/themes/blueMonday/package.json -f theme-monday && copyfiles lib/cjs/YuanPlayerThemeBlueMonday.js lib/mjs/YuanPlayerThemeBlueMonday.js lib/umd/YuanPlayerThemeBlueMonday.js theme-monday",
     "start": "live-server --open=/demo/ --wait=3000 --ignore=src .",
     "build": "rimraf lib && rollup --config",
+    "watch": "rollup --config --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
