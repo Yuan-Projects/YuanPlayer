@@ -28,9 +28,14 @@
     display: flex;
     gap: 1em;
     border-top: 1px solid black;
-  }
+    padding: .5rem 0;
 
-  .yuanplayer-mode-container {
-    cursor: pointer;
+    .material-symbols-outlined {
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(60,64,67,.04);
+      }
+    }
   }
 }

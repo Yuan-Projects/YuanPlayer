@@ -9,7 +9,7 @@ export default class PlayListUI extends PlayList {
     shuffle: '.yuan-shuffle',
     item: '.yuan-playlist-item',
   };
-  protected stateClass = {
+  stateClass = {
     shuffled: "yuan-state-shuffled",
     currentItem: 'yuan-playlist-current',
   };
@@ -20,6 +20,10 @@ export default class PlayListUI extends PlayList {
     this.cssSelector = {
       ...this.cssSelector,
       ...options.cssSelector
+    };
+    this.stateClass = {
+      ...this.stateClass,
+      ...options.stateClass
     };
     this._addEventListeners();
   }
@@ -88,10 +92,10 @@ export default class PlayListUI extends PlayList {
     return null;
   }
   protected _highlightItem(index = this.index) {
-    this.container.querySelector(this.cssSelector.item +'.'+this.stateClass.currentItem)?.classList.remove(this.stateClass.currentItem);
+    this.container.querySelector(this.cssSelector.item + '.' + this.stateClass.currentItem)?.classList.remove(this.stateClass.currentItem || '');
     const itemElements = this.container.querySelectorAll(this.cssSelector.item || '');
     if (itemElements.length) {
-      itemElements[index]?.classList.add(this.stateClass.currentItem);
+      itemElements[index]?.classList.add(this.stateClass.currentItem || '');
     }
   }
 };

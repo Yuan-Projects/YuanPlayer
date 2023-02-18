@@ -1,0 +1,7 @@
+<div class="music-item-container">
+  <% if (locals.track.poster) { %>
+  <img class="imgurl" src="<%= locals.track.poster %>">
+  <% } %>
+  <span><%= locals.track.title %></span>
+  <%= locals.track.artist %>
+</div>

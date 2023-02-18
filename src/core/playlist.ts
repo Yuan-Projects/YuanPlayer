@@ -219,7 +219,6 @@ class PlayList extends Emitter {
       this.updatePlayerLyric(index);
     });
     this.player.on('ended', () => {
-      debugger;
       const mode = PlayList.modes[this.modeIndex];
       if (mode === 'off') {
         // Have played the last music

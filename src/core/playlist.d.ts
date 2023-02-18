@@ -15,6 +15,11 @@ export interface CSSSelector {
   item?: string
 }
 
+export interface PlayListStateClass {
+  shuffled?: string
+  currentItem?: string
+}
+
 export interface PlayListOptions {
   container: HTMLElement
   player: any
@@ -24,4 +29,5 @@ export interface PlayListOptions {
   autoPlay?: boolean
   enableRemoveControls?: boolean
   cssSelector?: CSSSelector
+  stateClass?: PlayListStateClass
 }
