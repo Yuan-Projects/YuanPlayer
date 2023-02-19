@@ -1,0 +1,107 @@
+ /* @group playlist */
+.yuanplayer-bluemonday-playlist {
+  .yuan-details {
+    font-weight: bold;
+    text-align: center;
+    cursor: default; 
+  }
+
+  .yuan-details,
+  .yuan-playlist {
+    width: 100%;
+    background-color: #ccc;
+    border-top: 1px solid #009be3;
+  }
+
+  .yuan-type-single .yuan-details,
+  .yuan-type-playlist .yuan-details {
+    border-top: none;
+  }
+
+  .yuan-details .yuan-title {
+    margin: 0;
+    padding: 5px 20px;
+    font-size: .72em;
+    font-weight: bold;
+  }
+
+  .yuan-playlist ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 20px;
+    font-size: .72em;
+  }
+
+  .yuan-playlist li {
+    padding: 5px 0 4px 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .yuan-playlist li div {
+    display: inline;
+  }
+
+  /* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
+  div.yuan-type-playlist div.yuan-playlist li:last-child {
+    padding: 5px 0 5px 20px;
+    border-bottom: none;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist li.yuan-playlist-current {
+    list-style-type: square;
+    list-style-position: inside;
+    padding-left: 7px;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist a:hover {
+    color: #0d88c1;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist .yuan-playlist-current a {
+    color: #0d88c1 !important;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist a.yuan-playlist-item-remove {
+    float: right;
+    display: inline;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #666;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist a.yuan-playlist-item-remove:hover {
+    color: #0d88c1;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist li:hover a.yuan-playlist-item-remove {
+  display: inline !important;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist span.yuan-free-media {
+    float: right;
+    display: inline;
+    text-align: right;
+    margin-right: 10px;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist span.yuan-free-media a {
+    color: #666;
+  }
+
+  div.yuan-type-playlist div.yuan-playlist span.yuan-free-media a:hover {
+    color: #0d88c1;
+  }
+
+  span.yuan-artist {
+    font-size: .8em;
+    color: #666;
+  }
+}
+
+/* @end */

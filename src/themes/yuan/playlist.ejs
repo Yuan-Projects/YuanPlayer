@@ -1,0 +1,18 @@
+<div class="yuanplayer-yuan-playlist">
+  <div class="track-list">
+    <% locals.tracks.forEach(function(track, index){ %>
+    <div class="music-item-container">
+      <% if (track.poster) { %>
+      <img class="imgurl" src="<%= track.poster %>" />
+      <% } %>
+      <span><%= track.title %></span><%= track.artist %>
+    </div>
+    <% }); %>
+  </div>
+  <div class="operation-container">
+    <span class="material-symbols-outlined yuan-previous">skip_previous</span>
+    <span class="material-symbols-outlined yuan-next">skip_next</span>
+    <span class="material-symbols-outlined yuanplayer-yuan-playlist-repeat">repeat</span>
+    <span class="material-symbols-outlined yuan-shuffle">shuffle</span>
+  </div>
+</div>

@@ -18,6 +18,7 @@ function getClass(Base) {
   
     renderPlayerUI() {
       const div = document.createElement('div');
+      div.classList.add('yuanplayer-yuan-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);
 
@@ -110,6 +111,11 @@ function getClass(Base) {
           this.setVolumeIcon();
         }
         this.muted = this.mediaObject.muted;
+      });
+
+      this.on('stop', () => {
+        // Show play button again
+        animation.playSegments([0, 14], true);
       });
     }
     displayAudioDuration() {

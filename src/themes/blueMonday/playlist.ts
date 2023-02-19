@@ -3,6 +3,7 @@ import type { PlayListOptions } from "../../core/playlist.d";
 import tpl from './playlist.ejs';
 // @ts-ignore
 import itemTpl from './playlistItem.ejs';
+import './playlist.scss';
 
 function getClass(Base) {
   return class YuanPlayerPlayList extends Base {

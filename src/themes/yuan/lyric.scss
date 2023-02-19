@@ -1,4 +1,4 @@
-.yuanplayer-lyric-container {
+.yuanplayer-yuan-lyric {
   max-width: 500px;
   box-sizing: border-box;
   margin-top: 2em;
@@ -32,7 +32,7 @@
 
 /* For mobile devices */
 @media (max-width: 768px) {
-  .yuanplayer-lyric-container {
+  .yuanplayer-yuan-lyric {
     width: 90%;
   }
 }

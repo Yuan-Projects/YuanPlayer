@@ -1,4 +1,4 @@
-.yuanplayer-lyric-bluemonday-container {
+.yuanplayer-bluemonday-lyric {
   max-width: 500px;
   box-sizing: border-box;
   margin-top: 0;
@@ -31,7 +31,7 @@
 
 /* For mobile devices */
 @media (max-width: 768px) {
-  .yuanplayer-lyric-bluemonday-container {
+  .yuanplayer-bluemonday-lyric {
     width: 90%;
   }
 }

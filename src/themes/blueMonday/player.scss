@@ -1,0 +1,534 @@
+/*! Blue Monday Skin for jPlayer 2.9.2 ~ (c) 2009-2014 Happyworm Ltd ~ MIT License */
+
+/*
+ * Skin for jPlayer Plugin (jQuery JavaScript Library)
+ * http://www.jplayer.org
+ *
+ * Skin Name: Blue Monday
+ *
+ * Copyright (c) 2010 - 2014 Happyworm Ltd
+ * Licensed under the MIT license.
+ *  - http://www.opensource.org/licenses/mit-license.php
+ *
+ * Author: Silvia Benvenuti
+ * Skin Version: 5.1 (jPlayer 2.8.0)
+ * Date: 13th November 2014
+ */
+
+.yuanplayer-bluemonday-player {
+  .yuan-audio *:focus,
+  .yuan-audio-stream *:focus,
+  .yuan-video *:focus {
+    /* Disable the browser focus highlighting. */
+    outline: none;
+  }
+  
+  .yuan-audio button::-moz-focus-inner,
+  .yuan-audio-stream button::-moz-focus-inner,
+  .yuan-video button::-moz-focus-inner {
+    /* Disable the browser CSS3 focus highlighting. */
+    border: 0;
+  }
+  
+  .yuan-audio,
+  .yuan-audio-stream,
+  .yuan-video {
+    font-size: 16px;
+    font-family: Verdana, Arial, sans-serif;
+    line-height: 1.6;
+    color: #666;
+    border: 1px solid #009be3;
+    background-color: #eee;
+  }
+  
+  .yuan-audio {
+    min-width: 420px;
+  }
+  
+  .yuan-audio-stream {
+    width: 182px;
+  }
+
+  .yuan-video-270p {
+    width: 480px;
+  }
+
+  .yuan-video-360p {
+    width: 640px;
+  }
+
+  .yuan-video-full {
+    /* Rules for IE6 (full-screen) */
+    width: 480px;
+    height: 270px;
+    /* Rules for IE7 (full-screen) - Otherwise the relative container causes other page items that are not position:static (default) to appear over the video/gui. */
+    position: static !important;
+    position: relative;
+  }
+  
+  /* The z-index rule is defined in this manner to enable Popcorn plugins that add overlays to video area. EG. Subtitles. */
+  .yuan-video-full div div {
+    z-index: 1000;
+  }
+  
+  .yuan-video-full .yuan-jplayer {
+    top: 0;
+    left: 0;
+    position: fixed !important;
+    position: relative;
+    /* Rules for IE6 (full-screen) */
+    overflow: hidden;
+  }
+  
+  .yuan-video-full .yuan-gui {
+    position: fixed !important;
+    position: static;
+    /* Rules for IE6 (full-screen) */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
+    /* 1 layer above the others. */
+  }
+  
+  .yuan-video-full .yuan-interface {
+    position: absolute !important;
+    position: relative;
+    /* Rules for IE6 (full-screen) */
+    bottom: 0;
+    left: 0;
+  }
+  
+  .yuan-interface {
+    position: relative;
+    background-color: #eee;
+    width: 100%;
+  }
+  
+  .yuan-audio .yuan-interface {
+    height: 80px;
+  }
+  
+  .yuan-audio-stream .yuan-interface {
+    height: 80px;
+  }
+  
+  .yuan-video .yuan-interface {
+    border-top: 1px solid #009be3;
+  }
+  
+  /* @group CONTROLS */
+  .yuan-controls-holder {
+    clear: both;
+    width: 440px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    top: -8px;
+    /* This negative value depends on the size of the text in jp-currentTime and jp-duration */
+  }
+  
+  .yuan-interface .yuan-controls {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .yuan-audio .yuan-controls {
+    width: 380px;
+    padding: 20px 20px 0 20px;
+  }
+  
+  .yuan-audio-stream .yuan-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 142px;
+  }
+  
+  .yuan-video .yuan-type-single .yuan-controls {
+    width: 78px;
+    margin-left: 200px;
+  }
+  
+  .yuan-video .yuan-type-playlist .yuan-controls {
+    width: 134px;
+    margin-left: 172px;
+  }
+  
+  .yuan-video .yuan-controls {
+    float: left;
+  }
+  
+  .yuan-controls button {
+    display: block;
+    float: left;
+    overflow: hidden;
+    text-indent: -9999px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .yuan-play {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .yuan-play {
+    background: url("./images/jplayer.blue.monday.jpg") 0 0 no-repeat;
+  }
+  
+  .yuan-play:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -41px 0 no-repeat;
+  }
+  
+  .yuan-state-playing .yuan-play {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -42px no-repeat;
+  }
+  
+  .yuan-state-playing .yuan-play:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -41px -42px no-repeat;
+  }
+  
+  .yuan-stop, .yuan-previous, .yuan-next {
+    width: 28px;
+    height: 28px;
+    margin-top: 6px;
+  }
+  
+  .yuan-stop {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -83px no-repeat;
+    margin-left: 10px;
+  }
+  
+  .yuan-stop:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -29px -83px no-repeat;
+  }
+  
+  .yuan-previous {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -112px no-repeat;
+  }
+  
+  .yuan-previous:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -29px -112px no-repeat;
+  }
+  
+  .yuan-next {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -141px no-repeat;
+  }
+  
+  .yuan-next:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -29px -141px no-repeat;
+  }
+  
+  /* @end */
+  /* @group progress bar */
+  .yuan-progress {
+    overflow: hidden;
+    background-color: #ddd;
+  }
+  
+  .yuan-audio .yuan-progress {
+    position: absolute;
+    top: 32px;
+    height: 15px;
+  }
+  
+  .yuan-audio .yuan-type-single .yuan-progress {
+    left: 110px;
+    width: 186px;
+  }
+  
+  .yuan-audio .yuan-type-playlist .yuan-progress {
+    left: 166px;
+    width: 130px;
+  }
+
+  .yuan-video .yuan-progress {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 10px;
+  }
+
+  .yuan-seek-bar {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -202px repeat-x;
+    width: 0px;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .yuan-play-bar {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -218px repeat-x;
+    width: 0px;
+    height: 100%;
+  }
+
+  /* The seeking class is added/removed inside jPlayer */
+  .yuan-seeking-bg {
+    background: url("./images/jplayer.blue.monday.seeking.gif");
+  }
+
+  /* @end */
+  /* @group volume controls */
+  .yuan-state-no-volume .yuan-volume-controls {
+    display: none; 
+  }
+
+  .yuan-volume-controls {
+    position: absolute;
+    top: 32px;
+    left: 308px;
+    width: 200px;
+  }
+
+  .yuan-audio-stream .yuan-volume-controls {
+    left: 70px;
+  }
+
+  .yuan-video .yuan-volume-controls {
+    top: 12px;
+    left: 50px;
+  }
+
+  .yuan-volume-controls button {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    text-indent: -9999px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .yuan-mute,
+  .yuan-volume-max {
+    width: 18px;
+    height: 15px;
+  }
+
+  .yuan-volume-max {
+    left: 74px;
+  }
+
+  .yuan-mute {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -170px no-repeat;
+  }
+
+  .yuan-mute:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -19px -170px no-repeat;
+  }
+
+  .yuan-state-muted .yuan-mute {
+    background: url("./images/jplayer.blue.monday.jpg") -60px -170px no-repeat;
+  }
+
+  .yuan-state-muted .yuan-mute:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -79px -170px no-repeat; }
+  
+  .yuan-volume-max {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -186px no-repeat; }
+  
+  .yuan-volume-max:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -19px -186px no-repeat; }
+  
+  .yuan-volume-bar {
+    position: absolute;
+    overflow: hidden;
+    background: url("./images/jplayer.blue.monday.jpg") 0 -250px repeat-x;
+    top: 5px;
+    left: 22px;
+    width: 46px;
+    height: 5px;
+    cursor: pointer; }
+  
+  .yuan-volume-bar-value {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -256px repeat-x;
+    width: 0px;
+    height: 5px; }
+  
+  /* @end */
+  /* @group current time and duration */
+  .yuan-audio .yuan-time-holder {
+    position: absolute;
+    top: 50px; }
+  
+  .yuan-audio .yuan-type-single .yuan-time-holder {
+    left: 110px;
+    width: 186px; }
+  
+  .yuan-audio .yuan-type-playlist .yuan-time-holder {
+    left: 166px;
+    width: 130px; }
+  
+  .yuan-current-time,
+  .yuan-duration {
+    width: 60px;
+    font-size: .64em;
+    font-style: oblique; }
+  
+  .yuan-current-time {
+    float: left;
+    display: inline;
+    cursor: default; }
+  
+  .yuan-duration {
+    float: right;
+    display: inline;
+    text-align: right;
+    cursor: pointer; }
+  
+  .yuan-video .yuan-current-time {
+    margin-left: 20px; }
+  
+  .yuan-video .yuan-duration {
+    margin-right: 20px; }
+  
+  /* @end */
+ 
+  .yuan-video-play {
+    width: 100%;
+    overflow: hidden;
+    /* Important for nested negative margins to work in modern browsers */
+    cursor: pointer;
+    background-color: transparent;
+    /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */ }
+  
+  .yuan-video-270p .yuan-video-play {
+    margin-top: -270px;
+    height: 270px; }
+  
+  .yuan-video-360p .yuan-video-play {
+    margin-top: -360px;
+    height: 360px; }
+  
+  .yuan-video-full .yuan-video-play {
+    height: 100%; }
+  
+  .yuan-video-play-icon {
+    position: relative;
+    display: block;
+    width: 112px;
+    height: 100px;
+    margin-left: -56px;
+    margin-top: -50px;
+    left: 50%;
+    top: 50%;
+    background: url("./images/jplayer.blue.monday.video.play.png") 0 0 no-repeat;
+    text-indent: -9999px;
+    border: none;
+    cursor: pointer; }
+  
+  .yuan-video-play-icon:focus {
+    background: url("./images/jplayer.blue.monday.video.play.png") 0 -100px no-repeat; }
+  
+  .yuan-jplayer audio,
+  .yuan-jplayer {
+    width: 0px;
+    height: 0px; }
+  
+  .yuan-jplayer {
+    background-color: #000000; }
+  
+  /* @group TOGGLES */
+  /* The audio toggles are nested inside jp-time-holder */
+  .yuan-toggles {
+    padding: 0;
+    margin: 0 auto;
+    overflow: hidden; }
+  
+  .yuan-audio .yuan-type-single .yuan-toggles {
+    width: 25px; }
+  
+  .yuan-audio .yuan-type-playlist .yuan-toggles {
+    width: 55px;
+    margin: 0;
+    position: absolute;
+    left: 325px;
+    top: 50px; }
+  
+  .yuan-video .yuan-toggles {
+    position: absolute;
+    right: 16px;
+    margin: 0;
+    margin-top: 10px;
+    width: 100px; }
+  
+  .yuan-toggles button {
+    display: block;
+    float: left;
+    width: 25px;
+    height: 18px;
+    text-indent: -9999px;
+    line-height: 100%;
+    /* need this for IE6 */
+    border: none;
+    cursor: pointer; }
+  
+  .yuan-full-screen {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -310px no-repeat;
+    margin-left: 20px; }
+  
+  .yuan-full-screen:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -30px -310px no-repeat; }
+  
+  .yuan-state-full-screen .yuan-full-screen {
+    background: url("./images/jplayer.blue.monday.jpg") -60px -310px no-repeat; }
+  
+  .yuan-state-full-screen .yuan-full-screen:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -90px -310px no-repeat; }
+  
+  .yuan-repeat {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -290px no-repeat; }
+  
+  .yuan-repeat:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -30px -290px no-repeat; }
+  
+  .yuan-state-looped .yuan-repeat {
+    background: url("./images/jplayer.blue.monday.jpg") -60px -290px no-repeat; }
+  
+  .yuan-state-looped .yuan-repeat:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -90px -290px no-repeat; }
+  
+  .yuan-shuffle {
+    background: url("./images/jplayer.blue.monday.jpg") 0 -270px no-repeat;
+    margin-left: 5px; }
+  
+  .yuan-shuffle:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -30px -270px no-repeat; }
+  
+  .yuan-state-shuffled .yuan-shuffle {
+    background: url("./images/jplayer.blue.monday.jpg") -60px -270px no-repeat; }
+  
+  .yuan-state-shuffled .yuan-shuffle:focus {
+    background: url("./images/jplayer.blue.monday.jpg") -90px -270px no-repeat; }
+  
+  /* @end */
+  /* @group NO SOLUTION error feedback */
+  .yuan-no-solution {
+    padding: 5px;
+    font-size: .8em;
+    background-color: #eee;
+    border: 2px solid #009be3;
+    color: #000;
+    display: none; }
+  
+  .yuan-no-solution a {
+    color: #000; }
+  
+  .yuan-no-solution span {
+    font-size: 1em;
+    display: block;
+    text-align: center;
+    font-weight: bold; }
+ 
+ 
+  .yuan-playlist-empty {
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    padding: 10px;
+  }
+}
+ /* @end */
+ 

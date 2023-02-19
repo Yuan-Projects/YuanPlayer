@@ -1,7 +1,7 @@
 import type { CSSSelector, YuanPlayerOptions } from '../../core/player.d';
 // @ts-ignore
 import playerTpl from './player.ejs';
-import './index.css';
+import './player.scss';
 
 function getClass(Base) {
   return class YuanPlayer extends Base {
@@ -23,6 +23,7 @@ function getClass(Base) {
           div.classList.add(substr);
         }
       }
+      div.classList.add('yuanplayer-bluemonday-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);
     }

@@ -5,7 +5,7 @@ import './lyric.scss';
 function getClass(Base) {
   return class YuanPlayerLyric extends Base {
     constructor(otpions: LyricOptions) {
-      otpions.cssSelectorAncestor = '.yuanplayer-lyric-container';
+      otpions.cssSelectorAncestor = '.yuanplayer-yuan-lyric';
       super(otpions);
       this.addContainer();
       this.on('lyricfetched', (lyricItems) => {
@@ -14,16 +14,16 @@ function getClass(Base) {
     }
     addContainer() {
       if (typeof this.lyric === 'string') {
-        if (!this.container.querySelector('.yuanplayer-lyric-container')) {
+        if (!this.container.querySelector('.yuanplayer-yuan-lyric')) {
           // Add container for lyric
           var lyricDiv = document.createElement('div');
           var wrapContainer = document.createElement('div');
-          lyricDiv.classList.add('yuanplayer-lyric-container');
+          lyricDiv.classList.add('yuanplayer-yuan-lyric');
           wrapContainer.classList.add('lyric-wrapcontainer');
           this.container.appendChild(lyricDiv);
           lyricDiv.appendChild(wrapContainer);
         } else {
-          const lyricContainer = document.querySelector('.yuanplayer-lyric-container');
+          const lyricContainer = document.querySelector('.yuanplayer-yuan-lyric');
           if (lyricContainer) {
             lyricContainer.innerHTML = '<div id="lyric-wrapcontainer"></div>';
           }
