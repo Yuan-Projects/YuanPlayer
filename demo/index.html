@@ -15,34 +15,8 @@
     </style>
   </head>
   <body>
-    <h2>Example 0: English dictionary</h2>
-    <div>
-      <p><strong>Petal</strong></p>
-      <p>noun [ C ]</p>
-      <div>UK <img onclick="dicPlayer.play();" src="images/speaker.png" alt="" class="playicon">  /ˈpet.əl/ US <img onclick="dicPlayer2.play();" src="images/speaker.png" alt="" class="playicon"> /ˈpet̬.əl/</div>
-    </div>
-    <div id="exampleEnglishDicPlayer"></div>
-    <div id="exampleEnglishDicPlayer2"></div>
-    <hr />
-
-    <h2>Example 1: A simple player</h2>
-    <div id="simplePlayerContainer"></div>
-    <hr />
-
-    <h2>Example 2: A player with the lyric panel</h2>
-    <div id="APlayerLyricContainer"></div>
-    <div id="APlayerLyricLyricContainer"></div>
-    <hr />
-
-    <h2>Example 3: A player with the play list</h2>
-    <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 3rem;">
-      <div id="APlayerLyricPlaylistContainer" style="border: 2px solid black; width: 400px; padding: 2rem;"></div>
-      <div id="APlayerWithPlayListContainer" style="width: 400px;"></div>
-    </div>
-    <hr />
-
-    <h2>Example 4: A player with the play list and lyric panel</h2>
-    <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 3rem;">
+    <h2>Theme 1: Yuan</h2>
+    <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 1rem;">
       <div id="listcontainer3" style="width: 400px; border: 1px solid black;"></div>
       <div style="display: flex; flex-direction: column;">
         <div id="playercontainer3" style="border: 2px solid black; width: 400px; padding: 2rem;"></div>
@@ -52,16 +26,15 @@
 
     <hr />
 
-    <h2>Example 5: BlueMonday Theme</h2>
+    <h2>Theme 2: BlueMonday</h2>
     <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
       <div id="blueMondayPlayerContainer1" style="border: 2px solid black; width: 500px; box-sizing: border-box;"></div>
-      <div id="blueMondayLyricContainer1" style="width: 500px; box-sizing: border-box;"></div>
-      <div id="blueMondayPlayListContainer1" style="width: 500px; box-sizing: border-box;"></div>
     </div>
 
     <script src="../lib/umd/YuanPlayer.js"></script>
     <script src="../lib/umd/YuanPlayerThemeYuan.js"></script>
     <script src="../lib/umd/YuanPlayerThemeBlueMonday.js"></script>
+    <script src="playlist.js"></script>
     <script src="index.js"></script>
   </body>
 </html>
