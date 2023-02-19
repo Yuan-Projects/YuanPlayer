@@ -23,7 +23,11 @@ function getClass(Base) {
       this.on('shuffledchanged', () => {
         this.renderShuffleIcon();
         this.container.querySelector('.yuanplayer-yuan-playlist .track-list').innerHTML = this.list.map(item => itemTpl({ track: item })).join('');
-      })
+      });
+      this.on('add', () => {
+        this.container.querySelector('.yuanplayer-yuan-playlist .track-list').innerHTML = this.list.map(item => itemTpl({ track: item })).join('');
+        this._highlightItem();
+      });
     }
     renderUI() {
       const container = this.container;
@@ -36,7 +40,6 @@ function getClass(Base) {
           this.switchModes();
         }
       });
-      this.updateHighlight();
       this.renderModeIcon();
     }
 
@@ -67,13 +70,6 @@ function getClass(Base) {
         text = 'shuffle_on';
       }
       element.textContent = text;
-    }
-  
-    updateHighlight() {
-      const playlistCOntainer = this.container.querySelector('.yuanplayer-yuan-playlist');
-      if (!playlistCOntainer) return ;
-      playlistCOntainer.querySelector('.active')?.classList.remove('active');
-      playlistCOntainer.querySelectorAll('.music-item-container')[this.index].classList.add('active');
     }
   }
 }

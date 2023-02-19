@@ -39,7 +39,7 @@ export default class PlayListUI extends PlayList {
       this.on('remove', (index) => {
         this.container.querySelectorAll(this.cssSelector.item || '')[index]?.remove();
         this._highlightItem();
-      })
+      });
       this.on('select', (index) => {
         this._highlightItem(index);
       });

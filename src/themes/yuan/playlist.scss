@@ -4,6 +4,7 @@
   padding: 1em;
 
   .music-item-container {
+    position: relative;
     margin: 1rem auto;
     cursor: pointer;
     display: flex;
@@ -12,11 +13,22 @@
 
     &:hover {
       outline: 1px dotted black;
+
+      .yuan-playlist-item-remove {
+        display: inline-block;
+      }
     }
 
     .imgurl {
       width: 3rem;
       height: 3rem;
+    }
+
+    .yuan-playlist-item-remove {
+      position: absolute;
+      right: 1rem;
+      display: none;
+      color: black;
     }
   }
 
