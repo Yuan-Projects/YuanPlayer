@@ -22,7 +22,7 @@ function getClass(Base) {
           lyricDiv.appendChild(wrapContainer);
 
           const emptyElement = document.createElement('div');
-          emptyElement.classList.add(this.cssSelector.noContent);
+          emptyElement.classList.add(this.cssSelector.noContent.substring(1));
           emptyElement.textContent = 'No lyric available.';
           lyricDiv.appendChild(emptyElement);
         }
@@ -37,7 +37,7 @@ function getClass(Base) {
       var wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  
       for (var i = 0, l = items.length; i < l; i++) {
         var div = document.createElement('div');
-        div.classList.add(this.cssSelector.item);
+        div.classList.add(this.cssSelector.item.substring(1));
         var content = items[i].split(']')[1];
         innerText(div, content);
         wrapContainer?.appendChild(div);

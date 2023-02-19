@@ -36,7 +36,7 @@ function getClass(Base) {
   
       for (var i = 0, l = items.length; i < l; i++) {
         var div = document.createElement('div');
-        div.classList.add(this.cssSelector.item);
+        div.classList.add(this.cssSelector.item.substring(1));
         var content = items[i].split(']')[1];
         innerText(div, content);
         wrapContainer?.appendChild(div);

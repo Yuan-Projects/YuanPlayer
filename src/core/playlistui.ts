@@ -31,6 +31,7 @@ export default class PlayListUI extends PlayList {
     setTimeout(() => {
       this.on('shuffledchanged', () => {
         this.container.classList.toggle(this.stateClass.shuffled);
+        document.querySelector(this.player.cssSelectorAncestor)?.classList.toggle(this.stateClass.shuffled);
       });
       this.on('modechange', () => {
         // TODO

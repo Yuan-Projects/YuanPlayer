@@ -1,5 +1,6 @@
 // imports the Lottie library 
 import Lottie from 'lottie-web/build/player/esm/lottie.min.js';
+import { uuidv4 } from '../../core/utils';
 // @ts-ignore
 import playerTpl from './player.ejs';
 import { YuanPlayerOptions } from '../../core/player.d';
@@ -7,8 +8,20 @@ import './player.scss';
 
 function getClass(Base) {
   return class YuanPlayer extends Base {
+    cssSelectorAncestor = '';
     constructor(options: YuanPlayerOptions) {
+      options.useStateClassSkin = true;
+      options.cssSelectorAncestor = `#yuan_container_${uuidv4()}`;
+      options.cssSelector = {
+        mute: '.mute-icon',
+        volumeValue: '.volume-out',
+        play: '.play-icon',
+        currentTime: '.current-time',
+        duration: '.duration',
+        ...options.cssSelector
+      }
       super(options);
+      this.cssSelectorAncestor = options.cssSelectorAncestor;
       // previous muted state
       this.muted = false;
       if (!this.nativeControls) {
@@ -18,6 +31,7 @@ function getClass(Base) {
   
     renderPlayerUI() {
       const div = document.createElement('div');
+      div.id = this.cssSelectorAncestor.substring(1);
       div.classList.add('yuanplayer-yuan-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);
@@ -25,7 +39,7 @@ function getClass(Base) {
       // Play/Pause button
       // variable for the button that will contain both icons
       const playIconContainer = div.querySelector('.play-icon');
-  
+
       // loads the animation that transitions the play icon into the pause icon into the referenced button, using Lottie’s loadAnimation() method
       // [0, 14] => play icon
       // [14, 27] => pause icon
@@ -38,14 +52,6 @@ function getClass(Base) {
         name: "Demo Animation",
       });
       animation.goToAndStop(14, true);
-      // adds an event listener to the button so that when it is clicked, the the player toggles between play and pause
-      playIconContainer?.addEventListener('click', () => {
-        if (this.mediaObject.paused) {
-          this.mediaObject.play();
-        } else {
-          this.mediaObject.pause();
-        }
-      });
 
       this.on('ended', () => {
         // Show play button again
@@ -58,20 +64,13 @@ function getClass(Base) {
         animation.playSegments([14, 27], true);
       });
 
-      // Current time and duration
-      const currentTimeElement = div.querySelector('.current-time');
-      currentTimeElement!.textContent = this.formatTime(Math.floor(this.mediaObject.currentTime));
-
       const durationChangeHandler = () => {
-        this.displayAudioDuration();
         this.setSliderMax();
       };
       this.on('durationchange', durationChangeHandler);
       this.on('loadedmetadata', durationChangeHandler);
 
       this.on('timeupdate', () => {
-        const second = Math.floor(this.mediaObject.currentTime);
-        currentTimeElement!.textContent = this.formatTime(second);
         this.setSliderValue();
       });
 
@@ -80,8 +79,6 @@ function getClass(Base) {
       seekSlider?.addEventListener('input', () => {
         this.mediaObject.currentTime = parseInt(seekSlider.value);
       });
-
-      this.setVolumeOutput();
 
       const volumeSlider = div.querySelector('.volume-slider');
       this.setVolumeSlider();
@@ -100,12 +97,8 @@ function getClass(Base) {
         autoplay: false,
         name: "Mute Animation",
       });
-      muteIconContainer?.addEventListener('click',  () => {
-        this.toggleMute();
-      });
 
       this.on('volumechange', () => {
-        this.setVolumeOutput();
         this.setVolumeSlider();
         if (this.mediaObject.muted !== this.muted) {
           this.setVolumeIcon();
@@ -118,22 +111,16 @@ function getClass(Base) {
         animation.playSegments([0, 14], true);
       });
     }
-    displayAudioDuration() {
-      const durationElement = this.container.querySelector('.duration');
-      durationElement!.textContent = this.formatTime(Math.floor(this.mediaObject.duration));
-    }
     setSliderMax() {
-      const seekSlider = this.container.querySelector('.seek-slider');
-      seekSlider.max = Math.floor(this.mediaObject.duration);
+      const seekSlider = document.querySelector(this.cssSelectorAncestor)!.querySelector('.seek-slider') as HTMLInputElement;
+      if (seekSlider) {
+        seekSlider.max = String(Math.floor(this.mediaObject.duration));
+      }
     }
     setSliderValue() {
       const seekSlider = this.container.querySelector('.seek-slider');
       seekSlider.value = Math.floor(this.mediaObject.currentTime);
       this.container.querySelector('.yuanplayer-yuan-container').style.setProperty('--seek-before-width', `${seekSlider.value / seekSlider.max * 100}%`);
-    }
-    setVolumeOutput() {
-      const volumeOutput = this.container.querySelector('.volume-out')
-      volumeOutput.textContent = String(Math.trunc(this.mediaObject.volume * 100));
     }
     setVolumeSlider() {
       const volumeSlider = this.container.querySelector('.volume-slider');

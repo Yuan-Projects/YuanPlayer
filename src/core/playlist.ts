@@ -167,42 +167,6 @@ class PlayList extends Emitter {
         this.trigger('remove', index);
       }
     }
-    /*
-    let indexToBeRemoved;
-    for (let i = 0; i < this.originalList.length; i++) {
-      if (this.originalList[i].id == trackItemId) {
-        this.originalList.splice(i, 1);
-        break;
-      }
-    }
-    for (let i = 0; i < this.list.length; i++) {
-      if (this.list[i].id == trackItemId) {
-        indexToBeRemoved = i;
-        this.list.splice(i, 1);
-        break;
-      }
-    }
-    // If this item is the current one
-    if (indexToBeRemoved === this.index) {
-      // Stop the playback first
-      this.player.pause();
-      // If there are items left, try to move onto the next one in the list, if it's the last one, use the previous one.
-      if (this.list.length > 0) {
-        // if it's the last one, use the previous one.
-        if (indexToBeRemoved === this.list.length) {
-          this.index--;
-        }
-        this.updatePlayerLyric(this.index);
-      } else {
-        // If no one item left in the lists, reset the player object
-        this.player.clearMedia(); // TODO
-        this.lyricObj.unload(); // TODO
-      }
-    } else if (indexToBeRemoved < this.index) {
-      this.index--;
-    }
-    this.trigger('trackRemoved', trackItemId);
-    */
   }
   switchModes() {
     const newVal = (++this.modeIndex) % PlayList.modes.length;

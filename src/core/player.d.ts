@@ -10,6 +10,7 @@ export interface CSSSelector {
   volumeBar?: string
   volumeBarValue?: string
   volumeMax?: string
+  volumeValue?: string
   playbackRateBar?: string
   playbackRateBarValue?: string
   currentTime?: string

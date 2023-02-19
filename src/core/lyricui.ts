@@ -4,8 +4,8 @@ import type { LyricObject, LyricOptions } from "./lyric.d";
 export default class LyricUI extends Lyric {
   cssSelectorAncestor = '';
   cssSelector = {
-    item: 'yuanplayer-lyric-item',
-    noContent: 'yuanplayer-lyric-empty',
+    item: '.yuanplayer-lyric-item',
+    noContent: '.yuanplayer-lyric-empty',
   };
   protected stateClass = {
     current: "highlight",
@@ -43,7 +43,7 @@ export default class LyricUI extends Lyric {
     this.lyricCurrentPosition = newLyricIndex;
   
     // Hightlight the current lyric
-    var lyricDivs = this.container.querySelectorAll('.' + this.cssSelector.item);
+    var lyricDivs = this.container.querySelectorAll(this.cssSelector.item);
     if (lyricDivs.length) {
       lyricDivs[oldPosition].classList.remove(this.stateClass.current);
       lyricDivs[newLyricIndex].classList.add(this.stateClass.current);
@@ -55,7 +55,7 @@ export default class LyricUI extends Lyric {
     }
   }
   protected _removeAllItems() {
-    const itemElements = this.container.querySelectorAll('.' + this.cssSelector.item);
+    const itemElements = this.container.querySelectorAll(this.cssSelector.item);
     for (let i = 0; i < itemElements.length; i++) {
       itemElements[i].remove();
     }
