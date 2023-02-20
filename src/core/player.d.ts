@@ -25,6 +25,15 @@ export interface CSSSelector {
   shuffle?: string
 }
 
+export interface PlayerStateClass{
+  playing?: string
+  seeking?: string
+  muted?: string
+  looped?: string
+  fullScreen?: string
+  noVolume?: string
+}
+
 export interface MediaItem {
   poster?: string
   title?: string
@@ -40,4 +49,5 @@ export interface YuanPlayerOptions {
   media: MediaItem
   cssSelectorAncestor?: string
   cssSelector?: CSSSelector
+  stateClass?: PlayerStateClass
 }

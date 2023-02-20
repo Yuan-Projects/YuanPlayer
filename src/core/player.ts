@@ -154,6 +154,9 @@ class Player extends Emitter {
     for (var i = 0; i < src.length; i++) {
       this.addSourceElement(src[i]);
     }
+    setTimeout(() => {
+      this.trigger('setmedia');
+    }, 30);
   }
 
   /**

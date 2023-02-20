@@ -46,6 +46,10 @@ export default class PlayerUI extends Player {
       ...this.cssSelector,
       ...options.cssSelector
     };
+    this.stateClass = {
+      ...this.stateClass,
+      ...options.stateClass
+    };
     if (!this.nativeControls) {
       this.addEventListeners();
     }
@@ -110,6 +114,13 @@ export default class PlayerUI extends Player {
           element.textContent = this.formatTime(Math.floor(this.mediaObject.duration));
         }
       });
+      this.on('setmedia', () => {
+        if (!this.cssSelector.title) return false;
+        const element = domElement.querySelector(this.cssSelector.title);
+        if (element) {
+          element.textContent = this.media.title || '';
+        }
+      })
       this.on('timeupdate', () => {
         const second = Math.floor(this.mediaObject.currentTime);
         if (this.cssSelector.currentTime) {
@@ -154,7 +165,7 @@ export default class PlayerUI extends Player {
         return true;
       }
       dom = dom.parentNode;
-    } while (dom !== rootElement);
+    } while (dom !== document.querySelector(this.cssSelectorAncestor) && dom !== document);
     return false;
   }
   updateVolume() {
