@@ -30,8 +30,13 @@ export default class PlayListUI extends PlayList {
   private _addEventListeners() {
     setTimeout(() => {
       this.on('shuffledchanged', () => {
-        this.container.classList.toggle(this.stateClass.shuffled);
-        document.querySelector(this.player.cssSelectorAncestor)?.classList.toggle(this.stateClass.shuffled);
+        if (this.shuffled) {
+          this.container.classList.add(this.stateClass.shuffled);
+          document.querySelector(this.player.cssSelectorAncestor)?.classList.add(this.stateClass.shuffled);
+        } else {
+          this.container.classList.remove(this.stateClass.shuffled);
+          document.querySelector(this.player.cssSelectorAncestor)?.classList.remove(this.stateClass.shuffled);
+        }
       });
       this.on('modechange', () => {
         // TODO
