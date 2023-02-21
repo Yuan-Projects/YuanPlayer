@@ -67,4 +67,26 @@ export default [
       inlineStyles: false
     }), typescript()]
   },
+  {
+    input: 'src/themes/pinkFlag/index.ts',
+    output: [
+      {
+        file: 'lib/umd/YuanPlayerThemePinkFlag.js',
+        format: 'umd',
+        name: 'YuanPlayerThemePinkFlag'
+      },
+      {
+        file: 'lib/mjs/YuanPlayerThemePinkFlag.js',
+        format: 'es',
+      },
+      {
+        file: 'lib/cjs/YuanPlayerThemePinkFlag.js',
+        format: 'cjs',
+      },
+    ],
+    plugins: [styles(),   nodeResolve({browser:true}), ejs({
+      include: ['**/*.ejs', '**/*.html'],
+      inlineStyles: false
+    }), typescript()]
+  },
 ];
