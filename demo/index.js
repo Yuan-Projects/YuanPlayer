@@ -1,9 +1,11 @@
 const YPlayerObj = YuanPlayer.use(YuanPlayerThemeYuan);
 const BMPlayerObj = YuanPlayer.use(YuanPlayerThemeBlueMonday);
+const PFPlayerObj = YuanPlayer.use(YuanPlayerThemePinkFlag);
 
 const { Player, Lyric, PlayList } = YuanPlayer;
 const YPlayer = YPlayerObj.Player, YLyric = YPlayerObj.Lyric, YPlayList = YPlayerObj.PlayList;
 const BMPlayer = BMPlayerObj.Player, BMLyric = BMPlayerObj.Lyric, BMPlayList = BMPlayerObj.PlayList;
+const PFPlayer = PFPlayerObj.Player, PFPlayList = PFPlayerObj.PlayList;
 
 fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
   lyricArr.forEach((lyric, index) => {
@@ -44,7 +46,19 @@ fetchLyrics(playlist.map(item => item.lyric)).then(lyricArr => {
     player: blueMondayPlayer1,
     lyricObj: blueMondayLyric1
   });
-});
+}).then(() => { // Theme 3: pinkFlag
+  let pfPlayer1 = new PFPlayer({
+    media: {title: playlist[0].title, src: playlist[0].src},
+    container: document.querySelector('#pinkFlagPlayerContainer1')
+  });
+  //debugger;
+  window.pinFlagPlayListInstance = new PFPlayList({
+    autoPlay: false,
+    container: document.querySelector('#pinkFlagPlayerContainer1'),
+    list: playlist,
+    player: pfPlayer1,
+  });
+})
 
 async function fetchLyrics(urls) {
   try {
