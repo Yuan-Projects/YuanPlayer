@@ -1,0 +1,35 @@
+{
+  "name": "yuanplayer-theme-pinkflag",
+  "version": "0.0.1-alpha-1",
+  "description": "YuanPlayer theme PinkFlag",
+  "type": "module",
+  "main": "lib/cjs/YuanPlayerThemePinkFlag.js",
+  "module": "lib/mjs/YuanPlayerThemePinkFlag.js",
+  "exports": {
+    ".": {
+      "require": "./lib/cjs/YuanPlayerThemePinkFlag.js",
+      "import": "./lib/mjs/YuanPlayerThemePinkFlag.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuan-Projects/YuanPlayer.git"
+  },
+  "keywords": [
+    "music player",
+    "audio player",
+    "lyric",
+    "music"
+  ],
+  "author": "rainyjune <rainyjune@live.cn>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuan-Projects/YuanPlayer/issues"
+  },
+  "homepage": "https://github.com/Yuan-Projects/YuanPlayer#readme",
+  "devDependencies": {
+  }
+}
