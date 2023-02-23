@@ -10,7 +10,7 @@
     "build:theme-monday": "npm run build && rimraf theme-monday && copyfiles src/themes/blueMonday/package.json -f theme-monday && copyfiles lib/cjs/YuanPlayerThemeBlueMonday.js lib/mjs/YuanPlayerThemeBlueMonday.js lib/umd/YuanPlayerThemeBlueMonday.js theme-monday",
     "build:theme-pinkflag": "npm run build && rimraf theme-pinkflag && copyfiles src/themes/pinkFlag/package.json -f theme-pinkflag && copyfiles lib/cjs/YuanPlayerThemePinkFlag.js lib/mjs/YuanPlayerThemePinkFlag.js lib/umd/YuanPlayerThemePinkFlag.js theme-pinkflag",
     "start": "live-server --open=/demo/ --wait=2000 --ignore=src .",
-    "build": "rimraf lib && rollup --config",
+    "build": "rimraf lib && rollup --no-strict --config",
     "watch": "rollup --config --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
