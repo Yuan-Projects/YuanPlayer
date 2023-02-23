@@ -1,5 +1,5 @@
 import Player from "./player";
-import { uuidv4 } from './utils';
+import { matches, trunc, uuidv4 } from './utils';
 import type { CSSSelector, YuanPlayerOptions } from "./player.d";
 
 export default class PlayerUI extends Player {
@@ -107,6 +107,9 @@ export default class PlayerUI extends Player {
         }
       };
       domElement.addEventListener('click', clickHandler, false);
+      this.on('ended', () => {
+        domElement.classList.remove(this.stateClass.playing);
+      })
       this.on('durationchange', () => {
         if (!this.cssSelector.duration) return false;
         const element = domElement.querySelector(this.cssSelector.duration);
@@ -142,9 +145,18 @@ export default class PlayerUI extends Player {
       });
       this.on('stop', () => {
         domElement.classList.remove(this.stateClass.playing);
+        if (this.cssSelector.currentTime) {
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+        }
+        if (this.cssSelector.playBar) {
+          (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
+        }
       });
       this.on('clearmedia', () => {
         domElement?.classList.remove(this.stateClass.playing);
+        if (this.cssSelector.currentTime) {
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+        }
         if (this.cssSelector.duration) {
           domElement.querySelector(this.cssSelector.duration)!.textContent = this.formatTime(0);
         }
@@ -161,7 +173,7 @@ export default class PlayerUI extends Player {
   private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
     if (!cssSelector) return false;
     do {
-      if (dom.matches(cssSelector)) {
+      if (matches(dom, cssSelector)) {
         return true;
       }
       dom = dom.parentNode;
@@ -179,12 +191,12 @@ export default class PlayerUI extends Player {
     if (this.cssSelector.volumeValue) {
       const element = domElement.querySelector(this.cssSelector.volumeValue);
       if (element) {
-        element.textContent = String(Math.trunc(this.mediaObject.volume * 100));
+        element.textContent = String(trunc(this.mediaObject.volume * 100));
       }
     }
     if (!this.cssSelector.volumeBarValue) return false;
     const ele = domElement.querySelector(this.cssSelector.volumeBarValue) as HTMLElement;
-    const val = Math.trunc(this.mediaObject.volume * 100);
+    const val = trunc(this.mediaObject.volume * 100);
     if (ele) {
       ele!.style.width = this.mediaObject.muted ? '0%' : val + "%";
     }

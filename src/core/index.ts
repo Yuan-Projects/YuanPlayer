@@ -1,3 +1,4 @@
+import "./element-remove";
 import Player from "./playerui";
 import Lyric from "./lyricui";
 import PlayList from "./playlistui";

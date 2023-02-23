@@ -1,4 +1,5 @@
 import PlayList from "./playlist";
+import { matches } from "./utils";
 import type { CSSSelector, PlayListOptions } from './playlist.d';
 
 export default class PlayListUI extends PlayList {
@@ -59,11 +60,11 @@ export default class PlayListUI extends PlayList {
           const itemElement = this.findItemElement(target);
           const index = this.findDomIndex(itemElement);
           this.play(index); // TODO
-        } else if (this.cssSelector.next && target.matches(this.cssSelector?.next)) {
+        } else if (this.cssSelector.next && matches(target, this.cssSelector?.next)) {
           this.next();
-        } else if (this.cssSelector.previous && target.matches(this.cssSelector?.previous)) {
+        } else if (this.cssSelector.previous && matches(target, this.cssSelector?.previous)) {
           this.previous();
-        } else if (this.cssSelector.shuffle && target.matches(this.cssSelector.shuffle)) {
+        } else if (this.cssSelector.shuffle && matches(target, this.cssSelector.shuffle)) {
           this.shuffle();
         }
       });
@@ -72,7 +73,7 @@ export default class PlayListUI extends PlayList {
   private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
     if (!cssSelector) return false;
     do {
-      if (dom.matches(cssSelector)) {
+      if (matches(dom, cssSelector)) {
         return true;
       }
       dom = dom.parentNode;
@@ -90,7 +91,7 @@ export default class PlayListUI extends PlayList {
   }
   protected findItemElement(dom) {
     do {
-      if (dom.matches(this.cssSelector.item)) {
+      if (matches(dom, this.cssSelector.item)) {
         return dom;
       }
       dom = dom.parentNode;

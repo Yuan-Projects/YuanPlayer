@@ -174,7 +174,7 @@ class PlayList extends Emitter {
     this.trigger('modechange');
   }
   setMode(modeString: string) {
-    if (PlayList.modes.includes(modeString) === false) return false;
+    if (PlayList.modes.indexOf(modeString) === -1) return false;
     this.modeIndex = PlayList.modes.indexOf(modeString);
     this.trigger('modechange');
   }

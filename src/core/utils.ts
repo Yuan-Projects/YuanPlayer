@@ -14,10 +14,10 @@ export const innerText = function(element: HTMLElement, text: string) {
 }
 
 export function uuidv4() {
-  // @ts-ignore
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    return v.toString(16);
+  });
 }
 
 /**
@@ -30,10 +30,10 @@ export function merge(...args) {
 
   while (args.length > 0) {
     src = args.splice(0, 1)[0];
-    if (toString.call(src) == '[object Object]') {
+    if (Object.prototype.toString.call(src) == '[object Object]') {
       for (p in src) {
         if (src.hasOwnProperty(p)) {
-          if (toString.call(src[p]) == '[object Object]') {
+          if (Object.prototype.toString.call(src[p]) == '[object Object]') {
             dst[p] = merge(dst[p] || {}, src[p]);
           } else {
             dst[p] = src[p];
@@ -44,4 +44,21 @@ export function merge(...args) {
   }
 
   return dst;
+}
+
+export function trunc(x: number) {
+  if ('trunc' in Math) {
+    return Math.trunc(x);
+  }
+  // @ts-ignore
+  return x < 0 ? Math.ceil(x) : Math.floor(x);
+}
+
+export function matches(element, selectors) {
+  if (element.matches) {
+    return element.matches(selectors);
+  } else if (element.msMatchesSelector) {
+    return element.msMatchesSelector(selectors);
+  }
+  return false;
 }

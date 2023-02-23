@@ -1,4 +1,5 @@
 import type { PlayListOptions } from "../../core/playlist.d";
+import { matches } from "../../core/utils";
 // @ts-ignore
 import tpl from './playlist.ejs';
 // @ts-ignore
@@ -23,7 +24,7 @@ function getClass(Base) {
       const player = this.player;
       this.container.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
-        if (player.cssSelector.repeat && target.matches(player.cssSelector?.repeat)) {
+        if (player.cssSelector.repeat && matches(target, player.cssSelector?.repeat)) {
           this.toggleMode();
         }
       });
