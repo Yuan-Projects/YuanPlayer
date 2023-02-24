@@ -26,6 +26,12 @@ function getClass(Base) {
       div.classList.add('yuanplayer-bluemonday-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);
+
+      // If current browser support flex wrapping, use flexbox layout
+      // Some old browsers does not support this feature, such as Android 4.2 default browsers
+      if (document.createElement("p").style.flexWrap === '') {
+        div.querySelector('.yuan-interface')?.classList.add('flexbox');
+      }
     }
   }
 }
