@@ -50,8 +50,16 @@ export default class PlayerUI extends Player {
       ...this.stateClass,
       ...options.stateClass
     };
-    if (!this.nativeControls) {
+    if (!this.nativeControls && this.isAudioSupported) {
       this.addEventListeners();
+    }
+    if (!this.isAudioSupported) {
+      setTimeout(() => {
+        const element = document.querySelector(`${this.cssSelectorAncestor} ${this.cssSelector.noSolution}`) as HTMLElement;
+        if (element) {
+          element.style.display = 'block';
+        }
+      }, 0);
     }
   }
   private addEventListeners() {

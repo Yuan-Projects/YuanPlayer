@@ -150,10 +150,16 @@
     background-color: #eee;
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
+    padding: .6rem;
     justify-content: space-between;
     align-items: center;
     gap: .6rem;
+
+    &.flexbox {
+      .yuan-controls-row {
+        margin-top: 0;
+      }
+    }
   }
 
   .yuan-video .yuan-interface {
@@ -354,20 +360,22 @@
 
   .yuan-current-time,
   .yuan-duration {
-    width: 60px;
     font-size: .64em;
-    font-style: oblique; }
+    font-style: oblique;
+    line-height: 40px;
+  }
   
   .yuan-current-time {
-    float: left;
     display: inline;
-    cursor: default; }
+    cursor: default;
+  }
   
   .yuan-duration {
-    float: right;
     display: inline;
     text-align: right;
-    cursor: pointer; }
+    cursor: pointer;
+    margin-left: 1rem;
+  }
   
   .yuan-video .yuan-current-time {
     margin-left: 20px; }
@@ -435,10 +443,19 @@
   .yuan-audio .yuan-toggles {
     width: 55px;
     margin: 0;
+    height: 40px;
+    margin-left: 1rem;
+  }
+
+  .yuan-audio {
+    .yuan-time-holder {
+      margin-left: 1rem;
+    }
   }
 
   .yuan-controls-row {
     width: 100%;
+    margin-top: .6rem;
   }
 
   .yuan-toggles button {
@@ -449,7 +466,9 @@
     line-height: 100%;
     /* need this for IE6 */
     border: none;
-    cursor: pointer; }
+    cursor: pointer;
+    margin-top: 11px;
+  }
   
   .yuan-full-screen {
     background: url("./images/jplayer.blue.monday.jpg") 0 -310px no-repeat;
@@ -551,6 +570,16 @@
 
     .yuan-volume-max {
       left: 60px;
+    }
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .yuanplayer-bluemonday-player {
+    .yuan-controls {
+      .yuan-stop {
+        display: none;
+      }
     }
   }
 }

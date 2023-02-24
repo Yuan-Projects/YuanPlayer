@@ -16,6 +16,7 @@ class Player extends Emitter {
   loop = false;
   media: MediaItem;
   nativeControls = false;
+  isAudioSupported = false;
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -44,8 +45,9 @@ class Player extends Emitter {
   };
   constructor(options: YuanPlayerOptions) {
     super();
-    if (!isHtml5AudioSupported()) {
-      throw new Error("Your browser does not support HTML5 Audio.");
+    if (isHtml5AudioSupported()) {
+      //throw new Error("Your browser does not support HTML5 Audio.");
+      this.isAudioSupported = true;
     }
 
     this.errorCode = 0;
