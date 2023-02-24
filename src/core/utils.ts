@@ -59,6 +59,8 @@ export function matches(element, selectors) {
     return element.matches(selectors);
   } else if (element.msMatchesSelector) {
     return element.msMatchesSelector(selectors);
+  } else if (element.webkitMatchesSelector) {
+    return element.webkitMatchesSelector(selectors);
   }
   return false;
 }
