@@ -188,7 +188,7 @@ export default class PlayerUI extends Player {
     } while (dom !== document.querySelector(this.cssSelectorAncestor) && dom !== document);
     return false;
   }
-  updateVolume() {
+  private updateVolume() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
     if (this.mediaObject.muted) {

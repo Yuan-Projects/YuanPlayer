@@ -17,88 +17,29 @@
 
 .yuanplayer-bluemonday-player {
   .yuan-audio *:focus,
-  .yuan-audio-stream *:focus,
-  .yuan-video *:focus {
+  .yuan-audio-stream *:focus {
     /* Disable the browser focus highlighting. */
     outline: none;
   }
   
   .yuan-audio button::-moz-focus-inner,
-  .yuan-audio-stream button::-moz-focus-inner,
-  .yuan-video button::-moz-focus-inner {
+  .yuan-audio-stream button::-moz-focus-inner {
     /* Disable the browser CSS3 focus highlighting. */
     border: 0;
   }
   
   .yuan-audio,
-  .yuan-audio-stream,
-  .yuan-video {
+  .yuan-audio-stream {
     font-size: 16px;
     font-family: Verdana, Arial, sans-serif;
     line-height: 1.6;
     color: #666;
     background-color: #eee;
+    border-radius: .6rem .6rem 0 0;
   }
-  
-  .yuan-audio {
-    /*
-    min-width: 420px;
-    */
-  }
-  
+
   .yuan-audio-stream {
     width: 182px;
-  }
-
-  .yuan-video-270p {
-    width: 480px;
-  }
-
-  .yuan-video-360p {
-    width: 640px;
-  }
-
-  .yuan-video-full {
-    /* Rules for IE6 (full-screen) */
-    width: 480px;
-    height: 270px;
-    /* Rules for IE7 (full-screen) - Otherwise the relative container causes other page items that are not position:static (default) to appear over the video/gui. */
-    position: static !important;
-    position: relative;
-  }
-  
-  /* The z-index rule is defined in this manner to enable Popcorn plugins that add overlays to video area. EG. Subtitles. */
-  .yuan-video-full div div {
-    z-index: 1000;
-  }
-  
-  .yuan-video-full .yuan-jplayer {
-    top: 0;
-    left: 0;
-    position: fixed !important;
-    position: relative;
-    /* Rules for IE6 (full-screen) */
-    overflow: hidden;
-  }
-  
-  .yuan-video-full .yuan-gui {
-    position: fixed !important;
-    position: static;
-    /* Rules for IE6 (full-screen) */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1001;
-    /* 1 layer above the others. */
-  }
-  
-  .yuan-video-full .yuan-interface {
-    position: absolute !important;
-    position: relative;
-    /* Rules for IE6 (full-screen) */
-    bottom: 0;
-    left: 0;
   }
 
   .flexbox {
@@ -153,16 +94,13 @@
     justify-content: space-between;
     align-items: center;
     gap: .6rem;
+    border-radius: .6rem .6rem 0 0;
 
     &.flexbox {
       .yuan-controls-row {
         margin-top: 0;
       }
     }
-  }
-
-  .yuan-video .yuan-interface {
-    border-top: 1px solid #009be3;
   }
   
   /* @group CONTROLS */
@@ -281,24 +219,19 @@
   }
 
   .yuan-volume-controls {
-    top: 32px;
-    left: 308px;
-    width: 200px;
     display: none;
+
+    > * {
+      float: left;
+    }
   }
 
   .yuan-audio-stream .yuan-volume-controls {
     left: 70px;
   }
 
-  .yuan-video .yuan-volume-controls {
-    top: 12px;
-    left: 50px;
-  }
-
   .yuan-volume-controls button {
     display: block;
-    position: absolute;
     overflow: hidden;
     text-indent: -9999px;
     border: none;
@@ -309,10 +242,6 @@
   .yuan-volume-max {
     width: 18px;
     height: 15px;
-  }
-
-  .yuan-volume-max {
-    left: 74px;
   }
 
   .yuan-mute {
@@ -334,20 +263,21 @@
   }
 
   .yuan-volume-max {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -186px no-repeat; }
+    background: url("./images/jplayer.blue.monday.jpg") 0 -186px no-repeat;
+    margin-left: 5px;
+  }
   
   .yuan-volume-max:focus {
     background: url("./images/jplayer.blue.monday.jpg") -19px -186px no-repeat; }
   
   .yuan-volume-bar {
-    position: absolute;
     overflow: hidden;
     background: url("./images/jplayer.blue.monday.jpg") 0 -250px repeat-x;
-    top: 5px;
-    left: 22px;
+    margin-top: 5px;
     width: 46px;
     height: 5px;
-    cursor: pointer; }
+    cursor: pointer;
+  }
   
   .yuan-volume-bar-value {
     background: url("./images/jplayer.blue.monday.jpg") 0 -256px repeat-x;
@@ -376,49 +306,8 @@
     margin-left: 1rem;
   }
   
-  .yuan-video .yuan-current-time {
-    margin-left: 20px; }
-  
-  .yuan-video .yuan-duration {
-    margin-right: 20px; }
-  
   /* @end */
- 
-  .yuan-video-play {
-    width: 100%;
-    overflow: hidden;
-    /* Important for nested negative margins to work in modern browsers */
-    cursor: pointer;
-    background-color: transparent;
-    /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */ }
-  
-  .yuan-video-270p .yuan-video-play {
-    margin-top: -270px;
-    height: 270px; }
-  
-  .yuan-video-360p .yuan-video-play {
-    margin-top: -360px;
-    height: 360px; }
-  
-  .yuan-video-full .yuan-video-play {
-    height: 100%; }
-  
-  .yuan-video-play-icon {
-    position: relative;
-    display: block;
-    width: 112px;
-    height: 100px;
-    margin-left: -56px;
-    margin-top: -50px;
-    left: 50%;
-    top: 50%;
-    background: url("./images/jplayer.blue.monday.video.play.png") 0 0 no-repeat;
-    text-indent: -9999px;
-    border: none;
-    cursor: pointer; }
-  
-  .yuan-video-play-icon:focus {
-    background: url("./images/jplayer.blue.monday.video.play.png") 0 -100px no-repeat; }
+
   
   .yuan-jplayer audio,
   .yuan-jplayer {
@@ -542,7 +431,7 @@
   .yuanplayer-bluemonday-player {
 
     .yuan-volume-controls {
-      left: 210px;
+      
     }
 
     .yuan-volume-bar {
@@ -572,6 +461,14 @@
       .yuan-stop {
         display: none;
       }
+    }
+  }
+}
+
+@media screen and (min-width: 810px) {
+  .yuanplayer-bluemonday-player {
+    .yuan-volume-controls {
+      display: block;
     }
   }
 }

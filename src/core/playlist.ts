@@ -168,17 +168,17 @@ class PlayList extends Emitter {
       }
     }
   }
-  switchModes() {
+  public switchModes() {
     const newVal = (++this.modeIndex) % PlayList.modes.length;
     this.modeIndex = newVal;
     this.trigger('modechange');
   }
-  setMode(modeString: string) {
+  public setMode(modeString: string) {
     if (PlayList.modes.indexOf(modeString) === -1) return false;
     this.modeIndex = PlayList.modes.indexOf(modeString);
     this.trigger('modechange');
   }
-  addEvents() {
+  private addEvents() {
     this.on('select', index => {
       this.updatePlayerLyric(index);
     });
@@ -214,8 +214,7 @@ class PlayList extends Emitter {
    */
   public next() {
     if (this.index === this.list.length - 1) return false;
-    this.index++;
-    this.play(this.index);
+    this.play(this.index + 1);
   }
   /**
    * Tested 1
@@ -224,8 +223,7 @@ class PlayList extends Emitter {
    */
   public previous() {
     if (this.index === 0) return false;
-    this.index--;
-    this.play(this.index);
+    this.play(this.index - 1);
   }
   /**
    * Tested 1
@@ -236,13 +234,13 @@ class PlayList extends Emitter {
   public play(index: number = this.index) {
     index = (index < 0) ? this.originalList.length + index : index;
     if (index > this.list.length - 1 || index < 0 || this.list.length === 0) return false;
-    this.select(index);
+    if (index !== this.index) {
+      this.select(index);
+    }
     //this.updatePlayerLyric(index);
     if (this.player) {
       this.player.play();
     }
-    // TODO
-    this.trigger('play', index);
   }
   /**
    * Tested 1
@@ -251,21 +249,6 @@ class PlayList extends Emitter {
   public pause() {
     if (this.player) {
       this.player.pause();
-    }
-  }
-  playAtIndex(index: number = this.index) {
-    if (index > this.list.length - 1) return false;
-    this.updatePlayerLyric(index);
-    if (this.player) {
-      this.player.play();
-    }
-    this.trigger('playMusicAtIndex', index);
-  }
-  playTrackById(trackId: string | number) {
-    const index = this.list.findIndex((track) => track.id == trackId);
-    if (index > -1) {
-      this.index = index;
-      this.playAtIndex(index);
     }
   }
   protected updatePlayerLyric(index) {

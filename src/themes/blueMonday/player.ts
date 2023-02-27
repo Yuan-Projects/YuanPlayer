@@ -3,6 +3,12 @@ import type { CSSSelector, YuanPlayerOptions } from '../../core/player.d';
 import playerTpl from './player.ejs';
 import './player.scss';
 
+/**
+ * The higher-order function receives YuanPlayerUI class as the argument
+ * and returns a new class which supports GUI.
+ * @param Base - YuanPlayerUI class
+ * @returns - A new class
+ */
 function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {

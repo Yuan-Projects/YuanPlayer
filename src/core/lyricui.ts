@@ -18,6 +18,9 @@ export default class LyricUI extends Lyric {
       ...options.cssSelector
     };
     this._addEventListeners();
+    setTimeout(() => {
+      this.loadLyricPlugin();
+    }, 0);
   }
   private _addEventListeners() {
     setTimeout(() => {
