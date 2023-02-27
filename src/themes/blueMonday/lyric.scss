@@ -10,6 +10,11 @@
   background: #ccc;
   font-size: 14px;
 
+  &.empty {
+    height: auto;
+    padding-top: 0;
+  }
+
   div {
     margin-bottom: 5px;
     min-height: 1em; /* Make the empty lyric container visible. */

@@ -166,7 +166,9 @@ class PlayList extends Emitter {
           // no item left
           // TODO
           this.player.clearMedia(); // TODO
-          this.lyricObj.unload(); // TODO
+          if (this.lyricObj) {
+            this.lyricObj.unload();
+          }
         }
         this.trigger('remove', index);
       }

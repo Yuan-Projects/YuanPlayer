@@ -125,14 +125,11 @@ class Lyric extends Emitter {
     this.addLyric();
     this.bindLyricEvents();
   }
-  private reset() {
+  public unload() {
     this.lyric = '';
     this.lyricObj.lyricArray.length = 0;
     this.lyricObj.timeArray.length = 0;
     this.lyricCurrentPosition = 0;
-  }
-  public unload() {
-    this.reset();
     this.trigger('reset');
   }
 }

@@ -8,6 +8,7 @@ export default class LyricUI extends Lyric {
     noContent: '.yuanplayer-lyric-empty',
   };
   protected stateClass = {
+    empty: 'empty',
     current: "highlight",
   };
   constructor(options: LyricOptions) {
@@ -66,6 +67,12 @@ export default class LyricUI extends Lyric {
   protected _updatePanel() {
     const isEmpty = this.lyricObj.lyricArray.length === 0;
     const emptyElement = (this.container.querySelector(this.cssSelector.noContent) as HTMLElement);
+    if (isEmpty) {
+      this._removeAllItems();
+      this.container.querySelector(this.cssSelectorAncestor)?.classList.add(this.stateClass.empty);
+    } else {
+      this.container.querySelector(this.cssSelectorAncestor)?.classList.remove(this.stateClass.empty);
+    }
     if (emptyElement) {
       emptyElement.style.display = isEmpty ? 'block' : 'none';
     }
