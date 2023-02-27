@@ -75,6 +75,10 @@ class PlayList extends Emitter {
     this.shuffled = false;
     this.list = [...playlist];
     this.originalList = [...playlist];
+    this.trigger('playlistset');
+    if (this.list.length) {
+      this.select(0);
+    }
   }
   private shuffleList() {
     this.list = [...this.originalList].sort(() => Math.random() - 0.5);

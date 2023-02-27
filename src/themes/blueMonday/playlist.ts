@@ -34,6 +34,10 @@ function getClass(Base) {
       this.on('remove', (trackItemId) => {
         this.updateList();
       });
+      this.on('playlistset', () => {
+        this.container.querySelector('.yuanplayer-bluemonday-playlist').innerHTML = tpl({tracks: this.list});
+        this.updateList();
+      });
       this.on('add', (trackItem) => {
         let ul = this.container.querySelector('.yuan-playlist ul');
         const li = document.createElement('li');

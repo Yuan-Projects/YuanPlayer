@@ -33,7 +33,10 @@ function getClass(Base) {
       this.on('shuffledchanged', () => {
         this.renderList();
       });
-      
+      this.on('playlistset', () => {
+        this.renderList();
+        this._highlightItem();
+      })
       this.on('add', (trackItem) => {
         this.renderList();
         this._highlightItem();

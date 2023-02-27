@@ -596,3 +596,27 @@
  
  /* @end */
 }
+
+@media screen and (max-width: 375px) {
+  .yuanplayer-pinkflag-player {
+    .jp-video {
+      .jp-controls {
+        margin-left: 85px;
+      }
+      .jp-volume-bar {
+        width: 75px;
+      }
+      .jp-volume-controls {
+        .jp-volume-max {
+          left: 60px;
+        }
+      }
+      .jp-toggles {
+        margin-left: 5px;
+      }
+    }
+    .jp-shuffle {
+      margin-left: 5px;
+    }
+  }
+}
