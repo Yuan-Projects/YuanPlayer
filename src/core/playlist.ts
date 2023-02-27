@@ -190,27 +190,31 @@ class PlayList extends Emitter {
     });
     this.player.on('ended', () => {
       const mode = PlayList.modes[this.modeIndex];
+      let index = -1;
       if (mode === 'off') {
         // Have played the last music
         if (this.index === this.list.length - 1) {
           // Reach the end;
           return;
         } else {
-          this.index++;
+          index = this.index + 1;
           // Play the next one in the list
         }
       } else if (mode === 'one') {
         // Play current one
+        index = this.index;
       } else if (mode === 'all') {
         if (this.index === this.list.length - 1) {
           // Reach the end;
-          this.index = 0;
+          index = 0;
         } else {
-          this.index++;
+          index = this.index + 1;
           // Play the next one in the list
         }
       }
-      this.play(this.index);
+      if (index > -1) {
+        this.play(index);
+      }
     });
   }
   /**
