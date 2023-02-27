@@ -77,7 +77,7 @@ export default class PlayListUI extends PlayList {
         return true;
       }
       dom = dom.parentNode;
-    } while (dom !== rootElement);
+    } while (dom !== rootElement && dom !== document);
     return false;
   }
   protected findDomIndex(element: HTMLElement): number {
@@ -95,7 +95,7 @@ export default class PlayListUI extends PlayList {
         return dom;
       }
       dom = dom.parentNode;
-    } while (dom !== this.container);
+    } while (dom !== this.container && dom !== document);
     return null;
   }
   protected _highlightItem(index = this.index) {

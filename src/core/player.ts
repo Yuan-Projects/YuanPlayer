@@ -198,12 +198,19 @@ class Player extends Emitter {
   }
   protected togglePlay() {
     var media = this.mediaObject;
-    if (media) {
-      if (media.paused) {
-        media.play();
-      } else {
-        media.pause();
+    if (!media) return false;
+    if (media.paused) {
+      const playPromise = media.play();
+      // The play() method returns a Promise which is resolved when playback has been successfully started.
+      // Note: Browsers released before 2019 may not return a value from play().
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          // Automatic playback started!
+        }).catch(error => {})
       }
+    } else {
+      media.pause();
     }
   }
   /**

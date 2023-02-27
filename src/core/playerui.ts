@@ -146,7 +146,10 @@ export default class PlayerUI extends Player {
         }
       });
       this.on('play', () => {
-        domElement.classList.add(this.stateClass.playing);
+        // If current src is empty, we should not add the state class
+        if (this.mediaObject?.currentSrc) {
+          domElement.classList.add(this.stateClass.playing);
+        }
       });
       this.on('pause', () => {
         domElement.classList.remove(this.stateClass.playing);

@@ -17,6 +17,7 @@ function getClass(Base) {
           var lyricDiv = document.createElement('div');
           var wrapContainer = document.createElement('div');
           lyricDiv.classList.add('yuanplayer-bluemonday-lyric');
+          lyricDiv.classList.add(this.stateClass.empty);
           wrapContainer.classList.add('lyric-wrapcontainer');
           this.container.appendChild(lyricDiv);
           lyricDiv.appendChild(wrapContainer);
