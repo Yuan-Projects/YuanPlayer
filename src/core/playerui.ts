@@ -31,6 +31,7 @@ export default class PlayerUI extends Player {
     noSolution: ".yuan-no-solution"
   };
   protected stateClass = {
+    repeatOne: "yuan-repeat-one",
     playing: "yuan-state-playing",
     seeking: "yuan-state-seeking",
     muted: "yuan-state-muted",
@@ -178,8 +179,33 @@ export default class PlayerUI extends Player {
       this.on('volumechange', () => {
         this.updateVolume();
       });
+      this.on('loopchanged', () => {
+        this.updateLoopState();
+      });
       this.updateVolume();
+      this.updateLoopState();
     }, 0);
+  }
+  private updateLoopState() {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (!domElement) return false;
+    if (this.mediaObject.loop) {
+      domElement.classList.add(this.stateClass.looped);
+      if(this.cssSelector.repeat) {
+        const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
+        if (repeatBtn) {
+          repeatBtn.classList.add(this.stateClass?.repeatOne || '');
+        }
+      }
+    } else {
+      domElement.classList.remove(this.stateClass.looped);
+      if(this.cssSelector.repeat) {
+        const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
+        if (repeatBtn) {
+          repeatBtn.classList.remove(this.stateClass?.repeatOne || '');
+        }
+      }
+    }
   }
   private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
     if (!cssSelector) return false;

@@ -68,7 +68,7 @@ class Player extends Emitter {
   private initOptions(options: YuanPlayerOptions) {
     for (const prop in options) {
       // @ts-ignore
-      this[prop] = options[prop];
+      this[prop] = prop === 'loop' ? options[prop] === 'one' : options[prop];
     }
   }
 

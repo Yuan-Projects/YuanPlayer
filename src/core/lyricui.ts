@@ -26,7 +26,8 @@ export default class LyricUI extends Lyric {
   private _addEventListeners() {
     setTimeout(() => {
       this.on('lyricfetched', (lyricItems) => {
-        this.container.querySelector(this.cssSelectorAncestor)!.scrollTop = 0;
+        // @ts-ignore
+        this.container.querySelector(this.cssSelectorAncestor)?.scrollTop = 0;
         // empty previous lyric items
         this._removeAllItems();
         this._updatePanel();

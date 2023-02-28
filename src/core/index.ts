@@ -3,79 +3,92 @@ import Player from "./playerui";
 import Lyric from "./lyricui";
 import PlayList from "./playlistui";
 
-const YuanPlayer = {
-  Player,
-  Lyric,
-  PlayList,
-  use: function (themeObject) {
+class YuanPlayer {
+  static instances: Array<any> = [];
+  constructor(options) {
+    return new (YuanPlayer.use())(options);
+  }
+  static use(themeObject: any = {}) {
     const obj= {
-      Player: themeObject.Player ? themeObject.Player(Player) : null,
-      Lyric: themeObject.Lyric ? themeObject.Lyric(Lyric) : null,
-      PlayList: themeObject.PlayList ? themeObject.PlayList(PlayList) : null
+      Player: themeObject.Player ? themeObject.Player(Player) : Player,
+      Lyric: themeObject.Lyric ? themeObject.Lyric(Lyric) : Lyric,
+      PlayList: themeObject.PlayList ? themeObject.PlayList(PlayList) : PlayList
     };
     class MyClass {
+      // Events Group
+      static playerEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'error', 'stalled', 'setmedia', 'stop', 'loopchanged', 'clearmedia', 'destroy'];
+      static lyricEvents = ['lyricfetched', 'timeupdated', 'reset'];
+      static playlistEvents = ['shuffledchanged', 'add', 'select', 'remove', 'modechange'];
+      playerClass = obj.Player;
+      lyricClass = obj.Lyric;
+      playlistClass = obj.PlayList;
+      playerInstance;
+      lyricInstance;
+      playlistInstance;
       constructor(options) {
-        const playerInstance = obj.Player ? new obj.Player({
+        this.playerInstance = this.playerClass ? new this.playerClass({
+          ...options,
           media: Array.isArray(options.media) && options.media.length ? options.media[0] : options.media,
           container: options.container
         }) : null;
-        const lyricInstance = obj.Lyric ? new obj.Lyric({
+        this.lyricInstance = this.lyricClass ? new this.lyricClass({
+          ...options,
           lyric: Array.isArray(options.media) && options.media.length ? options.media[0].lyric : (options.media?.lyric || ''),
-          mediaObject: playerInstance.mediaObject,
+          mediaObject: this.playerInstance.mediaObject,
           container: options.container
         }) : null;
-        const playListInstance = obj.PlayList ? new obj.PlayList({
-          autoPlay: false,
+        this.playlistInstance = this.playlistClass ? new this.playlistClass({
+          ...options,
           container: options.container,
           list: Array.isArray(options.media) && options.media.length ? [...options.media] : [],
-          player: playerInstance,
-          lyricObj: lyricInstance
+          player: this.playerInstance,
+          lyricObj: this.lyricInstance
         }) : null;
-        if (playerInstance) {
-          ['setMedia', 'formatTime', 'play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'pauseOthers', 'tellOthers', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
-            this[f] = playerInstance[f].bind(playerInstance);
+        if (this.playerInstance) {
+          ['setMedia', 'formatTime', 'play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
+            this[f] = this.playerInstance[f].bind(this.playerInstance);
           });
         }
-        if (lyricInstance) {
+        if (this.lyricInstance) {
           ['loadLyricPlugin', 'unload'].forEach((f) => {
-            this[f] = lyricInstance[f].bind(lyricInstance);
+            this[f] = this.lyricInstance[f].bind(this.lyricInstance);
           });
         }
-        if (playListInstance) {
+        if (this.playlistInstance) {
           ['shuffle', 'setPlaylist', 'add', 'select', 'remove', 'switchModes', 'setMode', 'next', 'previous', 'play', 'pause'].forEach((f) => {
-            this[f] = playListInstance[f].bind(playListInstance);
+            this[f] = this.playlistInstance[f].bind(this.playlistInstance);
           });
         }
-        // Events Group
-        const playerEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'error', 'stalled', 'setmedia', 'stop', 'loopchanged', 'clearmedia', 'destroy'];
-        const lyricEvents = ['lyricfetched', 'timeupdated', 'reset'];
-        const playlistEvents = ['shuffledchanged', 'add', 'select', 'remove', 'modechange'];
-        // @ts-ignore
-        this.on = function(event: string, callback: Function) {
-          //
-          if (playerEvents.indexOf(event) > -1) {
-            playerInstance.on(event, callback);
-          } else if (lyricEvents.indexOf(event) > -1) {
-            lyricInstance.on(event, callback);
-          } else if (playlistEvents.indexOf(event) > -1) {
-            playListInstance.on(event, callback);
-          }
-        };
-        // @ts-ignore
-        this.off = function(event: string, callback: Function) {
-          //
-          if (playerEvents.indexOf(event) > -1) {
-            playerInstance.off(event, callback);
-          } else if (lyricEvents.indexOf(event) > -1) {
-            lyricInstance.off(event, callback);
-          } else if (playlistEvents.indexOf(event) > -1) {
-            playListInstance.off(event, callback);
-          }
-        };
+        YuanPlayer.instances.push(this);
       }
+      on(event: string, callback: Function) {
+        if (MyClass.playerEvents.indexOf(event) > -1) {
+          this.playerInstance.on(event, callback);
+        } else if (MyClass.lyricEvents.indexOf(event) > -1) {
+          this.lyricInstance.on(event, callback);
+        } else if (MyClass.playlistEvents.indexOf(event) > -1) {
+          this.playlistInstance.on(event, callback);
+        }
+      }
+      off(event: string, callback: Function) {
+        if (MyClass.playerEvents.indexOf(event) > -1) {
+          this.playerInstance.off(event, callback);
+        } else if (MyClass.lyricEvents.indexOf(event) > -1) {
+          this.lyricInstance.off(event, callback);
+        } else if (MyClass.playlistEvents.indexOf(event) > -1) {
+          this.playlistInstance.off(event, callback);
+        }
+      }
+      pauseOthers() {
+        YuanPlayer.instances.forEach(instance => {
+          if (instance !== this) {
+            instance.pause();
+          }
+        })
+      };
     }
     return MyClass;
   }
-};
+}
 
 export default YuanPlayer;

@@ -135,19 +135,19 @@
   }
   
   .yuan-play {
-    background: url("./images/jplayer.blue.monday.jpg") 0 0 no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 0 no-repeat;
   }
   
   .yuan-play:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -41px 0 no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") -41px 0 no-repeat;
   }
   
   &.yuan-state-playing {
     .yuan-play {
-      background: url("./images/jplayer.blue.monday.jpg") 0 -42px no-repeat;
+      background: url("./images/jplayer.blue.monday2.png") 0 -42px no-repeat;
 
       &:focus {
-        background: url("./images/jplayer.blue.monday.jpg") -41px -42px no-repeat;
+        background: url("./images/jplayer.blue.monday2.png") -41px -42px no-repeat;
       }
     }
   }
@@ -159,28 +159,28 @@
   }
   
   .yuan-stop {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -83px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -83px no-repeat;
     margin-left: 10px;
   }
   
   .yuan-stop:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -29px -83px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") -29px -83px no-repeat;
   }
   
   .yuan-previous {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -112px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -112px no-repeat;
   }
   
   .yuan-previous:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -29px -112px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") -29px -112px no-repeat;
   }
   
   .yuan-next {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -141px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -141px no-repeat;
   }
   
   .yuan-next:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -29px -141px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") -29px -141px no-repeat;
   }
   
   /* @end */
@@ -193,14 +193,14 @@
   }
 
   .yuan-seek-bar {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -202px repeat-x;
+    background: url("./images/jplayer.blue.monday2.png") 0 -202px repeat-x;
     width: 0px;
     height: 100%;
     cursor: pointer;
   }
 
   .yuan-play-bar {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -218px repeat-x;
+    background: url("./images/jplayer.blue.monday2.png") 0 -218px repeat-x;
     width: 0px;
     height: 100%;
   }
@@ -245,34 +245,34 @@
   }
 
   .yuan-mute {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -170px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -170px no-repeat;
   }
 
   .yuan-mute:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -19px -170px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") -19px -170px no-repeat;
   }
 
   &.yuan-state-muted {
     .yuan-mute {
-      background: url("./images/jplayer.blue.monday.jpg") -60px -170px no-repeat;
+      background: url("./images/jplayer.blue.monday2.png") -60px -170px no-repeat;
 
       &:focus {
-        background: url("./images/jplayer.blue.monday.jpg") -79px -170px no-repeat;
+        background: url("./images/jplayer.blue.monday2.png") -79px -170px no-repeat;
       }
     }
   }
 
   .yuan-volume-max {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -186px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -186px no-repeat;
     margin-left: 5px;
   }
   
   .yuan-volume-max:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -19px -186px no-repeat; }
+    background: url("./images/jplayer.blue.monday2.png") -19px -186px no-repeat; }
   
   .yuan-volume-bar {
     overflow: hidden;
-    background: url("./images/jplayer.blue.monday.jpg") 0 -250px repeat-x;
+    background: url("./images/jplayer.blue.monday2.png") 0 -250px repeat-x;
     margin-top: 5px;
     width: 46px;
     height: 5px;
@@ -280,7 +280,7 @@
   }
   
   .yuan-volume-bar-value {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -256px repeat-x;
+    background: url("./images/jplayer.blue.monday2.png") 0 -256px repeat-x;
     width: 0px;
     height: 5px; }
   
@@ -359,48 +359,64 @@
   }
   
   .yuan-full-screen {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -310px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -310px no-repeat;
     margin-left: 20px; }
   
   .yuan-full-screen:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -30px -310px no-repeat; }
+    background: url("./images/jplayer.blue.monday2.png") -30px -310px no-repeat; }
   
   &.yuan-state-full-screen {
     .yuan-full-screen {
-      background: url("./images/jplayer.blue.monday.jpg") -60px -310px no-repeat;
+      background: url("./images/jplayer.blue.monday2.png") -60px -310px no-repeat;
       &:focus {
-        background: url("./images/jplayer.blue.monday.jpg") -90px -310px no-repeat;
+        background: url("./images/jplayer.blue.monday2.png") -90px -310px no-repeat;
       }
     }
   }
 
   .yuan-repeat {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -290px no-repeat; }
+    background: url("./images/jplayer.blue.monday2.png") 0 -290px no-repeat; }
   
   .yuan-repeat:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -30px -290px no-repeat; }
+    background: url("./images/jplayer.blue.monday2.png") -30px -290px no-repeat; }
   
   &.yuan-state-looped {
     .yuan-repeat {
-      background: url("./images/jplayer.blue.monday.jpg") -60px -290px no-repeat;
+      background: url("./images/jplayer.blue.monday2.png") -60px -290px no-repeat;
       &:focus {
-        background: url("./images/jplayer.blue.monday.jpg") -90px -290px no-repeat;
+        background: url("./images/jplayer.blue.monday2.png") -90px -290px no-repeat;
+      }
+    }
+  }
+
+  .yuan-repeat-one {
+    background: url("./images/jplayer.blue.monday2.png") -120px -290px no-repeat;
+    &:focus {
+      background-position-x: -150px;
+    }
+  }
+  &.yuan-state-looped {
+    .yuan-repeat-one {
+      //background: url("./images/jplayer.blue.monday2.png") -120px -290px no-repeat;
+      background-position-x: -180px;
+      &:focus {
+        background-position-x: -210px;
       }
     }
   }
 
   .yuan-shuffle {
-    background: url("./images/jplayer.blue.monday.jpg") 0 -270px no-repeat;
+    background: url("./images/jplayer.blue.monday2.png") 0 -270px no-repeat;
     margin-left: 5px; }
   
   .yuan-shuffle:focus {
-    background: url("./images/jplayer.blue.monday.jpg") -30px -270px no-repeat; }
+    background: url("./images/jplayer.blue.monday2.png") -30px -270px no-repeat; }
   
   &.yuan-state-shuffled {
     .yuan-shuffle {
-      background: url("./images/jplayer.blue.monday.jpg") -60px -270px no-repeat;
+      background: url("./images/jplayer.blue.monday2.png") -60px -270px no-repeat;
       &:focus {
-        background: url("./images/jplayer.blue.monday.jpg") -90px -270px no-repeat;
+        background: url("./images/jplayer.blue.monday2.png") -90px -270px no-repeat;
       }
     }
   }

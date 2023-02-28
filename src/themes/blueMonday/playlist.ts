@@ -25,7 +25,7 @@ function getClass(Base) {
       this.container.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
         if (player.cssSelector.repeat && matches(target, player.cssSelector?.repeat)) {
-          this.toggleMode();
+          this.switchModes();
         }
       });
       this.on('shuffledchanged', () => {
@@ -54,13 +54,6 @@ function getClass(Base) {
         this.container.querySelector('.yuan-playlist-empty').style.display = 'none';
       }
       this._highlightItem();
-    }
-    toggleMode() {
-      if (this.modeIndex === 0) {
-        this.setMode('all');
-      } else {
-        this.setMode('off');
-      }
     }
   }
 }

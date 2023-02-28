@@ -269,7 +269,9 @@ class PlayList extends Emitter {
 
     if (this.lyricObj) {
       this.lyricObj.lyric = this.list[index].lyric;
-      this.lyricObj.addLyric();
+      if (this.lyricObj && this.lyricObj.addLyric) {
+        this.lyricObj.addLyric();
+      }
     }
   }
 }

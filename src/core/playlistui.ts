@@ -40,7 +40,7 @@ export default class PlayListUI extends PlayList {
         }
       });
       this.on('modechange', () => {
-        // TODO
+        this.updateRepeatButtonState();
       });
       this._highlightItem();
       this.on('remove', (index) => {
@@ -68,7 +68,20 @@ export default class PlayListUI extends PlayList {
           this.shuffle();
         }
       });
+      this.updateRepeatButtonState();
     }, 0);
+  }
+  private updateRepeatButtonState() {
+    if (this.modeIndex === 0) {
+      document.querySelector(this.player.cssSelectorAncestor)?.classList.remove(this.player.stateClass.looped);
+      document.querySelector(this.player.cssSelectorAncestor)?.querySelector(this.player.cssSelector.repeat).classList.remove(this.player.stateClass.repeatOne);
+    } else if (this.modeIndex === 1) {
+      document.querySelector(this.player.cssSelectorAncestor)?.classList.add(this.player.stateClass.looped);
+      document.querySelector(this.player.cssSelectorAncestor)?.querySelector(this.player.cssSelector.repeat).classList.add(this.player.stateClass.repeatOne);
+    } else if (this.modeIndex === 2) {
+      document.querySelector(this.player.cssSelectorAncestor)?.classList.add(this.player.stateClass.looped);
+      document.querySelector(this.player.cssSelectorAncestor)?.querySelector(this.player.cssSelector.repeat).classList.remove(this.player.stateClass.repeatOne);
+    }
   }
   private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
     if (!cssSelector) return false;
