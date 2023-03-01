@@ -25,7 +25,9 @@ class YuanPlayer {
       playerInstance;
       lyricInstance;
       playlistInstance;
+      options;
       constructor(options) {
+        this.options = options;
         this.playerInstance = this.playerClass ? new this.playerClass({
           ...options,
           media: Array.isArray(options.media) && options.media.length ? options.media[0] : options.media,
@@ -37,29 +39,70 @@ class YuanPlayer {
           mediaObject: this.playerInstance.mediaObject,
           container: options.container
         }) : null;
-        this.playlistInstance = this.playlistClass ? new this.playlistClass({
+        this.setPlaylistInstance();
+
+        ['formatTime', 'play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
+          this[f] = (...args) => {
+            if (!this.playerInstance) {
+              console.warn(`The player instance has not been initialized`);
+              return;
+            }
+            return this.playerInstance[f].apply(this.playerInstance, args);
+          }
+        });
+        
+        ['loadLyricPlugin', 'unload', 'setLyric'].forEach((f) => {
+          this[f] = (...args) => {
+            if (!this.lyricInstance) {
+              console.warn(`The lyric instance has not been initialized`);
+              return;
+            }
+            return this.lyricInstance[f].apply(this.lyricInstance, args);
+          }
+        });
+
+        ['shuffle', 'add', 'select', 'remove', 'switchModes', 'setMode', 'next', 'previous', 'playAtIndex'].forEach((f) => {
+          this[f] = (...args) => {
+            if (!this.playlistInstance) {
+              console.warn(`The playlist instance has not been initialized`);
+              return;
+            }
+            return this.playlistInstance[f].apply(this.playlistInstance, args);
+          };
+        });
+        YuanPlayer.instances.push(this);
+      }
+      private setPlaylistInstance(options = this.options) {
+        this.playlistInstance = this.playlistClass && Array.isArray(options.media) ? new this.playlistClass({
           ...options,
           container: options.container,
           list: Array.isArray(options.media) && options.media.length ? [...options.media] : [],
           player: this.playerInstance,
           lyricObj: this.lyricInstance
         }) : null;
+      }
+      setMedia(media) {
         if (this.playerInstance) {
-          ['setMedia', 'formatTime', 'play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
-            this[f] = this.playerInstance[f].bind(this.playerInstance);
-          });
+          this.playerInstance.setMedia(media);
         }
         if (this.lyricInstance) {
-          ['loadLyricPlugin', 'unload'].forEach((f) => {
-            this[f] = this.lyricInstance[f].bind(this.lyricInstance);
+          this.lyricInstance.setLyric(media.lyric);
+        }
+        if (this.playlistInstance) {
+          this.playlistInstance.remove();
+        }
+      }
+      setPlaylist(playlist) {
+        if (!Array.isArray(playlist)) return;
+        if (!this.playlistInstance) {
+          this.setPlaylistInstance({
+            ...this.options,
+            media: playlist
           });
         }
         if (this.playlistInstance) {
-          ['shuffle', 'setPlaylist', 'add', 'select', 'remove', 'switchModes', 'setMode', 'next', 'previous', 'play', 'pause'].forEach((f) => {
-            this[f] = this.playlistInstance[f].bind(this.playlistInstance);
-          });
+          this.playlistInstance.setPlaylist(playlist);
         }
-        YuanPlayer.instances.push(this);
       }
       on(event: string, callback: Function) {
         if (MyClass.playerEvents.indexOf(event) > -1) {

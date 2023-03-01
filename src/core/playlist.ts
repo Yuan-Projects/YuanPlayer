@@ -252,6 +252,9 @@ class PlayList extends Emitter {
       this.player.play();
     }
   }
+  public playAtIndex(index: number = this.index) {
+    this.play(index);
+  }
   /**
    * Tested 1
    * Pause the current item.

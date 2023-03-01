@@ -182,8 +182,11 @@ class Player extends Emitter {
    * Plays the media file.
    */
   public play() {
-    if (this.mediaObject) {
-      this.mediaObject.play();
+    if (this.mediaObject && this.mediaObject.currentSrc) {
+      const playPromise = this.mediaObject.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {}).catch(error => {})
+      }
     }
   }
   /**
@@ -205,9 +208,7 @@ class Player extends Emitter {
       // Note: Browsers released before 2019 may not return a value from play().
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
       if (playPromise !== undefined) {
-        playPromise.then(() => {
-          // Automatic playback started!
-        }).catch(error => {})
+        playPromise.then(() => {}).catch(error => {})
       }
     } else {
       media.pause();

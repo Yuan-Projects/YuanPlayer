@@ -175,6 +175,12 @@ export default class PlayerUI extends Player {
         if (this.cssSelector.playBar) {
           (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
         }
+        if (this.cssSelector.title) {
+          const element = (domElement.querySelector(this.cssSelector.title) as HTMLElement);
+          if (element) {
+            element.textContent = '';
+          }
+        }
       });
       this.on('volumechange', () => {
         this.updateVolume();

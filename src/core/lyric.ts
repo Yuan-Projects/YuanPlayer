@@ -125,6 +125,10 @@ class Lyric extends Emitter {
     this.addLyric();
     this.bindLyricEvents();
   }
+  public setLyric(lyric: string) {
+    this.lyric = lyric;
+    this.addLyric();
+  }
   public unload() {
     this.lyric = '';
     this.lyricObj.lyricArray.length = 0;
