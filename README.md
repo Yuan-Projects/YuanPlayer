@@ -32,8 +32,8 @@ You can visit the [Developer Guide](https://github.com/Yuan-Projects/YuanPlayer/
 Add the following script on your HTML:
 
 ```html
-<script src='https://cdn.jsdelivr.net/npm/yuanplayer-core@0.0.1-alpha-1/+esm'></script>
-<script src='https://cdn.jsdelivr.net/npm/yuanplayer-theme-bluemonday@0.0.1-alpha-1/+esm'></script>
+<script src='https://cdn.jsdelivr.net/npm/yuanplayer-core@latest/lib/umd/YuanPlayer.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/yuanplayer-theme-bluemonday@latest/lib/umd/YuanPlayerThemeBlueMonday.min.js'></script>
 ```
 
 Now, create the player:
