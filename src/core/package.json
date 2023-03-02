@@ -1,6 +1,6 @@
 {
   "name": "yuanplayer-core",
-  "version": "0.0.1-alpha-1",
+  "version": "0.0.1-beta-1",
   "description": "YuanPlayer",
   "type": "module",
   "main": "lib/cjs/YuanPlayer.js",
@@ -22,7 +22,10 @@
     "music player",
     "audio player",
     "lyric",
-    "music"
+    "music",
+    "web player",
+    "playlist",
+    "YuanPlayer"
   ],
   "author": "rainyjune <rainyjune@live.cn>",
   "license": "ISC",
