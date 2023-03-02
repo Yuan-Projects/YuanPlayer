@@ -1,6 +1,6 @@
 {
   "name": "yuanplayer-theme-bluemonday",
-  "version": "0.0.1-beta-1",
+  "version": "0.0.1-beta-2",
   "description": "YuanPlayer theme BlueMonday",
   "type": "module",
   "main": "lib/cjs/YuanPlayerThemeBlueMonday.js",
