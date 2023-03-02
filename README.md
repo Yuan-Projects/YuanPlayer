@@ -2,6 +2,7 @@ YuanPlayer
 ==========
 
 [![npm](https://img.shields.io/npm/v/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
+[![](https://data.jsdelivr.com/v1/package/npm/yuanplayer-core/badge)](https://www.jsdelivr.com/package/npm/yuanplayer-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
 [![npm](https://img.shields.io/npm/dt/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
 

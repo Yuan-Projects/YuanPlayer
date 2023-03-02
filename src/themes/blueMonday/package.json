@@ -1,6 +1,6 @@
 {
   "name": "yuanplayer-theme-bluemonday",
-  "version": "0.0.1-beta-2",
+  "version": "1.0.1",
   "description": "YuanPlayer theme BlueMonday",
   "type": "module",
   "main": "lib/cjs/YuanPlayerThemeBlueMonday.js",
@@ -28,7 +28,7 @@
     "YuanPlayer"
   ],
   "author": "rainyjune <rainyjune@live.cn>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Yuan-Projects/YuanPlayer/issues"
   },
