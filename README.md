@@ -3,6 +3,8 @@ YuanPlayer
 
 YuanPlayer is a customizable audio player.
 
+![demo](./src/themes/blueMonday/images/demo.png)
+
 ## Features:
 
 ### Lyric and playlist
