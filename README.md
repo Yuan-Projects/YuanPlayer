@@ -7,6 +7,10 @@ YuanPlayer is a customizable audio player.
 
 ## Features:
 
+### Modules support
+
+YuanPlayer supports various JavaScript modules: AMD, CommonJS, UMD and ESM.
+
 ### Lyric and playlist
 
 The lyric and playlist features are built in its core.
