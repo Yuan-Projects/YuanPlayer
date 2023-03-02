@@ -12,9 +12,16 @@
   height: 1em;
   cursor: pointer;
 }
+
+@media screen and (max-width: 640px) {
+  body > div {
+    padding: 0 !important;
+  }
+}
     </style>
   </head>
   <body>
+    <!--
     <h2>Theme 1: Yuan</h2>
     <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 1rem;">
       <div id="listcontainer3" style="width: 400px; border: 1px solid black;"></div>
@@ -23,21 +30,24 @@
         <div id="lyriccontainer3"></div>
       </div>
     </div>
+    
 
-    <hr />
+    <h2>Theme: Use native controls</h2>
+    <div id="noThemeContainer"></div>
+    <hr />-->
 
-    <h2>Theme 2: BlueMonday</h2>
+    <h2>Theme: BlueMonday</h2>
     <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
-      <div id="blueMondayPlayerContainer1" style="border: 2px solid black; width: 500px; box-sizing: border-box;"></div>
+      <div id="blueMondayPlayerContainer1"></div>
     </div>
 
-    <h2>Theme 3: PinkFlag</h2>
+    <h2>Theme: PinkFlag</h2>
     <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
-      <div id="pinkFlagPlayerContainer1" style="border: 2px solid black; width: 500px; box-sizing: border-box;"></div>
+      <div id="pinkFlagPlayerContainer1" style="border: 2px solid black; max-width: 500px; box-sizing: border-box;"></div>
     </div>
 
     <script src="../lib/umd/YuanPlayer.js"></script>
-    <script src="../lib/umd/YuanPlayerThemeYuan.js"></script>
+    <!--<script src="../lib/umd/YuanPlayerThemeYuan.js"></script>-->
     <script src="../lib/umd/YuanPlayerThemeBlueMonday.js"></script>
     <script src="../lib/umd/YuanPlayerThemePinkFlag.js"></script>
     <script src="playlist.js"></script>
