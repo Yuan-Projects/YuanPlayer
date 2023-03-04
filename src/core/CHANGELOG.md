@@ -1,3 +1,7 @@
+## 1.0.3 (March 4, 2023)
+
+- Add HLS support
+
 ## 1.0.2 (March 2, 2023)
 
 - Update License in package.json
