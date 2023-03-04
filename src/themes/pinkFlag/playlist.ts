@@ -20,8 +20,13 @@ function getClass(Base) {
           currentItem: 'jp-playlist-current',
         }
       }
-      const mergedOptions: any = merge(defaultOptions, options);
+      const mergedOptions: any = merge(defaultOptions, {
+        ...options,
+        player: {},
+        lyricObj: {}
+      });
       mergedOptions.player = options.player;
+      mergedOptions.lyricObj = options.lyricObj;
       mergedOptions.cssSelectorAncestor = options.player.cssSelectorAncestor;
       super(mergedOptions);
       this.options = mergedOptions;

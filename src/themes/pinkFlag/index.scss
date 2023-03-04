@@ -15,6 +15,31 @@
  * Date: 13th November 2014
  */
 .yuanplayer-pinkflag-player {
+  .jp-controls,
+  .jp-play,
+  .jp-play:focus,
+  .jp-previous,
+  .jp-previous:focus,
+  .jp-stop,
+  .jp-stop:focus,
+  .jp-next,
+  .jp-next:focus,
+  .jp-repeat,
+  .jp-repeat:focus,
+  .jp-shuffle,
+  .jp-shuffle:focus,
+  .jp-seek-bar,
+  .jp-play-bar,
+  .jp-mute,
+  .jp-mute:focus,
+  .jp-volume-max,
+  .jp-volume-max:focus,
+  .jp-volume-bar,
+  .jp-volume-bar-value,
+  .jp-progress {
+    background-image: url("./image/jplayer.pink.flag.jpg");
+    background-repeat: no-repeat;
+  }
  .jp-audio *:focus,
  .jp-audio-stream *:focus,
  .jp-video *:focus {
@@ -113,7 +138,7 @@
    height: 50px; }
  
  .jp-controls {
-   background: url("./image/jplayer.pink.flag.jpg") 0 0 no-repeat;
+   background-position: 0 0;
    padding: 1px 0 2px 1px;
    overflow: hidden;
    width: 201px;
@@ -148,17 +173,19 @@
    width: 99px; }
  
  .jp-type-single .jp-play {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -40px no-repeat; }
+   background-position: 0px -40px;
+  }
  
  .jp-type-single .jp-play:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -100px -40px no-repeat; }
+   background-position: -100px -40px;
+  }
  
   &.jp-state-playing {
     .jp-type-single {
       .jp-play {
-        background: url("./image/jplayer.pink.flag.jpg") 0px -120px no-repeat;
+        background-position: 0px -120px;
         &:focus {
-          background: url("./image/jplayer.pink.flag.jpg") -100px -120px no-repeat;
+          background-position: -100px -120px;
         }
       }
     }
@@ -170,10 +197,12 @@
    border-right: 1px solid #180920; }
  
  .jp-type-single .jp-stop {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -80px no-repeat; }
+   background-position: 0px -80px;
+  }
  
  .jp-type-single .jp-stop:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -100px -80px no-repeat; }
+   background-position: -100px -80px;
+ }
  
  /* @end */
  /* @group playlist player controls */
@@ -181,39 +210,47 @@
    width: 49px; }
  
  .jp-type-playlist .jp-play {
-   background: url("./image/jplayer.pink.flag.jpg") -24px -40px no-repeat; }
+   background-position: -24px -40px;
+  }
  
  .jp-type-playlist .jp-play:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -124px -40px no-repeat; }
+   background-position: -124px -40px;
+  }
  
   &.jp-state-playing {
     div.jp-type-playlist {
       .jp-play {
-        background: url("./image/jplayer.pink.flag.jpg") -24px -120px no-repeat;
+        background-position: -24px -120px;
         &:focus {
-          background: url("./image/jplayer.pink.flag.jpg") -124px -120px no-repeat;
+          background-position: -124px -120px;
         }
       }
     }
   }
  
  .jp-type-playlist .jp-stop {
-   background: url("./image/jplayer.pink.flag.jpg") -24px -80px no-repeat; }
+   background-position: -24px -80px;
+ }
  
  .jp-type-playlist .jp-stop:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -124px -80px no-repeat; }
+   background-position: -124px -80px;
+  }
  
  .jp-type-playlist .jp-previous {
-   background: url("./image/jplayer.pink.flag.jpg") -24px -200px no-repeat; }
+   background-position: -24px -200px;
+  }
  
  .jp-type-playlist .jp-previous:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -124px -200px no-repeat; }
+   background-position: -124px -200px;
+  }
  
  .jp-type-playlist .jp-next {
-   background: url("./image/jplayer.pink.flag.jpg") -24px -160px no-repeat; }
+   background-position: -24px -160px;
+  }
  
  .jp-type-playlist .jp-next:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -124px -160px no-repeat; }
+   background-position: -124px -160px;
+  }
  
  /* @end */
  /* @group TOGGLES */
@@ -244,47 +281,38 @@
    border: none;
    cursor: pointer; }
  
- .jp-full-screen {
-   background: url("./image/jplayer.pink.flag.jpg") 0 -420px no-repeat;
-   margin-left: 15px; }
- 
- .jp-full-screen:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -30px -420px no-repeat; }
- 
- .jp-state-full-screen .jp-full-screen {
-   background: url("./image/jplayer.pink.flag.jpg") -60px -420px no-repeat; }
- 
- .jp-state-full-screen .jp-full-screen:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -90px -420px no-repeat; }
- 
  .jp-repeat {
-   background: url("./image/jplayer.pink.flag.jpg") 0 -440px no-repeat;
-   margin-left: 0; }
+   background-position: 0 -440px;
+   margin-left: 0;
+  }
  
  .jp-repeat:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -30px -440px no-repeat; }
+   background-position: -30px -440px;
+  }
  
   &.jp-state-looped {
     .jp-repeat {
-      background: url("./image/jplayer.pink.flag.jpg") -60px -440px no-repeat;
+      background-position: -60px -440px;
       &:focus {
-        background: url("./image/jplayer.pink.flag.jpg") -90px -440px no-repeat;
+        background-position: -90px -440px;
       }
     }
   }
  
  .jp-shuffle {
-   background: url("./image/jplayer.pink.flag.jpg") 0 -460px no-repeat;
-   margin-left: 15px; }
+   background-position: 0 -460px;
+   margin-left: 15px;
+  }
  
  .jp-shuffle:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -30px -460px no-repeat; }
+   background-position: -30px -460px;
+  }
  
   &.jp-state-shuffled {
     .jp-shuffle {
-      background: url("./image/jplayer.pink.flag.jpg") -60px -460px no-repeat;
+      background-position: -60px -460px;
       &:focus {
-        background: url("./image/jplayer.pink.flag.jpg") -90px -460px no-repeat;
+        background-position: -90px -460px;
       }
     }
   }
@@ -299,7 +327,7 @@
    background: url("./image/jplayer.pink.flag.seeking.gif"); }
  
  .jp-progress {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -240px no-repeat;
+   background-position: 0px -240px;
    width: 197px;
    height: 13px;
    padding: 0 2px 2px 2px;
@@ -314,17 +342,21 @@
    padding: 0; }
  
  .jp-seek-bar {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -260px repeat-x;
+   background-position: 0px -260px;
+   background-repeat: repeat-x;
    width: 100%;
    height: 100%;
    overflow: hidden;
-   cursor: pointer; }
+   cursor: pointer;
+  }
  
  .jp-play-bar {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -280px repeat-x;
+   background-position: 0px -280px;
+   background-repeat: repeat-x;
    width: 0px;
    height: 100%;
-   overflow: hidden; }
+   overflow: hidden;
+  }
  
  /* @end */
  /* @group volume controls */
@@ -370,36 +402,42 @@
    top: 14px; }
  
  .jp-volume-controls .jp-mute {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -330px no-repeat; }
+   background-position: 0px -330px;
+  }
  
  .jp-volume-controls .jp-mute:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -25px -330px no-repeat; }
+   background-position: -25px -330px;
+  }
  
   &.jp-state-muted {
     .jp-volume-controls {
       .jp-mute {
-        background: url("./image/jplayer.pink.flag.jpg") -60px -330px no-repeat;
+        background-position: -60px -330px;
         &:focus {
-          background: url("./image/jplayer.pink.flag.jpg") -85px -330px no-repeat;
+          background-position: -85px -330px;
         }
       }
     }
   }
  
  .jp-volume-controls .jp-volume-max {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -350px no-repeat; }
+   background-position: 0px -350px;
+  }
  
  .jp-volume-controls .jp-volume-max:focus {
-   background: url("./image/jplayer.pink.flag.jpg") -25px -350px no-repeat; }
+   background-position: -25px -350px;
+  }
  
  .jp-volume-bar {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -300px repeat-x;
+   background-position: 0px -300px;
+   background-repeat: repeat-x;
    position: absolute;
    width: 197px;
    height: 4px;
    padding: 2px 2px 1px 2px;
    overflow: hidden;
-   cursor: pointer; }
+   cursor: pointer;
+  }
  
  .jp-audio .jp-interface .jp-volume-bar,
  .jp-audio-stream .jp-interface .jp-volume-bar {
@@ -420,8 +458,10 @@
    margin-top: 30px; }
  
  .jp-volume-bar-value {
-   background: url("./image/jplayer.pink.flag.jpg") 0px -320px repeat-x;
-   height: 4px; }
+   background-position: 0px -320px;
+   background-repeat: repeat-x;
+   height: 4px;
+  }
  
  /* @end */
  /* @group current time and duration */
