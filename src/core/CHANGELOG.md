@@ -1,4 +1,4 @@
-## 1.0.3 (March 4, 2023)
+## 1.1.0 (March 4, 2023)
 
 - Add HLS support
 
