@@ -20,6 +20,12 @@ YuanPlayer supports various JavaScript modules: AMD, CommonJS, UMD and ESM.
 
 The lyric and playlist features are built in its core.
 
+### Live Streaming support
+
+- HLS (via hls.js)
+- SHOUTcast
+- Icecast
+
 ### Theme Support
 
 You can choose from open source themes for YuanPlayer, or create your own unique one.
