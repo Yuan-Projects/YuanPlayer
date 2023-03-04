@@ -32,7 +32,7 @@ export function merge(...args) {
     src = args.splice(0, 1)[0];
     if (Object.prototype.toString.call(src) == '[object Object]') {
       for (p in src) {
-        if (src.hasOwnProperty(p)) {
+        if (src.hasOwnProperty && src.hasOwnProperty(p)) {
           if (Object.prototype.toString.call(src[p]) == '[object Object]') {
             dst[p] = merge(dst[p] || {}, src[p]);
           } else {

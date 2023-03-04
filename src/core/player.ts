@@ -232,10 +232,22 @@ class Player extends Emitter {
     }
     this.trigger('loopchanged');
   }
-  protected getMimeType(fileName: string) {
+  /**
+   * Return MIME type for the media file.
+   * @param fileName 
+   * @returns 
+   */
+  protected getMimeType(fileName: string): string {
     var type = 'wav';
     if (fileName) {
       var fileExtension = fileName.split('.').pop();
+      if (fileExtension === 'm3u8') {
+        if (this.mediaObject.canPlayType('application/x-mpegURL')) {
+          return 'application/x-mpegURL';
+        } else if (this.mediaObject.canPlayType('application/vnd.apple.mpegURL')) {
+          return 'application/vnd.apple.mpegURL';
+        }
+      }
       switch(fileExtension) {
         case 'aac':
           type = 'aac';
@@ -287,9 +299,32 @@ class Player extends Emitter {
 
   private addSourceElement(src: string) {
     var sourceElement = document.createElement('source');
-    sourceElement.src = src;
+    sourceElement.src = this.processSrc(src);
     sourceElement.type = this.getMimeType(src);
     this.mediaObject.appendChild(sourceElement);
+  }
+
+  private processSrc(src: string): string {
+    var fileExtension = src.split('.').pop();
+    if (fileExtension === 'm3u8' && !this.isHLSNativelySupported()) {
+      if (this.isHLSJSSupported()) {
+        // @ts-ignore
+        const hlsInstance = new Hls();
+        hlsInstance.loadSource(src);
+        hlsInstance.attachMedia(this.mediaObject);
+      } else {
+        console.warn(`HLS is not supported in your browsers. Please make sure you are using a modern browser and/or have imported hls.js correctly.`);
+      }
+    }
+    return src;
+  }
+
+  private isHLSNativelySupported() {
+    return this.mediaObject.canPlayType('application/x-mpegURL') || this.mediaObject.canPlayType('application/vnd.apple.mpegURL');
+  }
+  private isHLSJSSupported() {
+    // @ts-ignore
+    return typeof Hls === 'function' && Hls.isSupported();
   }
   /**
    * Mutes the media's sounds
