@@ -18,6 +18,12 @@
     padding: 0 !important;
   }
 }
+
+#radiocontainer .jp-progress,
+#radiocontainer .jp-current-time,
+#radiocontainer .jp-duration {
+  display: none;
+}
     </style>
   </head>
   <body>
@@ -46,9 +52,17 @@
       <div id="pinkFlagPlayerContainer1" style="border: 2px solid black; max-width: 500px; box-sizing: border-box;"></div>
     </div>
 
+    <h2>Radio Support</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;" id="radiocontainer">
+      <div id="radioContainer1"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
     <script src='https://cdn.jsdelivr.net/npm/yuanplayer-core@latest/lib/umd/YuanPlayer.min.js'></script>
+    <!--<script src="../lib/umd/YuanPlayer.js"></script>-->
     <script src='https://cdn.jsdelivr.net/npm/yuanplayer-theme-bluemonday@latest/lib/umd/YuanPlayerThemeBlueMonday.min.js'></script>
     <script src='https://www.unpkg.com/yuanplayer-theme-pinkflag@latest/lib/umd/YuanPlayerThemePinkFlag.min.js'></script>
+    <!--<script src="../lib/umd/YuanPlayerThemePinkFlag.js"></script>-->
     <script src="playlist.js"></script>
     <script src="index.js"></script>
   </body>
