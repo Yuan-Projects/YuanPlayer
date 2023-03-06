@@ -12,11 +12,11 @@ class Lyric extends Emitter {
   };
   lyric: string;
   lyricCurrentPosition = 0;
-  mediaObject: any;
+  mediaElement: any;
   container: HTMLElement;
   constructor(options: LyricOptions) {
     super();
-    this.mediaObject = options.mediaObject;
+    this.mediaElement = options.mediaElement;
     this.lyric = options.lyric;
     this.container = options.container;
   }
@@ -83,7 +83,7 @@ class Lyric extends Emitter {
 
   private bindLyricEvents() {
     var that = this;
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (!media) return;
     media.addEventListener(
       "timeupdate",

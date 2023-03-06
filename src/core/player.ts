@@ -9,7 +9,7 @@ import type { MediaItem, YuanPlayerOptions } from './player.d';
  */
 class Player extends Emitter {
   container: HTMLElement;
-  mediaObject: HTMLAudioElement;
+  mediaElement: HTMLMediaElement;
   errorCode: number;
   errorMessage: string;
   eventHandlers: object;
@@ -76,7 +76,7 @@ class Player extends Emitter {
     const div = document.createElement('div');
     var mediaElement = document.createElement('audio');
     mediaElement.preload = "metadata";
-    this.mediaObject = mediaElement;
+    this.mediaElement = mediaElement;
 
     mediaElement.controls = !!this.nativeControls;
     if ( typeof this.loop !== "undefined") {
@@ -91,7 +91,7 @@ class Player extends Emitter {
 
   private bindMediaEvents() {
     var that = this;
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (!media) return ;
 
     var t = window.setInterval(function(){
@@ -139,8 +139,8 @@ class Player extends Emitter {
   private addMediaSource(){
     if (!this.media || !this.media.src) return false;
 
-    this.mediaObject.innerHTML = '';
-    this.mediaObject.removeAttribute('src');
+    this.mediaElement.innerHTML = '';
+    this.mediaElement.removeAttribute('src');
     let src = this.media.src;
     if (typeof src === 'string') {
       src = [src];
@@ -160,7 +160,7 @@ class Player extends Emitter {
   public setMedia(media: MediaItem) {
     this.media = media;
     this.addMediaSource();
-    this.mediaObject.load();
+    this.mediaElement.load();
   }
 
   public formatTime(secs: number): string {
@@ -174,8 +174,8 @@ class Player extends Emitter {
    * Plays the media file.
    */
   public play() {
-    if (this.mediaObject && this.mediaObject.currentSrc) {
-      const playPromise = this.mediaObject.play();
+    if (this.mediaElement && this.mediaElement.currentSrc) {
+      const playPromise = this.mediaElement.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {}).catch(error => {})
       }
@@ -186,13 +186,13 @@ class Player extends Emitter {
    * @param percent
    */
   public playHead(percent: number) {
-    this.mediaObject.currentTime = percent * this.mediaObject.duration;
+    this.mediaElement.currentTime = percent * this.mediaElement.duration;
   }
   public isPlaying() {
-    return this.mediaObject && !this.mediaObject.paused;
+    return this.mediaElement && !this.mediaElement.paused;
   }
   protected togglePlay() {
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (!media) return false;
     if (media.paused) {
       const playPromise = media.play();
@@ -210,7 +210,7 @@ class Player extends Emitter {
    * Stop the media and reset the play-head to the start of the media.
    */
   public stop(){
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.pause();
       media.currentTime = 0;
@@ -218,7 +218,7 @@ class Player extends Emitter {
     }
   }
   public toggleLoop() {
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.loop = !media.loop;
     }
@@ -234,9 +234,9 @@ class Player extends Emitter {
     if (fileName) {
       var fileExtension = fileName.split('.').pop();
       if (fileExtension === 'm3u8') {
-        if (this.mediaObject.canPlayType('application/x-mpegURL')) {
+        if (this.mediaElement.canPlayType('application/x-mpegURL')) {
           return 'application/x-mpegURL';
-        } else if (this.mediaObject.canPlayType('application/vnd.apple.mpegURL')) {
+        } else if (this.mediaElement.canPlayType('application/vnd.apple.mpegURL')) {
           return 'application/vnd.apple.mpegURL';
         }
       }
@@ -275,7 +275,7 @@ class Player extends Emitter {
    * Pause the media.
    */
   public pause(){
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.pause();
     }
@@ -293,7 +293,7 @@ class Player extends Emitter {
     var sourceElement = document.createElement('source');
     sourceElement.src = this.processSrc(src);
     sourceElement.type = this.getMimeType(src);
-    this.mediaObject.appendChild(sourceElement);
+    this.mediaElement.appendChild(sourceElement);
   }
 
   private processSrc(src: string): string {
@@ -303,7 +303,7 @@ class Player extends Emitter {
         // @ts-ignore
         const hlsInstance = new Hls();
         hlsInstance.loadSource(src);
-        hlsInstance.attachMedia(this.mediaObject);
+        hlsInstance.attachMedia(this.mediaElement);
       } else {
         console.warn(`HLS is not supported in your browsers. Please make sure you are using a modern browser and/or have imported hls.js correctly.`);
       }
@@ -312,7 +312,7 @@ class Player extends Emitter {
   }
 
   private isHLSNativelySupported() {
-    return this.mediaObject.canPlayType('application/x-mpegURL') || this.mediaObject.canPlayType('application/vnd.apple.mpegURL');
+    return this.mediaElement.canPlayType('application/x-mpegURL') || this.mediaElement.canPlayType('application/vnd.apple.mpegURL');
   }
   private isHLSJSSupported() {
     // @ts-ignore
@@ -322,7 +322,7 @@ class Player extends Emitter {
    * Mutes the media's sounds
    */
   public mute() {
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.muted = true;;
     }
@@ -331,13 +331,13 @@ class Player extends Emitter {
    * Unmutes the media's sounds.
    */
   public unmute() {
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.muted = false;
     }
   }
   protected toggleMute() {
-    var media = this.mediaObject;
+    var media = this.mediaElement;
     if (media) {
       media.muted = !media.muted;
     }
@@ -350,17 +350,17 @@ class Player extends Emitter {
    * @param ratio - Number (0 to 1) defining the ratio of maximum volume.
    */
   public volume(ratio: number) {
-    this.mediaObject.volume = (ratio >= 1.0) ? 1.0 : ratio;
+    this.mediaElement.volume = (ratio >= 1.0) ? 1.0 : ratio;
   }
   /**
    * This method is used to clear the media and stop playback.
    * If a media file is downloading at the time, the download will be cancelled.
    */
   public clearMedia() {
-    if (!this.mediaObject) return false;
+    if (!this.mediaElement) return false;
     this.stop();
-    this.mediaObject.innerHTML = '';
-    this.mediaObject.src = '';
+    this.mediaElement.innerHTML = '';
+    this.mediaElement.src = '';
     this.trigger('clearmedia');
   }
   // TODO

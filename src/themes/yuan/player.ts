@@ -77,14 +77,14 @@ function getClass(Base) {
       const seekSlider = div.querySelector('.seek-slider') as HTMLInputElement;
 
       seekSlider?.addEventListener('input', () => {
-        this.mediaObject.currentTime = parseInt(seekSlider.value);
+        this.mediaElement.currentTime = parseInt(seekSlider.value);
       });
 
       const volumeSlider = div.querySelector('.volume-slider');
       this.setVolumeSlider();
       volumeSlider?.addEventListener('input', (e) => {
         const value = (e.target as HTMLInputElement).value;
-        this.mediaObject.volume = (parseFloat(value) / 100);
+        this.mediaElement.volume = (parseFloat(value) / 100);
       });
 
       const muteIconContainer = div.querySelector('.mute-icon');
@@ -100,10 +100,10 @@ function getClass(Base) {
 
       this.on('volumechange', () => {
         this.setVolumeSlider();
-        if (this.mediaObject.muted !== this.muted) {
+        if (this.mediaElement.muted !== this.muted) {
           this.setVolumeIcon();
         }
-        this.muted = this.mediaObject.muted;
+        this.muted = this.mediaElement.muted;
       });
 
       this.on('stop', () => {
@@ -114,20 +114,20 @@ function getClass(Base) {
     setSliderMax() {
       const seekSlider = document.querySelector(this.cssSelectorAncestor)!.querySelector('.seek-slider') as HTMLInputElement;
       if (seekSlider) {
-        seekSlider.max = String(Math.floor(this.mediaObject.duration));
+        seekSlider.max = String(Math.floor(this.mediaElement.duration));
       }
     }
     setSliderValue() {
       const seekSlider = this.container.querySelector('.seek-slider');
-      seekSlider.value = Math.floor(this.mediaObject.currentTime);
+      seekSlider.value = Math.floor(this.mediaElement.currentTime);
       this.container.querySelector('.yuanplayer-yuan-container').style.setProperty('--seek-before-width', `${seekSlider.value / seekSlider.max * 100}%`);
     }
     setVolumeSlider() {
       const volumeSlider = this.container.querySelector('.volume-slider');
-      volumeSlider.value = String(this.mediaObject.volume * 100); //'0';
+      volumeSlider.value = String(this.mediaElement.volume * 100); //'0';
     }
     setVolumeIcon() {
-      if (this.mediaObject.muted) {
+      if (this.mediaElement.muted) {
         this.muteAnimation.playSegments([0, 15], true);
       } else {
         this.muteAnimation.playSegments([15, 25], true);

@@ -36,7 +36,7 @@ class YuanPlayer {
         this.lyricInstance = this.lyricClass ? new this.lyricClass({
           ...options,
           lyric: Array.isArray(options.media) && options.media.length ? options.media[0].lyric : (options.media?.lyric || ''),
-          mediaObject: this.playerInstance.mediaObject,
+          mediaElement: this.playerInstance.mediaElement,
           container: options.container
         }) : null;
         this.setPlaylistInstance();

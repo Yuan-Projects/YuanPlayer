@@ -1,6 +1,6 @@
 export interface LyricOptions {
   lyric: string
-  mediaObject: object,
+  mediaElement: object,
   container: HTMLElement
   cssSelector?: object
   cssSelectorAncestor: string
