@@ -103,7 +103,7 @@ class Player extends Emitter {
       }
     }, 100);
 
-    const mediaEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting'];
+    const mediaEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'];
     mediaEvents.forEach(event => {
       media.addEventListener(event, () => this.trigger(event), false);
     });
@@ -134,14 +134,6 @@ class Player extends Emitter {
       clearInterval(t);
       that.trigger('error');
     }, false);
-    // Fixes for Android 2.2,this event will be triggered in Android 2.2 when the media file load failed with HTTP status 403.
-    media.addEventListener('stalled', function() {
-      that.trigger('stalled');
-      that.errorCode = Player.error.MEDIA_ERR_URLEMPTY.code;
-      that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;
-      that.trigger('error');
-      clearInterval(t);
-      }, false);
   }
 
   private addMediaSource(){
