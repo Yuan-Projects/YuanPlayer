@@ -1,4 +1,4 @@
-import { isHtml5AudioSupported } from './utils';
+import { createElement, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
 
@@ -9,14 +9,14 @@ import type { MediaItem, YuanPlayerOptions } from './player.d';
  */
 class Player extends Emitter {
   container: HTMLElement;
-  mediaElement: HTMLMediaElement;
+  mediaElement: HTMLMediaElement | null;
   errorCode: number;
   errorMessage: string;
-  eventHandlers: object;
   loop = false;
-  media: MediaItem;
+  media: MediaItem | null;
   nativeControls = false;
   isAudioSupported = false;
+  eventListeners: Array<any> = [];
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -73,20 +73,49 @@ class Player extends Emitter {
   }
 
   private addMediaElement() {
-    const div = document.createElement('div');
-    var mediaElement = document.createElement('audio');
-    mediaElement.preload = "metadata";
-    this.mediaElement = mediaElement;
-
-    mediaElement.controls = !!this.nativeControls;
-    if ( typeof this.loop !== "undefined") {
-      mediaElement.loop = !!this.loop;
-    }
+    const div = createElement('div');
+    const mediaElement = this.addMediaElementTag();
 
     this.addMediaSource();
 
     div.appendChild(mediaElement);
     this.container.appendChild(div);
+  }
+
+  private addMediaElementTag() {
+    const attrs = {
+      preload: "metadata",
+      controls: !!this.nativeControls,
+      loop: typeof this.loop !== "undefined" ? !!this.loop : false
+    };
+    const mediaElement = this.isVideo(this.media) ? createElement('video', {
+      ...attrs,
+      poster: this.media?.poster,
+      style: "width: 100%;"
+    }) : createElement('audio', attrs);
+    this.mediaElement = mediaElement;
+    return mediaElement;
+  }
+  /**
+   * Determine if current track is a video.
+   * @param media - The media object
+   * @returns boolean
+   */
+  private isVideo(media: any): boolean {
+    if (typeof media.isVideo === 'boolean') return media.isVideo;
+    const src = media.src;
+    if (!src) return false;
+    // TODO: .ogg, mp4 can be used as both video and audio
+    const videoExts = ['ogm', 'ogv', 'webm', 'mp4', 'm4v'];
+    // @ts-ignore
+    const srcs = isArray(src) ? [...src] : [src];
+    for (const link of srcs) {
+      const ext = link.split('.').pop();
+      if (videoExts.includes(ext)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private bindMediaEvents() {
@@ -95,7 +124,7 @@ class Player extends Emitter {
     if (!media) return ;
 
     var t = window.setInterval(function(){
-      if (media.networkState === 3) {
+      if (media?.networkState === 3) {
         that.errorCode = Player.error.MEDIA_ERR_URLEMPTY.code;
         that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;
         clearInterval(t);
@@ -105,10 +134,10 @@ class Player extends Emitter {
 
     const mediaEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'];
     mediaEvents.forEach(event => {
-      media.addEventListener(event, () => this.trigger(event), false);
+      this.addEventListener(media, event, () => this.trigger(event));
     });
 
-    media.addEventListener('error', function(e: any) {
+    this.addEventListener(media, 'error', function(e: any) {
       switch (e.target.error.code) {
         case e.target.error.MEDIA_ERR_ABORTED:
           that.errorCode = Player.error.MEDIA_ERR_ABORTED.code;
@@ -133,11 +162,16 @@ class Player extends Emitter {
       }
       clearInterval(t);
       that.trigger('error');
-    }, false);
+    });
   }
 
-  private addMediaSource(){
-    if (!this.media || !this.media.src) return false;
+  protected addEventListener(target, type, listener) {
+    target.addEventListener(type, listener);
+    this.eventListeners.push([target, type, listener]);
+  }
+
+  private addMediaSource() {
+    if (!this.media || !this.media.src || !this.mediaElement) return false;
 
     this.mediaElement.innerHTML = '';
     this.mediaElement.removeAttribute('src');
@@ -159,8 +193,30 @@ class Player extends Emitter {
    */
   public setMedia(media: MediaItem) {
     this.media = media;
+    const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
+    // If the new media file has a different tag name
+    // Remove the existing tag, remove its event handlers
+    // Then create a new tag and add events listeners again.
+    if (this.mediaElement && this.mediaElement?.tagName.toLowerCase() !== expectedTag) {
+      const div = this.mediaElement.parentNode;
+      this.eventListeners.forEach(([target, type, listener]) => {
+        // Only those event handlers attached to the old tag need to be removed
+        if (target === this.mediaElement) {
+          target.removeEventListener(type, listener);
+        }
+      });
+      this.clearMedia();
+      this.eventListeners.length = 0;
+      this.mediaElement.remove();
+      this.mediaElement = null;
+
+      // add new tag
+      const mediaElement = this.addMediaElementTag();
+      div?.appendChild(mediaElement);
+      this.bindMediaEvents();
+    }
     this.addMediaSource();
-    this.mediaElement.load();
+    this.mediaElement?.load();
   }
 
   public formatTime(secs: number): string {
@@ -174,7 +230,7 @@ class Player extends Emitter {
    * Plays the media file.
    */
   public play() {
-    if (this.mediaElement && this.mediaElement.currentSrc) {
+    if (this.mediaElement) {
       const playPromise = this.mediaElement.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {}).catch(error => {})
@@ -186,6 +242,7 @@ class Player extends Emitter {
    * @param percent
    */
   public playHead(percent: number) {
+    if (!this.mediaElement) return;
     this.mediaElement.currentTime = percent * this.mediaElement.duration;
   }
   public isPlaying() {
@@ -209,7 +266,7 @@ class Player extends Emitter {
   /**
    * Stop the media and reset the play-head to the start of the media.
    */
-  public stop(){
+  public stop() {
     var media = this.mediaElement;
     if (media) {
       media.pause();
@@ -233,7 +290,7 @@ class Player extends Emitter {
     var type = 'wav';
     if (fileName) {
       var fileExtension = fileName.split('.').pop();
-      if (fileExtension === 'm3u8') {
+      if (fileExtension === 'm3u8' && this.mediaElement) {
         if (this.mediaElement.canPlayType('application/x-mpegURL')) {
           return 'application/x-mpegURL';
         } else if (this.mediaElement.canPlayType('application/vnd.apple.mpegURL')) {
@@ -290,16 +347,19 @@ class Player extends Emitter {
   }
 
   private addSourceElement(src: string) {
-    var sourceElement = document.createElement('source');
-    sourceElement.src = this.processSrc(src);
-    sourceElement.type = this.getMimeType(src);
-    this.mediaElement.appendChild(sourceElement);
+    var sourceElement = createElement('source', {
+      src: this.processSrc(src),
+      type: this.getMimeType(src)
+    });
+    if (this.mediaElement) {
+      this.mediaElement.appendChild(sourceElement);
+    }
   }
 
   private processSrc(src: string): string {
     var fileExtension = src.split('.').pop();
-    if (fileExtension === 'm3u8' && !this.isHLSNativelySupported()) {
-      if (this.isHLSJSSupported()) {
+    if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
+      if (isHLSJSSupported()) {
         // @ts-ignore
         const hlsInstance = new Hls();
         hlsInstance.loadSource(src);
@@ -311,13 +371,6 @@ class Player extends Emitter {
     return src;
   }
 
-  private isHLSNativelySupported() {
-    return this.mediaElement.canPlayType('application/x-mpegURL') || this.mediaElement.canPlayType('application/vnd.apple.mpegURL');
-  }
-  private isHLSJSSupported() {
-    // @ts-ignore
-    return typeof Hls === 'function' && Hls.isSupported();
-  }
   /**
    * Mutes the media's sounds
    */
@@ -350,6 +403,7 @@ class Player extends Emitter {
    * @param ratio - Number (0 to 1) defining the ratio of maximum volume.
    */
   public volume(ratio: number) {
+    if (!this.mediaElement) return;
     this.mediaElement.volume = (ratio >= 1.0) ? 1.0 : ratio;
   }
   /**
@@ -369,6 +423,22 @@ class Player extends Emitter {
    * All event and interface bindings created are removed.
    */
   public destroy() {
+    this.clearMedia();
+    this.eventListeners.forEach(([target, type, listener]) => {
+      target.removeEventListener(type, listener);
+    });
+    this.eventListeners.length = 0;
+    this.eventHandlers = {};
+    if (this.mediaElement) {
+      this.mediaElement.remove();
+    }
+    this.mediaElement = null;
+    this.errorCode = 0;
+    this.errorMessage = '';
+    this.loop = false;
+    this.media = null;
+    this.nativeControls = false;
+    this.isAudioSupported = false;
     this.trigger('destroy');
   }
 }

@@ -64,3 +64,23 @@ export function matches(element, selectors) {
   }
   return false;
 }
+
+export function isHLSNativelySupported() {
+  const videoElement = document.createElement('video');
+  return videoElement.canPlayType('application/x-mpegURL') || videoElement.canPlayType('application/vnd.apple.mpegURL');
+}
+
+export function isHLSJSSupported() {
+  // @ts-ignore
+  return typeof Hls === 'function' && Hls.isSupported();
+}
+
+export function createElement(tag, attributes = {}) {
+  const element = document.createElement(tag);
+  for (let attr in attributes) {
+    if (attributes.hasOwnProperty(attr)) {
+      element[attr] = attributes[attr];
+    }
+  }
+  return element;
+}

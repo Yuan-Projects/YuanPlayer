@@ -115,7 +115,7 @@ export default class PlayerUI extends Player {
           }
         }
       };
-      domElement.addEventListener('click', clickHandler, false);
+      this.addEventListener(domElement, 'click', clickHandler);
       this.on('ended', () => {
         domElement.classList.remove(this.stateClass.playing);
       })
@@ -123,25 +123,25 @@ export default class PlayerUI extends Player {
         if (!this.cssSelector.duration) return false;
         const element = domElement.querySelector(this.cssSelector.duration);
         if (element) {
-          element.textContent = this.formatTime(Math.floor(this.mediaElement.duration));
+          element.textContent = this.formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
         }
       });
       this.on('setmedia', () => {
         if (!this.cssSelector.title) return false;
         const element = domElement.querySelector(this.cssSelector.title);
         if (element) {
-          element.textContent = this.media.title || '';
+          element.textContent = this.media?.title || '';
         }
       })
       this.on('timeupdate', () => {
-        const second = Math.floor(this.mediaElement.currentTime);
+        const second = this.mediaElement ? Math.floor(this.mediaElement.currentTime) : 0;
         if (this.cssSelector.currentTime) {
           domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(second);
         }
         if (this.cssSelector.playBar) {
           const element = (domElement.querySelector(this.cssSelector.playBar) as HTMLElement);
           if (element) {
-            const perc = isFinite(this.mediaElement.duration) ? this.mediaElement.currentTime / this.mediaElement.duration : 0;
+            const perc = this.mediaElement && isFinite(this.mediaElement.duration) ? this.mediaElement.currentTime / this.mediaElement.duration : 0;
             element.style.width = `${perc * 100}%`;
           }
         }
@@ -195,7 +195,7 @@ export default class PlayerUI extends Player {
   private updateLoopState() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
-    if (this.mediaElement.loop) {
+    if (this.mediaElement?.loop) {
       domElement.classList.add(this.stateClass.looped);
       if(this.cssSelector.repeat) {
         const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
@@ -226,7 +226,7 @@ export default class PlayerUI extends Player {
   private updateVolume() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
-    if (this.mediaElement.muted) {
+    if (this.mediaElement?.muted) {
       domElement.classList.add(this.stateClass.muted);
     } else {
       domElement.classList.remove(this.stateClass.muted);
@@ -234,14 +234,14 @@ export default class PlayerUI extends Player {
     if (this.cssSelector.volumeValue) {
       const element = domElement.querySelector(this.cssSelector.volumeValue);
       if (element) {
-        element.textContent = String(trunc(this.mediaElement.volume * 100));
+        element.textContent = String(trunc(this.mediaElement ? this.mediaElement.volume * 100 : 0));
       }
     }
     if (!this.cssSelector.volumeBarValue) return false;
     const ele = domElement.querySelector(this.cssSelector.volumeBarValue) as HTMLElement;
-    const val = trunc(this.mediaElement.volume * 100);
+    const val = trunc(this.mediaElement ? this.mediaElement.volume * 100 : 0);
     if (ele) {
-      ele!.style.width = this.mediaElement.muted ? '0%' : val + "%";
+      ele!.style.width = this.mediaElement?.muted ? '0%' : val + "%";
     }
   }
 };
