@@ -16,6 +16,9 @@
  */
 
 .yuanplayer-bluemonday-player {
+  .hidden {
+    display: none !important;
+  }
   .yuan-audio *:focus,
   .yuan-audio-stream *:focus {
     /* Disable the browser focus highlighting. */
@@ -329,15 +332,12 @@
     width: 25px; }
   
   .yuan-audio .yuan-toggles {
-    width: 55px;
     margin: 0;
     height: 40px;
-    margin-left: 1rem;
   }
 
   .yuan-audio {
     .yuan-time-holder {
-      margin-left: 1rem;
     }
   }
 
@@ -360,12 +360,16 @@
   
   .yuan-full-screen {
     background: url("./images/jplayer.blue.monday2.png") 0 -310px no-repeat;
-    margin-left: 20px; }
+  }
   
   .yuan-full-screen:focus {
     background: url("./images/jplayer.blue.monday2.png") -30px -310px no-repeat; }
   
   &.yuan-state-full-screen {
+    position: fixed;
+    left: 0px;
+    bottom: 0;
+    width: 100%;
     .yuan-full-screen {
       background: url("./images/jplayer.blue.monday2.png") -60px -310px no-repeat;
       &:focus {

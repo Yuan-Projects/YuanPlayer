@@ -1,5 +1,5 @@
 import Player from "./player";
-import { matches, trunc, uuidv4 } from './utils';
+import { debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, YuanPlayerOptions } from "./player.d";
 
 export default class PlayerUI extends Player {
@@ -65,8 +65,66 @@ export default class PlayerUI extends Player {
   }
   private addEventListeners() {
     setTimeout(() => {
-      const domElement = document.querySelector(this.cssSelectorAncestor);
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (!domElement) return false;
+      if (isFullScreenEnabled()) {
+        const debouncedHide = debounce(() => {
+          domElement.style.display = 'none';
+        }, 1000);
+        const fullScreenVideoHandler = () => {
+          domElement.style.display = 'block';
+          debouncedHide();
+        };
+        const fullScreenGUIHandler = () => {
+          clearTimeout(debouncedHide.timer());
+        };
+        const fullScreenGUIHandler2 = () => {
+          domElement.style.display = 'none';
+        };
+        const fullscreenchangeFn = (e) => {
+          let isFullScreen;
+          switch(e.type?.toLowerCase()) {
+            case 'webkitfullscreenchange':
+              // @ts-ignore
+              isFullScreen = !!document.webkitIsFullScreen;
+              break;
+            case 'msfullscreenchange':
+              // @ts-ignore
+              isFullScreen = !!document.msFullscreenElement;
+              break;
+            case 'mozfullscreenchange':
+              // @ts-ignore
+              isFullScreen = !!document.mozFullScreen;
+              break;
+            default:
+              // @ts-ignore
+              isFullScreen = !!(document.fullScreen || document.fullscreenElement);
+              break;
+          }
+          this.setFullscreenData(isFullScreen);
+          if (isFullScreen && document.fullscreenElement === this.container) {
+            this.addEventListener(this.mediaElement, 'mousemove', fullScreenVideoHandler);
+            this.addEventListener(domElement, 'mouseenter', fullScreenGUIHandler);
+            this.addEventListener(domElement, 'mouseleave', fullScreenGUIHandler2);
+          } else {
+            domElement.style.display = 'block';
+            (this.mediaElement as HTMLElement).style.position = 'static';
+            clearTimeout(debouncedHide.timer());
+            this.removeEventListener(this.mediaElement, 'mousemove', fullScreenVideoHandler);
+            this.removeEventListener(domElement, 'mouseenter', fullScreenGUIHandler);
+            this.removeEventListener(domElement, 'mouseleave', fullScreenGUIHandler2);
+            this.mediaElement?.scrollIntoView({
+              block: "center",
+              inline: "center"
+            });
+          }
+        };
+        this.addEventListener(document, 'fullscreenchange', fullscreenchangeFn);
+        this.addEventListener(document, 'webkitfullscreenchange', fullscreenchangeFn);
+        this.addEventListener(document, 'mozfullscreenchange', fullscreenchangeFn);
+        this.addEventListener(document, 'msfullscreenchange', fullscreenchangeFn);
+        this.addEventListener(document, 'MSFullscreenChange', fullscreenchangeFn);
+      }
       const clickHandler = (e) => {
         const target = e.target as HTMLElement;
         if (this.isMatchedWithSelector(target, this.cssSelector.play)) {
@@ -80,6 +138,12 @@ export default class PlayerUI extends Player {
             this.togglePlay();
           } else {
             this.pause();
+          }
+        } else if (this.isMatchedWithSelector(target, this.cssSelector.fullScreen)) {
+          if (this.useStateClassSkin) {
+            this.handleFullscreen();
+          } else {
+            this.handleFullscreen(true);
           }
         } else if (this.isMatchedWithSelector(target, this.cssSelector.stop)) {
           this.stop();
@@ -131,6 +195,9 @@ export default class PlayerUI extends Player {
         const element = domElement.querySelector(this.cssSelector.title);
         if (element) {
           element.textContent = this.media?.title || '';
+        }
+        if (this.mediaElement?.tagName === 'AUDIO') {
+          this.handleFullscreen(false);
         }
       })
       this.on('timeupdate', () => {
@@ -191,6 +258,61 @@ export default class PlayerUI extends Player {
       this.updateVolume();
       this.updateLoopState();
     }, 0);
+  }
+  protected setFullscreenData(state: boolean) {
+    if (state) {
+      this.container.classList.add(this.stateClass.fullScreen);
+      document.querySelector(this.cssSelectorAncestor)?.classList.add(this.stateClass.fullScreen);
+    } else {
+      this.container.classList.remove(this.stateClass.fullScreen);
+      document.querySelector(this.cssSelectorAncestor)?.classList.remove(this.stateClass.fullScreen);
+    }
+  }
+  // Fullscreen
+  protected handleFullscreen(enterFullScreen?: boolean) {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    const fullScreenEnabled = isFullScreenEnabled();
+    // If the browser doesn't support the Fulscreen API then hide the fullscreen button
+    if (!fullScreenEnabled) {
+      const btn = document.querySelector(this.cssSelectorAncestor)?.querySelector(this.cssSelector?.fullScreen || '') as HTMLElement;
+      btn.style.display = 'none';
+      console.warn('Your browser does not support the Fullscreen API.');
+      return;
+    }
+    const enterFullFn = () => {
+      domElement.style.display = 'none';
+      (this.mediaElement as HTMLElement).style.position = 'fixed';
+      requestFullscreen(this.container);
+      this.setFullscreenData(true);
+    };
+    const exitFullFn = () => {
+      domElement.style.display = 'block';
+      (this.mediaElement as HTMLElement).style.position = 'static';
+      exitFullscreen();
+      this.setFullscreenData(false);
+      this.mediaElement?.scrollIntoView({
+        block: "center",
+        inline: "center"
+      });
+    };
+    if (typeof enterFullScreen === 'boolean') {
+      if (enterFullScreen) {
+        enterFullFn();
+      } else {
+        exitFullFn();
+      }
+      return;
+    }
+    // If fullscreen mode is active...	
+    if (isFullScreen()) {
+      // ...exit fullscreen mode
+      // (Note: this can only be called on document)
+      exitFullFn();
+    } else {
+       // ...otherwise enter fullscreen mode
+       // (Note: can be called on document, but here the specific element is used as it will also ensure that the element's children, e.g. the custom controls, go fullscreen also)
+       enterFullFn();
+     }
   }
   private updateLoopState() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;

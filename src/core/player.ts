@@ -1,4 +1,4 @@
-import { createElement, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
+import { createElement, includes, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
 
@@ -91,7 +91,7 @@ class Player extends Emitter {
     const mediaElement = this.isVideo(this.media) ? createElement('video', {
       ...attrs,
       poster: this.media?.poster,
-      style: "width: 100%;"
+      style: "width: 100%; height: 100%;"
     }) : createElement('audio', attrs);
     this.mediaElement = mediaElement;
     return mediaElement;
@@ -111,7 +111,7 @@ class Player extends Emitter {
     const srcs = isArray(src) ? [...src] : [src];
     for (const link of srcs) {
       const ext = link.split('.').pop();
-      if (videoExts.includes(ext)) {
+      if (includes(videoExts, ext)) {
         return true;
       }
     }
@@ -168,6 +168,17 @@ class Player extends Emitter {
   protected addEventListener(target, type, listener) {
     target.addEventListener(type, listener);
     this.eventListeners.push([target, type, listener]);
+  }
+
+  protected removeEventListener(target, type, listener) {
+    target.removeEventListener(type, listener);
+    for (let i = 0; i < this.eventListeners.length; i++) {
+      const [target1, type1, listener1] = this.eventListeners[i];
+      if (target1 === target && type1 === type && listener1 === listener) {
+        this.eventListeners.splice(i, 1);
+        break;
+      }
+    }
   }
 
   private addMediaSource() {

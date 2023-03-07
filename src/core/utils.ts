@@ -79,8 +79,92 @@ export function createElement(tag, attributes = {}) {
   const element = document.createElement(tag);
   for (let attr in attributes) {
     if (attributes.hasOwnProperty(attr)) {
-      element[attr] = attributes[attr];
+      if (attr === 'style') {
+        element.style.cssText = attributes[attr];
+      } else {
+        element[attr] = attributes[attr];
+      }
     }
   }
   return element;
+}
+
+export function includes(arr, searchElement) {
+  // @ts-ignore
+  if (Array.prototype.includes) {
+    return arr.includes(searchElement);
+  }
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === searchElement) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Check if the browser supports the Fullscreen API
+export function isFullScreenEnabled() {
+  // @ts-ignore
+  return !!(document.fullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitSupportsFullscreen || document.webkitFullscreenEnabled || document.createElement('video').webkitRequestFullScreen);
+}
+
+// Checks if the document is currently in fullscreen mode
+export function isFullScreen() {
+  // @ts-ignore
+  return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
+}
+
+export function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  // @ts-ignore
+  } else if (document.mozCancelFullScreen) {
+    // @ts-ignore
+    document.mozCancelFullScreen();
+    // @ts-ignore
+  } else if (document.webkitCancelFullScreen) {
+    // @ts-ignore
+    document.webkitCancelFullScreen();
+    // @ts-ignore
+  } else if (document.msExitFullscreen) {
+    // @ts-ignore
+    document.msExitFullscreen();
+  }
+}
+
+export function requestFullscreen(element) {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullScreen) {
+    // Safari 5.1 only allows proper fullscreen on the video element. This also works fine on other WebKit browsers as the following CSS (set in styles.css) hides the default controls that appear again, and 
+    // ensures that our custom controls are visible:
+    // figure[data-fullscreen=true] video::-webkit-media-controls { display:none !important; }
+    // figure[data-fullscreen=true] .controls { z-index:2147483647; }
+    element.webkitRequestFullScreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+}
+
+export function getFullScreenElement() {
+  // @ts-ignore
+  return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+}
+
+export function debounce(fn, limit) {
+  let timer;
+  const ans= function (...args) {
+    // @ts-ignore
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.call(context, ...args);
+    }, limit);
+  };
+  ans.timer = () => {
+    return timer;
+  };
+  return ans;
 }
