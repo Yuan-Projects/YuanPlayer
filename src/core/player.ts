@@ -88,11 +88,14 @@ class Player extends Emitter {
       controls: !!this.nativeControls,
       loop: typeof this.loop !== "undefined" ? !!this.loop : false
     };
-    const mediaElement = this.isVideo(this.media) ? createElement('video', {
+    const videoAttrs: any =  {
       ...attrs,
-      poster: this.media?.poster,
       style: "width: 100%; height: 100%;"
-    }) : createElement('audio', attrs);
+    };
+    if (this.media?.poster) {
+      videoAttrs.poster = this.media.poster;
+    }
+    const mediaElement = this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
     this.mediaElement = mediaElement;
     return mediaElement;
   }

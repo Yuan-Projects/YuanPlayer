@@ -199,7 +199,20 @@ export default class PlayerUI extends Player {
         if (this.mediaElement?.tagName === 'AUDIO') {
           this.handleFullscreen(false);
         }
-      })
+      });
+      this.on('error', () => {
+        if (this.errorCode === -2 || this.errorCode === 4) {
+          if (this.cssSelector.currentTime) {
+            domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+          }
+          if (this.cssSelector.duration) {
+            domElement.querySelector(this.cssSelector.duration)!.textContent = this.formatTime(0);
+          }
+          if (this.cssSelector.playBar) {
+            (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
+          }
+        }
+      });
       this.on('timeupdate', () => {
         const second = this.mediaElement ? Math.floor(this.mediaElement.currentTime) : 0;
         if (this.cssSelector.currentTime) {
@@ -298,7 +311,7 @@ export default class PlayerUI extends Player {
     if (typeof enterFullScreen === 'boolean') {
       if (enterFullScreen) {
         enterFullFn();
-      } else {
+      } else if (isFullScreen()) {
         exitFullFn();
       }
       return;
