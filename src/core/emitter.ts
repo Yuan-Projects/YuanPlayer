@@ -1,17 +1,17 @@
 export default class Emitter {
   eventHandlers = {};
   on(event: string, callback: Function) {
-    var Events = this.eventHandlers;
+    const Events = this.eventHandlers;
     if (!Events[event]) {
       Events[event] = [];
     }
     Events[event].push(callback);
   }
   off(event: string, callback: Function) {
-    var Events = this.eventHandlers;
+    const Events = this.eventHandlers;
     if (!Events[event]) return ;
     if (callback) {
-      var index = Events[event].indexOf(callback);
+      const index = Events[event].indexOf(callback);
       if (index !== -1) {
         Events[event].splice(index, 1);
       }
@@ -20,10 +20,10 @@ export default class Emitter {
     }
   }
   trigger(event: string, ...args) {
-    var Events = this.eventHandlers;
+    const Events = this.eventHandlers;
     if (!Events[event]) return ;
-    var callbackArray = Events[event];
-    for (var i = callbackArray.length - 1; i >= 0; i--) {
+    const callbackArray = Events[event];
+    for (let i = callbackArray.length - 1; i >= 0; i--) {
       callbackArray[i].apply(callbackArray[i], args);
     };
   }

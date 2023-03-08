@@ -41,20 +41,20 @@ export default class LyricUI extends Lyric {
     }, 0);
   }
   protected scrollLyric(currentTime: number) {
-    var newLyricIndex = this.getNewLyricIndex(currentTime);
-    var oldPosition = this.lyricCurrentPosition;
+    const newLyricIndex = this.getNewLyricIndex(currentTime);
+    const oldPosition = this.lyricCurrentPosition;
     if (newLyricIndex === oldPosition) return ;
   
     this.lyricCurrentPosition = newLyricIndex;
   
     // Hightlight the current lyric
-    var lyricDivs = this.container.querySelectorAll(this.cssSelector.item);
+    const lyricDivs = this.container.querySelectorAll(this.cssSelector.item);
     if (lyricDivs.length) {
       lyricDivs[oldPosition].classList.remove(this.stateClass.current);
       lyricDivs[newLyricIndex].classList.add(this.stateClass.current);
 
       // Scroll the lyrics container
-      var newScrollTop = (lyricDivs[newLyricIndex] as HTMLElement).offsetTop;
+      const newScrollTop = (lyricDivs[newLyricIndex] as HTMLElement).offsetTop;
       // lyric-wrapcontainer
       this.container.querySelector(this.cssSelectorAncestor)!.scrollTop = newScrollTop;
     }

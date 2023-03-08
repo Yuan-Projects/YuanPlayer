@@ -14,8 +14,8 @@ function getClass(Base) {
       if (typeof this.lyric === 'string') {
         if (!this.container.querySelector('.yuanplayer-bluemonday-lyric')) {
           // Add container for lyric
-          var lyricDiv = document.createElement('div');
-          var wrapContainer = document.createElement('div');
+          const lyricDiv = document.createElement('div');
+          const wrapContainer = document.createElement('div');
           lyricDiv.classList.add('yuanplayer-bluemonday-lyric');
           lyricDiv.classList.add(this.stateClass.empty);
           wrapContainer.classList.add('lyric-wrapcontainer');
@@ -35,11 +35,11 @@ function getClass(Base) {
       });
     }
     addLyricItems(items: any) {
-      var wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  
-      for (var i = 0, l = items.length; i < l; i++) {
-        var div = document.createElement('div');
+      const wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  
+      for (let i = 0, l = items.length; i < l; i++) {
+        const div = document.createElement('div');
         div.classList.add(this.cssSelector.item.substring(1));
-        var content = items[i].split(']')[1];
+        const content = items[i].split(']')[1];
         innerText(div, content);
         wrapContainer?.appendChild(div);
       }
