@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function isArray(vArg: any) {
   if (Array.isArray) {
     return Array.isArray(vArg);
@@ -51,7 +52,6 @@ export function trunc(x: number) {
   if ('trunc' in Math) {
     return Math.trunc(x);
   }
-  // @ts-ignore
   return x < 0 ? Math.ceil(x) : Math.floor(x);
 }
 
@@ -72,7 +72,6 @@ export function isHLSNativelySupported() {
 }
 
 export function isHLSJSSupported() {
-  // @ts-ignore
   return typeof Hls === 'function' && Hls.isSupported();
 }
 
@@ -91,7 +90,6 @@ export function createElement(tag, attributes = {}) {
 }
 
 export function includes(arr, searchElement) {
-  // @ts-ignore
   if (Array.prototype.includes) {
     return arr.includes(searchElement);
   }
@@ -105,30 +103,22 @@ export function includes(arr, searchElement) {
 
 // Check if the browser supports the Fullscreen API
 export function isFullScreenEnabled() {
-  // @ts-ignore
   return !!(document.fullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitSupportsFullscreen || document.webkitFullscreenEnabled || document.createElement('video').webkitRequestFullScreen);
 }
 
 // Checks if the document is currently in fullscreen mode
 export function isFullScreen() {
-  // @ts-ignore
   return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
 }
 
 export function exitFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
-  // @ts-ignore
   } else if (document.mozCancelFullScreen) {
-    // @ts-ignore
     document.mozCancelFullScreen();
-    // @ts-ignore
   } else if (document.webkitCancelFullScreen) {
-    // @ts-ignore
     document.webkitCancelFullScreen();
-    // @ts-ignore
   } else if (document.msExitFullscreen) {
-    // @ts-ignore
     document.msExitFullscreen();
   }
 }
@@ -150,14 +140,12 @@ export function requestFullscreen(element) {
 }
 
 export function getFullScreenElement() {
-  // @ts-ignore
   return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 }
 
 export function debounce(fn, limit) {
   let timer;
   const ans= function (...args) {
-    // @ts-ignore
     const context = this;
     clearTimeout(timer);
     timer = setTimeout(function () {
