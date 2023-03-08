@@ -29,6 +29,7 @@ function getClass(Base) {
           fullScreen: '.jp-full-screen',
         },
         stateClass: {
+          fullScreen: 'jp-state-full-screen',
           playing: 'jp-state-playing',
           muted: 'jp-state-muted',
           looped: "jp-state-looped",

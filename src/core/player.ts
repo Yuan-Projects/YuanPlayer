@@ -90,7 +90,7 @@ class Player extends Emitter {
     };
     const videoAttrs: any =  {
       ...attrs,
-      style: "width: 100%; height: 100%;"
+      style: "width: 100%;"
     };
     if (this.media?.poster) {
       videoAttrs.poster = this.media.poster;

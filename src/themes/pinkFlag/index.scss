@@ -125,16 +125,6 @@
     }
   }
 
-  .jp-state-full-screen {
-    .jp-full-screen {
-      background-position: -60px -420px;
-
-      &:focus {
-        background-position: -90px -420px;
-      }
-    }
-  }
-
  .jp-video-full .jp-interface {
    position: absolute !important;
    position: relative;
@@ -733,7 +723,7 @@
   }
 }
 
-.yuan-state-full-screen {
+.jp-state-full-screen {
   .jp-playlist {
     display: none;
   }
@@ -742,5 +732,15 @@
     left: 0;
     bottom: 0;
     width: 100%;
+  }
+}
+
+.jp-state-full-screen {
+  .jp-full-screen {
+    background-position: -60px -420px;
+
+    &:focus {
+      background-position: -90px -420px;
+    }
   }
 }
