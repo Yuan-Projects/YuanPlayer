@@ -9,8 +9,10 @@
     "build:theme-yuan": "rimraf theme-yuan && copyfiles src/themes/yuan/package.json LICENSE.md -f theme-yuan && copyfiles src/themes/yuan/README.md -f theme-yuan && copyfiles lib/cjs/YuanPlayerThemeYuan.js lib/cjs/YuanPlayerThemeYuan.min.js lib/mjs/YuanPlayerThemeYuan.js lib/mjs/YuanPlayerThemeYuan.min.js lib/umd/YuanPlayerThemeYuan.js lib/umd/YuanPlayerThemeYuan.min.js theme-yuan",
     "build:theme-monday": "rimraf theme-monday && copyfiles src/themes/blueMonday/package.json src/themes/blueMonday/CHANGELOG.md LICENSE.md -f theme-monday && copyfiles src/themes/blueMonday/README.md -f theme-monday && copyfiles lib/cjs/YuanPlayerThemeBlueMonday.js lib/cjs/YuanPlayerThemeBlueMonday.min.js lib/mjs/YuanPlayerThemeBlueMonday.js lib/mjs/YuanPlayerThemeBlueMonday.min.js lib/umd/YuanPlayerThemeBlueMonday.js lib/umd/YuanPlayerThemeBlueMonday.min.js theme-monday",
     "build:theme-pinkflag": "rimraf theme-pinkflag && copyfiles src/themes/pinkFlag/package.json src/themes/pinkFlag/CHANGELOG.md LICENSE.md -f theme-pinkflag && copyfiles src/themes/pinkFlag/README.md -f theme-pinkflag && copyfiles lib/cjs/YuanPlayerThemePinkFlag.js lib/cjs/YuanPlayerThemePinkFlag.min.js lib/mjs/YuanPlayerThemePinkFlag.js lib/mjs/YuanPlayerThemePinkFlag.min.js lib/umd/YuanPlayerThemePinkFlag.js lib/umd/YuanPlayerThemePinkFlag.min.js theme-pinkflag",
-    "start": "live-server --open=/demo/ --wait=2000 --ignore=src .",
-    "build": "rimraf lib && rollup --no-strict --config",
+    "build": "npm run buildcore && npm run buildbm && npm run buildpf",
+    "buildcore": "rollup --no-strict --config rollup.config.core.js",
+    "buildpf": "rollup --no-strict --config rollup.config.pinkflag.js",
+    "buildbm": "rollup --no-strict --config rollup.config.blueMonday.js",
     "watch": "rollup --config --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -35,7 +37,6 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
     "copyfiles": "^2.4.1",
-    "live-server": "^1.2.2",
     "node-sass": "^8.0.0",
     "rimraf": "^4.1.2",
     "rollup": "^3.12.0",
