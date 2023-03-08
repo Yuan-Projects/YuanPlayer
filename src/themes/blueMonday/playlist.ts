@@ -1,8 +1,7 @@
+// @ts-nocheck
 import type { PlayListOptions } from "../../core/playlist.d";
 import { matches } from "../../core/utils";
-// @ts-ignore
 import tpl from './playlist.ejs';
-// @ts-ignore
 import itemTpl from './playlistItem.ejs';
 import './playlist.scss';
 

@@ -1,6 +1,7 @@
 import { createElement, includes, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
+declare var Hls;
 
 /**
  * Render the <audio> tag into a specific DOM element
@@ -67,7 +68,6 @@ class Player extends Emitter {
 
   private initOptions(options: YuanPlayerOptions) {
     for (const prop in options) {
-      // @ts-ignore
       this[prop] = prop === 'loop' ? options[prop] === 'one' : options[prop];
     }
   }
@@ -110,7 +110,6 @@ class Player extends Emitter {
     if (!src) return false;
     // TODO: .ogg, mp4 can be used as both video and audio
     const videoExts = ['ogm', 'ogv', 'webm', 'mp4', 'm4v'];
-    // @ts-ignore
     const srcs = isArray(src) ? [...src] : [src];
     for (const link of srcs) {
       const ext = link.split('.').pop();
@@ -374,7 +373,6 @@ class Player extends Emitter {
     const fileExtension = src.split('.').pop();
     if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
       if (isHLSJSSupported()) {
-        // @ts-ignore
         const hlsInstance = new Hls();
         hlsInstance.loadSource(src);
         hlsInstance.attachMedia(this.mediaElement);
