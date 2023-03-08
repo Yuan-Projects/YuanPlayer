@@ -25,6 +25,6 @@ export default class Emitter {
     const callbackArray = Events[event];
     for (let i = callbackArray.length - 1; i >= 0; i--) {
       callbackArray[i].apply(callbackArray[i], args);
-    };
+    }
   }
 }

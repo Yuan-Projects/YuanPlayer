@@ -128,7 +128,7 @@ class YuanPlayer {
             instance.pause();
           }
         })
-      };
+      }
     }
     return MyClass;
   }

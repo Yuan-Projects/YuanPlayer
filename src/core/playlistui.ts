@@ -118,4 +118,4 @@ export default class PlayListUI extends PlayList {
       itemElements[index]?.classList.add(this.stateClass.currentItem || '');
     }
   }
-};
+}

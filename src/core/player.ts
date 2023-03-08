@@ -125,7 +125,7 @@ class Player extends Emitter {
     const media = this.mediaElement;
     if (!media) return ;
 
-    let t = window.setInterval(function() {
+    const t = window.setInterval(function() {
       if (media?.networkState === 3) {
         that.errorCode = Player.error.MEDIA_ERR_URLEMPTY.code;
         that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;

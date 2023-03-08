@@ -3,7 +3,7 @@ export function isArray(vArg: any) {
     return Array.isArray(vArg);
   }
   return Object.prototype.toString.call(vArg) === "[object Array]";
-};
+}
 
 export const isHtml5AudioSupported = function () {
   return document.createElement("audio").play;
@@ -15,7 +15,7 @@ export const innerText = function(element: HTMLElement, text: string) {
 
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    let r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    const r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
     return v.toString(16);
   });
 }
@@ -26,7 +26,8 @@ export function uuidv4() {
  * obj1 &lt;- obj2 [ &lt;- ... ]
  */
 export function merge(...args) {
-  let dst = {} ,src, p;
+  const dst = {};
+  let src, p;
 
   while (args.length > 0) {
     src = args.splice(0, 1)[0];
@@ -77,7 +78,7 @@ export function isHLSJSSupported() {
 
 export function createElement(tag, attributes = {}) {
   const element = document.createElement(tag);
-  for (let attr in attributes) {
+  for (const attr in attributes) {
     if (attributes.hasOwnProperty(attr)) {
       if (attr === 'style') {
         element.style.cssText = attributes[attr];
