@@ -17,7 +17,6 @@ function getClass(Base) {
       super(options);
       if (!this.nativeControls) {
         this.renderPlayerUI();
-        this.addEvents();
       }
     }
   
@@ -40,17 +39,6 @@ function getClass(Base) {
       if (document.createElement("p").style.flexWrap === '') {
         div.querySelector('.yuan-interface')?.classList.add('flexbox');
       }
-    }
-    addEvents() {
-      this.on('setmedia', () => {
-        const fullScreenBtn = this.container?.querySelector(this.cssSelector.fullScreen);
-        if (!fullScreenBtn || !isFullScreenEnabled()) return;
-        if (this.mediaElement?.tagName.toLowerCase() === 'video') {
-          fullScreenBtn.classList.remove('hidden');
-        } else {
-          fullScreenBtn.classList.add('hidden');
-        }
-      });
     }
   }
 }

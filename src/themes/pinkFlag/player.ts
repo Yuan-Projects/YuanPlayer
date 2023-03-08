@@ -26,6 +26,7 @@ function getClass(Base) {
           volumeBarValue: '.jp-volume-bar-value',
           repeat: '.jp-repeat',
           title: '.jp-title',
+          fullScreen: '.jp-full-screen',
         },
         stateClass: {
           playing: 'jp-state-playing',
@@ -47,6 +48,12 @@ function getClass(Base) {
       div.classList.add('yuanplayer-pinkflag-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);
+
+      // If current browser support flex wrapping, use flexbox layout
+      // Some old browsers does not support this feature, such as Android 4.2 default browsers
+      if (document.createElement("p").style.flexWrap === '') {
+        div.querySelector('.jp-toggles')?.classList.add('flexbox');
+      }
     }
   }
 }

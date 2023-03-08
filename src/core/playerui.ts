@@ -191,6 +191,16 @@ export default class PlayerUI extends Player {
         }
       });
       this.on('setmedia', () => {
+        if (!this.cssSelector?.fullScreen) return false;
+        const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
+        if (!fullScreenBtn || !isFullScreenEnabled()) return;
+        if (this.mediaElement?.tagName.toLowerCase() === 'video') {
+          fullScreenBtn.style.display = 'inline-block';
+        } else {
+          fullScreenBtn.style.display = 'none';
+        }
+      });
+      this.on('setmedia', () => {
         if (!this.cssSelector.title) return false;
         const element = domElement.querySelector(this.cssSelector.title);
         if (element) {

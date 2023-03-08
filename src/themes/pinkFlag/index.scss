@@ -15,6 +15,9 @@
  * Date: 13th November 2014
  */
 .yuanplayer-pinkflag-player {
+  .hidden {
+    display: none !important;
+  }
   .jp-controls,
   .jp-play,
   .jp-play:focus,
@@ -36,7 +39,9 @@
   .jp-volume-max:focus,
   .jp-volume-bar,
   .jp-volume-bar-value,
-  .jp-progress {
+  .jp-progress,
+  .jp-full-screen,
+  .jp-full-screen:focus {
     background-image: url("./image/jplayer.pink.flag.jpg");
     background-repeat: no-repeat;
   }
@@ -109,7 +114,27 @@
    height: 100%;
    z-index: 1001;
    /* 1 layer above the others. */ }
- 
+
+  .jp-full-screen {
+    background-position: 0 -420px;
+    margin-left: 6px;
+    display: none;
+
+    &:focus {
+      background-position: -30px -420px;
+    }
+  }
+
+  .jp-state-full-screen {
+    .jp-full-screen {
+      background-position: -60px -420px;
+
+      &:focus {
+        background-position: -90px -420px;
+      }
+    }
+  }
+
  .jp-video-full .jp-interface {
    position: absolute !important;
    position: relative;
@@ -126,10 +151,11 @@
  /* @group CONTROLS */
  .jp-video .jp-controls-holder {
    clear: both;
-   width: 440px;
    margin: 0 auto 10px auto;
    position: relative;
-   overflow: hidden; }
+   overflow: hidden;
+   height: 36px;
+  }
  
  .jp-audio .jp-controls-holder {
    height: 80px; }
@@ -137,12 +163,15 @@
  .jp-audio-stream .jp-controls-holder {
    height: 50px; }
  
- .jp-controls {
-   background-position: 0 0;
-   padding: 1px 0 2px 1px;
-   overflow: hidden;
-   width: 201px;
-   height: 34px; }
+  .jp-controls {
+    background-position: 0 0;
+    padding: 1px 0 2px 1px;
+    overflow: hidden;
+    height: 34px;
+
+    flex-shrink: 0;
+    margin: 0;
+  }
  
  .jp-audio .jp-controls,
  .jp-audio-stream .jp-controls {
@@ -152,9 +181,9 @@
    width: 100px; }
  
  .jp-video .jp-controls {
-   margin: 0 0 0 115px;
-   float: left;
+   /*float: left;
    display: inline;
+   */
    /* need this to fix IE6 double margin */ }
  
  .jp-controls button {
@@ -207,57 +236,61 @@
  /* @end */
  /* @group playlist player controls */
  .jp-type-playlist .jp-controls button {
-   width: 49px; }
- 
- .jp-type-playlist .jp-play {
-   background-position: -24px -40px;
+   width: 40px;
   }
  
- .jp-type-playlist .jp-play:focus {
-   background-position: -124px -40px;
+ .jp-type-playlist .jp-play {
+   background-position: -28px -40px;
+   &:focus {
+    background-position: -128px -40px;
+   }
   }
  
   &.jp-state-playing {
     div.jp-type-playlist {
       .jp-play {
-        background-position: -24px -120px;
+        background-position: -28px -120px;
         &:focus {
-          background-position: -124px -120px;
+          background-position: -128px -120px;
         }
       }
     }
   }
  
  .jp-type-playlist .jp-stop {
-   background-position: -24px -80px;
+   background-position: -28px -80px;
  }
  
  .jp-type-playlist .jp-stop:focus {
-   background-position: -124px -80px;
+   background-position: -128px -80px;
   }
  
  .jp-type-playlist .jp-previous {
-   background-position: -24px -200px;
+   background-position: -28px -200px;
   }
  
  .jp-type-playlist .jp-previous:focus {
-   background-position: -124px -200px;
+   background-position: -128px -200px;
   }
  
  .jp-type-playlist .jp-next {
-   background-position: -24px -160px;
+   background-position: -28px -160px;
   }
  
  .jp-type-playlist .jp-next:focus {
-   background-position: -124px -160px;
+   background-position: -128px -160px;
   }
  
  /* @end */
  /* @group TOGGLES */
- .jp-toggles {
-   padding: 0;
-   margin: 0 auto;
-   overflow: hidden; }
+  .jp-toggles {
+    padding: 0;
+    margin: 0 auto;
+    overflow: hidden;
+    /*
+    display: flex;
+    */
+  }
  
  .jp-audio .jp-toggles {
    width: 55px; }
@@ -266,9 +299,11 @@
    width: 25px; }
  
  .jp-video .jp-toggles {
-   float: left;
-   width: 105px;
-   margin: 10px 0 0 15px; }
+  /*
+   width: auto;
+   width: 88px;
+   */
+  }
  
  .jp-toggles button {
    display: block;
@@ -360,6 +395,14 @@
  
  /* @end */
  /* @group volume controls */
+
+  .jp-volume-controls {
+    overflow: auto;
+    position: relative;
+    width: 90px;
+    height: 100%;
+    display: none;
+  }
   &.jp-state-no-volume {
     .jp-volume-controls {
       display: none;
@@ -464,6 +507,36 @@
   }
  
  /* @end */
+
+  .flexbox {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  .flexbox-row {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .flexbox-justify-content-space-between {
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+
+  .flexbox-align-content-center {
+    -webkit-align-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+  }
+
+  .flexbox-align-items-center {
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
  /* @group current time and duration */
  .jp-current-time, .jp-duration {
    width: 70px;
@@ -641,7 +714,6 @@
   .yuanplayer-pinkflag-player {
     .jp-video {
       .jp-controls {
-        margin-left: 85px;
       }
       .jp-volume-bar {
         width: 75px;
@@ -658,5 +730,17 @@
     .jp-shuffle {
       margin-left: 5px;
     }
+  }
+}
+
+.yuan-state-full-screen {
+  .jp-playlist {
+    display: none;
+  }
+  .yuanplayer-pinkflag-player {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
   }
 }
