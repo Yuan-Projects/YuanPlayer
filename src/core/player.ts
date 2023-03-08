@@ -122,11 +122,11 @@ class Player extends Emitter {
   }
 
   private bindMediaEvents() {
-    var that = this;
-    var media = this.mediaElement;
+    const that = this;
+    const media = this.mediaElement;
     if (!media) return ;
 
-    var t = window.setInterval(function(){
+    let t = window.setInterval(function() {
       if (media?.networkState === 3) {
         that.errorCode = Player.error.MEDIA_ERR_URLEMPTY.code;
         that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;
@@ -193,7 +193,7 @@ class Player extends Emitter {
     if (typeof src === 'string') {
       src = [src];
     }
-    for (var i = 0; i < src.length; i++) {
+    for (let i = 0; i < src.length; i++) {
       this.addSourceElement(src[i]);
     }
     setTimeout(() => {
@@ -247,7 +247,7 @@ class Player extends Emitter {
     if (this.mediaElement) {
       const playPromise = this.mediaElement.play();
       if (playPromise !== undefined) {
-        playPromise.then(() => {}).catch(error => {})
+        playPromise.then(() => {}).catch(() => {})
       }
     }
   }
@@ -263,7 +263,7 @@ class Player extends Emitter {
     return this.mediaElement && !this.mediaElement.paused;
   }
   protected togglePlay() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (!media) return false;
     if (media.paused) {
       const playPromise = media.play();
@@ -271,7 +271,7 @@ class Player extends Emitter {
       // Note: Browsers released before 2019 may not return a value from play().
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
       if (playPromise !== undefined) {
-        playPromise.then(() => {}).catch(error => {})
+        playPromise.then(() => {}).catch(() => {})
       }
     } else {
       media.pause();
@@ -281,7 +281,7 @@ class Player extends Emitter {
    * Stop the media and reset the play-head to the start of the media.
    */
   public stop() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (media) {
       media.pause();
       media.currentTime = 0;
@@ -289,7 +289,7 @@ class Player extends Emitter {
     }
   }
   public toggleLoop() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (media) {
       media.loop = !media.loop;
     }
@@ -301,9 +301,9 @@ class Player extends Emitter {
    * @returns 
    */
   protected getMimeType(fileName: string): string {
-    var type = 'wav';
+    let type = 'wav';
     if (fileName) {
-      var fileExtension = fileName.split('.').pop();
+      const fileExtension = fileName.split('.').pop();
       if (fileExtension === 'm3u8' && this.mediaElement) {
         if (this.mediaElement.canPlayType('application/x-mpegURL')) {
           return 'application/x-mpegURL';
@@ -345,8 +345,8 @@ class Player extends Emitter {
   /**
    * Pause the media.
    */
-  public pause(){
-    var media = this.mediaElement;
+  public pause() {
+    const media = this.mediaElement;
     if (media) {
       media.pause();
     }
@@ -361,7 +361,7 @@ class Player extends Emitter {
   }
 
   private addSourceElement(src: string) {
-    var sourceElement = createElement('source', {
+    const sourceElement = createElement('source', {
       src: this.processSrc(src),
       type: this.getMimeType(src)
     });
@@ -371,7 +371,7 @@ class Player extends Emitter {
   }
 
   private processSrc(src: string): string {
-    var fileExtension = src.split('.').pop();
+    const fileExtension = src.split('.').pop();
     if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
       if (isHLSJSSupported()) {
         // @ts-ignore
@@ -389,22 +389,22 @@ class Player extends Emitter {
    * Mutes the media's sounds
    */
   public mute() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (media) {
-      media.muted = true;;
+      media.muted = true;
     }
   }
   /**
    * Unmutes the media's sounds.
    */
   public unmute() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (media) {
       media.muted = false;
     }
   }
   protected toggleMute() {
-    var media = this.mediaElement;
+    const media = this.mediaElement;
     if (media) {
       media.muted = !media.muted;
     }

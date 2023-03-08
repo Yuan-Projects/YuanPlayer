@@ -303,7 +303,6 @@ export default class PlayerUI extends Player {
   }
   // Fullscreen
   protected handleFullscreen(enterFullScreen?: boolean) {
-    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     const fullScreenEnabled = isFullScreenEnabled();
     // If the browser doesn't support the Fulscreen API then hide the fullscreen button
     if (!fullScreenEnabled) {
@@ -356,7 +355,7 @@ export default class PlayerUI extends Player {
       }
     }
   }
-  private isMatchedWithSelector(dom, cssSelector, rootElement = this.container): boolean {
+  private isMatchedWithSelector(dom, cssSelector): boolean {
     if (!cssSelector) return false;
     do {
       if (matches(dom, cssSelector)) {
@@ -387,4 +386,4 @@ export default class PlayerUI extends Player {
       ele!.style.width = this.mediaElement?.muted ? '0%' : val + "%";
     }
   }
-};
+}
