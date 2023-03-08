@@ -21,14 +21,14 @@ class Lyric extends Emitter {
     this.container = options.container;
   }
   private parseLyricItems(items: Array<any>): Array<any> {
-    var result: Array<any> = [];
-    var timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}\]/g;
-    for (var i = 0, l = items.length; i < l; i++) {
-      var thisItem = items[i];
-      var timeSpanArray = thisItem.match(timePattern);
+    const result: Array<any> = [];
+    const timePattern = /\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}\]/g;
+    for (let i = 0, l = items.length; i < l; i++) {
+      const thisItem = items[i];
+      const timeSpanArray = thisItem.match(timePattern);
       if (timeSpanArray) {
-        var lyric = thisItem.split(timePattern).pop();
-        for (var j = 0, len = timeSpanArray.length; j < len; j++) {
+        const lyric = thisItem.split(timePattern).pop();
+        for (let j = 0, len = timeSpanArray.length; j < len; j++) {
           result.push(timeSpanArray[j] + lyric);
         }
       }
@@ -36,9 +36,9 @@ class Lyric extends Emitter {
     return result;
   }
   private logLyricInfo(items: Array<any>) {
-    var patt = /\[|\]/;
-    for (var i = 0; i < items.length; i++) {
-      var component = items[i].split(patt);
+    const patt = /\[|\]/;
+    for (let i = 0; i < items.length; i++) {
+      const component = items[i].split(patt);
       if (component[2] === "") {
         // If no lyric
       }
@@ -49,27 +49,27 @@ class Lyric extends Emitter {
   }
 
   private compareTimeSpan(x: any, y: any): number {
-    var timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2,3})\]/;
-    var xTime = x.match(timePattern)[1],
+    const timePattern = /\[([0-9]{2}:[0-9]{2}\.[0-9]{2,3})\]/;
+    const xTime = x.match(timePattern)[1],
       yTime = y.match(timePattern)[1];
-    var xTimeInSeconds: number = this.parseTimeToSeconds(xTime),
+    const xTimeInSeconds: number = this.parseTimeToSeconds(xTime),
       yTimeInSeconds: number = this.parseTimeToSeconds(yTime);
     return xTimeInSeconds - yTimeInSeconds;
   }
 
   private parseTimeToSeconds(timeString: string): number {
-    var component = timeString.split(".");
-    var bigPart = component[0];
-    var bigPartComponent = bigPart.split(":");
-    var minutePart = parseInt(bigPartComponent[0]);
-    var secondPart = parseInt(bigPartComponent[1]);
+    const component = timeString.split(".");
+    const bigPart = component[0];
+    const bigPartComponent = bigPart.split(":");
+    const minutePart = parseInt(bigPartComponent[0]);
+    const secondPart = parseInt(bigPartComponent[1]);
     return parseFloat(minutePart * 60 + secondPart + "." + component[1]);
   }
 
   private addLyric() {
-    var lyric = this.lyric;
+    const lyric = this.lyric;
     if (lyric) {
-      var lyricItems = lyric.split(/[\n\r]/g);
+      let lyricItems = lyric.split(/[\n\r]/g);
       lyricItems = this.parseLyricItems(lyricItems);
       lyricItems.sort((x: any, y: any) => {
         return this.compareTimeSpan.call(this, x, y);
@@ -82,8 +82,8 @@ class Lyric extends Emitter {
   }
 
   private bindLyricEvents() {
-    var that = this;
-    var media = this.mediaElement;
+    const that = this;
+    const media = this.mediaElement;
     if (!media) return;
     media.addEventListener(
       "timeupdate",
@@ -101,9 +101,9 @@ class Lyric extends Emitter {
   }
 
   protected getNewLyricIndex(currentTime:any): number {
-    var index = 0;
-    var timeArray = this.lyricObj.timeArray;
-    var timeLength = timeArray.length;
+    let index = 0;
+    const timeArray = this.lyricObj.timeArray;
+    const timeLength = timeArray.length;
     if (timeLength) {
       if(currentTime <= timeArray[0]) {
         return 0;
@@ -111,7 +111,7 @@ class Lyric extends Emitter {
       if(currentTime >= timeArray[timeLength-1]) {
         return timeLength - 1;
       }
-      for (var i = 0; i < timeLength; i++) {
+      for (let i = 0; i < timeLength; i++) {
         if (currentTime <= timeArray[i]) {
           index = i - 1;
           break;
