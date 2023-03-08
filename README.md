@@ -6,6 +6,7 @@ YuanPlayer
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
 [![npm](https://img.shields.io/npm/dt/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
 [![CodeFactor](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer/badge)](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer)
+[![yuanplayer-core](https://snyk.io/advisor/npm-package/yuanplayer-core/badge.svg)](https://snyk.io/advisor/npm-package/yuanplayer-core)
 
 YuanPlayer is a customizable audio player.
 
