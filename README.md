@@ -2,6 +2,7 @@ YuanPlayer
 ==========
 
 [![npm](https://img.shields.io/npm/v/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FYuan-Projects%2FYuanPlayer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FYuan-Projects%2FYuanPlayer?ref=badge_shield)
 [![](https://data.jsdelivr.com/v1/package/npm/yuanplayer-core/badge)](https://www.jsdelivr.com/package/npm/yuanplayer-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
 [![npm](https://img.shields.io/npm/dt/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
@@ -108,3 +109,7 @@ const bmplayer = new BMPlayer({
 ## Demo
 
 Please visit [GitHub Pages](https://yuan-projects.github.io/YuanPlayer/demo/).
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FYuan-Projects%2FYuanPlayer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FYuan-Projects%2FYuanPlayer?ref=badge_large)
