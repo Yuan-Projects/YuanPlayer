@@ -8,37 +8,22 @@ YuanPlayer
 [![CodeFactor](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer/badge)](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer)
 [![yuanplayer-core](https://snyk.io/advisor/npm-package/yuanplayer-core/badge.svg)](https://snyk.io/advisor/npm-package/yuanplayer-core)
 
-YuanPlayer is a customizable audio player.
+YuanPlayer is a simple, customisable media player for HTML5 video and audio.
 
 ![demo](./src/themes/blueMonday/images/demo.png)
 
 ## Features:
 
-### Modules support
-
-YuanPlayer supports various JavaScript modules: AMD, CommonJS, UMD and ESM.
-
-### Lyric and playlist
-
-The lyric and playlist features are built in its core.
-
-### Live Streaming support
-
-- HLS (via hls.js)
-- SHOUTcast
-- Icecast
-
-### Theme Support
-
-You can choose from open source themes for YuanPlayer, or create your own unique one.
-
-### API Support
-
-Access YuanPlayer functions, change the track, pause and play, skip to previous or next, add new ones, etc. Let it work in harmony with your own application.
-
-### Programmable Events
-
-Register your event listener methods for well designed events. YuanPlayer will do the rest by executing your method when the event occurs.
+- **HTML Video & Audio** - support for the major formats
+- **Customizable** - choose from open source themes for YuanPlayer, or create your own unique one.
+- **Responsive** - works with any screen size
+- **Streaming** - support for hls.js streaming playback
+- **API** - toggle playback, volume, seeking, and more
+- **Events** - all events are standardized across formats
+- **Fullscreen** - support full window mode
+- **No frameworks** - written in TypeScript, no jQuery required
+- **Modules support** - supports various JavaScript modules: AMD, CommonJS, UMD and ESM.
+- **Lyric and playlist** - The lyric and playlist features are built in its core.
 
 You can visit the [Developer Guide](https://github.com/Yuan-Projects/YuanPlayer/wiki/Developer-Guide) doc for more information.
 
