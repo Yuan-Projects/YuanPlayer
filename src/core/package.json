@@ -1,6 +1,6 @@
 {
   "name": "yuanplayer-core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "YuanPlayer",
   "type": "module",
   "main": "lib/cjs/YuanPlayer.js",
@@ -19,13 +19,16 @@
     "url": "git+https://github.com/Yuan-Projects/YuanPlayer.git"
   },
   "keywords": [
+    "media player",
     "music player",
     "audio player",
+    "video player",
     "lyric",
     "music",
     "web player",
     "playlist",
     "YuanPlayer",
+    "HLS player",
     "radio player"
   ],
   "author": "rainyjune <rainyjune@live.cn>",

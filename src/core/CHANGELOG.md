@@ -1,3 +1,7 @@
+## 1.2.0 (March 9, 2023)
+
+- Add video support
+
 ## 1.1.0 (March 4, 2023)
 
 - Add HLS support
