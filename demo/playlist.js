@@ -52,10 +52,10 @@ window.videolist = [
     src: ['http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v', 'http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv', 'http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm']
   },
   {
-    title: '乘风破浪的姐姐 HLS',
-    artist: '芒果TV',
+    title: 'TV Live HLS',
+    artist: 'Shangyu New Commercial City TV HLS',
     isVideo: true,
-    src: 'https://europe.olemovienews.com/hlstimeofffmp4/20200904/CxuuEajo/mp4/CxuuEajo.mp4/index-v1-a1.m3u8'
+    src: 'https://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8',
   }
 ];
 
