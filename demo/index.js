@@ -17,7 +17,7 @@ window.noThemePlayer = new YuanPlayer({
     //debugger;
     //bmplayer.setPlaylist(playlist);
   }, 1000)
-  let count = 0;
+  //let count = 0;
 /*
   bmplayer.on('pause', () => {
     debugger;
