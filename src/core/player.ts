@@ -1,4 +1,4 @@
-import { createElement, includes, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
+import { createElement, getMediaMimeType, includes, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
 declare var Hls;
@@ -193,7 +193,7 @@ class Player extends Emitter {
       src = [src];
     }
     for (let i = 0; i < src.length; i++) {
-      this.addSourceElement(src[i]);
+      this.addSourceElement(src[i], !!this.media.isVideo);
     }
     setTimeout(() => {
       this.trigger('setmedia');
@@ -295,53 +295,6 @@ class Player extends Emitter {
     this.trigger('loopchanged');
   }
   /**
-   * Return MIME type for the media file.
-   * @param fileName 
-   * @returns 
-   */
-  protected getMimeType(fileName: string): string {
-    let type = 'wav';
-    if (fileName) {
-      const fileExtension = fileName.split('.').pop();
-      if (fileExtension === 'm3u8' && this.mediaElement) {
-        if (this.mediaElement.canPlayType('application/x-mpegURL')) {
-          return 'application/x-mpegURL';
-        } else if (this.mediaElement.canPlayType('application/vnd.apple.mpegURL')) {
-          return 'application/vnd.apple.mpegURL';
-        }
-      }
-      switch(fileExtension) {
-        case 'aac':
-          type = 'aac';
-          break;
-        case 'mp4':
-        case 'm4a':
-          type = 'mp4';
-          break;
-        case 'mp1':
-        case 'mp2':
-        case 'mp3':
-        case 'mpg':
-        case 'mpeg':
-          type = 'mpeg';
-          break;
-        case 'oga':
-        case 'ogg':
-          type = 'ogg';
-          break;
-        case 'wav':
-          type = 'wav';
-          break;
-        case 'webm':
-          type = 'webm';
-          break;
-        default :
-          type = 'wav';
-      }
-    }
-    return 'audio/' + type;
-  }
-  /**
    * Pause the media.
    */
   public pause() {
@@ -359,10 +312,10 @@ class Player extends Emitter {
 
   }
 
-  private addSourceElement(src: string) {
+  private addSourceElement(src: string, isVideo = false) {
     const sourceElement = createElement('source', {
       src: this.processSrc(src),
-      type: this.getMimeType(src)
+      type: getMediaMimeType(src, isVideo)
     });
     if (this.mediaElement) {
       this.mediaElement.appendChild(sourceElement);

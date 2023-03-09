@@ -157,3 +157,82 @@ export function debounce(fn, limit) {
   };
   return ans;
 }
+
+/**
+ * Return MIME type for the media file.
+ * @param fileName 
+ * @returns 
+ */
+export function getMediaMimeType(fileName, isVideo = false): string {
+  let category = isVideo ? 'video' : 'audio';
+  let type = 'wav';
+  if (fileName) {
+    const fileExtension = fileName.split('.').pop();
+    const videoElement = document.createElement('video');
+    if (fileExtension === 'm3u8') {
+      if (videoElement.canPlayType('application/x-mpegURL')) {
+        return 'application/x-mpegURL';
+      } else {
+        return 'application/vnd.apple.mpegurl';
+      }
+    }
+    switch(fileExtension) {
+      case '3gp':
+        type = '3gpp';
+        break;
+      case 'aac':
+        category = 'audio';
+        type = 'aac';
+        break;
+      case 'flac':
+        category = 'audio';
+        type = 'flac';
+        break;
+      case 'm4v':
+      case 'm4p':
+        category = 'video';
+        type = 'mp4';
+        break;
+      case 'mp3':
+        category = 'audio';
+        type = 'mp3';
+        break;
+      case 'mp4':
+        type = 'mp4';
+        break;
+      case 'm4a':
+        category = 'audio';
+        type = 'mp4';
+        break;
+      case 'mpg':
+      case 'mpeg':
+        type = 'mpeg';
+        break;
+      case 'oga':
+        category = 'audio';
+        type = 'ogg';
+        break;
+      case 'ogv':
+        category = 'video';
+        type = 'ogg';
+        break;
+      case 'ogg':
+        type = 'ogg';
+        break;
+      case 'mov':
+        category = 'video';
+        type = 'quicktime';
+        break;
+      case 'webm':
+        type = 'webm';
+        break;
+      case 'wav':
+        category = 'audio';
+        type = 'wav';
+      default:
+        type = 'wav';
+        break;
+    }
+  }
+  return `${category}/${type}`;
+}

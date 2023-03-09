@@ -40,6 +40,7 @@ export interface MediaItem {
   duration?: string | number
   track?: Array<object>
   src: string | Array<string>
+  isVideo?: boolean
 }
 
 export interface YuanPlayerOptions {
