@@ -1,76 +1,32 @@
 var BMPlayer = YuanPlayer.use(YuanPlayerThemeBlueMonday);
 var PFPlayer = YuanPlayer.use(YuanPlayerThemePinkFlag);
-/*
-window.noThemePlayer = new YuanPlayer({
-  media: playlist[0],
-  nativeControls: true,
-  container: document.querySelector('#noThemeContainer')
+
+window.bmplayer = new BMPlayer({
+  media: playlist,
+  container: document.querySelector('#blueMondayPlayerContainer1')
 });
-*/
-  window.bmplayer = new BMPlayer({
-    media: playlist,
-    container: document.querySelector('#blueMondayPlayerContainer1')
-  });
 
-  setTimeout(function() {
-    //bmplayer.setMedia(playlist[0])
-    //debugger;
-    //bmplayer.setPlaylist(playlist);
-  }, 1000)
-  //let count = 0;
-/*
-  bmplayer.on('pause', () => {
-    debugger;
-  });
+window.bmplayer2 = new BMPlayer({
+  media: videolist,
+  container: document.querySelector('#blueMondayPlayerContainer2')
+});
 
-  const playFn = () => {
-    count++;
-    debugger;
-    if (count > 2) {
-      bmplayer.off('play', playFn);
-    }
-  };
-  bmplayer.on('play', playFn);
-  bmplayer.on('add', (arg) => {
-    debugger
-  });
-*/
-  
-  // Theme 3: pinkFlag
-  window.pfPlayer1 = new PFPlayer({
-    loop: 'all',
-    media: {},
-    container: document.querySelector('#pinkFlagPlayerContainer1')
-  });
+// Theme: pinkFlag
+window.pfPlayer1 = new PFPlayer({
+  loop: 'all',
+  media: {},
+  container: document.querySelector('#pinkFlagPlayerContainer1')
+});
+window.pfPlayer2 = new PFPlayer({
+  media: videolist,
+  container: document.querySelector('#pinkFlagPlayerContainer2')
+});
 
-  setTimeout(function() {
-    //debugger;
-    pfPlayer1.setPlaylist(playlist);
-    //pfPlayer1.setMedia(playlist[0])
-  })
+setTimeout(function() {
+  pfPlayer1.setPlaylist(playlist);
+});
 
 window.radioPlayer = new PFPlayer({
-  media: [
-    {
-      src: 'https://shoutcast.hubu.fm:443',
-      title: 'Hubu.FM SHOUTcast'
-    },
-    {
-      src: 'http://188.225.87.45:8000/Svadba',
-      title: 'Radio Svadba Icecast'
-    },
-    {
-      src: 'https://hls.somafm.com/hls/groovesalad/128k/program.m3u8',
-      title: 'Soma FM Groove Salad 128K AAC HLS'
-    },
-    {
-      src: 'https://live.cgtn.com/1000/prog_index.m3u8',
-      title: 'CGTV English HLS'
-    },
-    {
-      src: 'https://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8',
-      title: 'Shangyu New Commercial City TV HLS'
-    },
-  ],
+  media: radioList,
   container: document.querySelector('#radioContainer1')
 });

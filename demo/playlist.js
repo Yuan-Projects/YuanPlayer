@@ -32,3 +32,48 @@ window.playlist = [
     lyric: "[00:01.00]梁靜茹-給未來的自己"+"\n[00:03.00]給未來的自己"+"\n[00:03.89]梁靜茹"+"\n[00:07.54]作詞：黃婷 作曲：李正宗"+"\n[00:14.00]站在狂風的天臺一望無際"+"\n[00:19.65]這一座孤獨的城市"+"\n[00:24.90]在天空與高樓交接的盡頭"+"\n[00:33.03]誰追尋空曠的自由"+"\n[00:39.00]陽光覆滿這一刻寧靜的我"+"\n[00:45.37]隔絕了喧囂和冷漠"+"\n[00:52.00]川流不息的人遊蕩在街頭"+"\n[00:58.65]誰能聽見誰的寂寞"+"\n[01:03.92]找一個人心心相惜　找一顆心心心相印"+"\n[01:12.03]在這個宇宙　我是獨一無二　沒人能取代"+"\n[01:16.75][02:44.30][03:36.50]不管怎樣　怎樣都會受傷"+"\n[01:21.00][02:48.17][03:40.75]傷了又怎樣　至少我很堅強　我很坦蕩"+"\n[01:41.37]夜幕籠罩燦爛的一片燈海"+"\n[01:47.09]多少人多少種無奈"+"\n[01:53.40]在星光裏遺忘昨天的傷害"+"\n[02:00.43]一覺醒來還有期待"+"\n[02:05.30][03:23.68]我不放棄愛的勇氣　我不懷疑會有真心"+"\n[02:13.00][03:30.50]我要握住　一個最美的夢　給未來的自己"+"\n[02:18.53]一天一天　一天推翻一天　堅持的信仰"+"\n[02:25.40]我會記住自己今天的模樣"+"\n[02:31.26]有一個人心心相惜　有一顆心心心相印"+"\n[02:38.00]拋開過去　我想認真去追尋　未來的自己"+"\n[03:48.96]未來的你　會懂我的瘋狂"+"\n[01:31.50][02:58.50]"
   }
 ];
+
+window.videolist = [
+  {
+    title: 'Mountains',
+    artist: 'Test',
+    src: ['https://www.javatpoint.com/oprweb/movie.mp4']
+  },
+  {
+    title: 'Incredibles Teaser',
+    artist: 'Pixar',
+    poster: 'http://www.jplayer.org/video/poster/Incredibles_Teaser_640x272.png',
+    src: ['http://www.jplayer.org/video/m4v/Incredibles_Teaser.m4v', 'http://www.jplayer.org/video/ogv/Incredibles_Teaser.ogv', 'http://www.jplayer.org/video/webm/Incredibles_Teaser.webm']
+  },
+  {
+    title: 'Big Buck Bunny Trailer',
+    artist: 'Blender Foundation',
+    poster: 'http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png',
+    src: ['http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v', 'http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv', 'http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm']
+  },
+  {
+    title: '乘风破浪的姐姐 HLS',
+    artist: '芒果TV',
+    isVideo: true,
+    src: 'https://europe.olemovienews.com/hlstimeofffmp4/20200904/CxuuEajo/mp4/CxuuEajo.mp4/index-v1-a1.m3u8'
+  }
+];
+
+var radioList = [
+  {
+    src: 'https://shoutcast.hubu.fm:443',
+    title: 'Hubu.FM SHOUTcast'
+  },
+  {
+    src: 'http://188.225.87.45:8000/Svadba',
+    title: 'Radio Svadba Icecast'
+  },
+  {
+    src: 'https://live.cgtn.com/1000/prog_index.m3u8',
+    title: 'CGTV English HLS'
+  },
+  {
+    src: 'https://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8',
+    title: 'Shangyu New Commercial City TV HLS'
+  },
+];
