@@ -1,6 +1,7 @@
 import Player from "./player";
-import { debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { includes, isArray, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, YuanPlayerOptions } from "./player.d";
+declare var Hls;
 
 export default class PlayerUI extends Player {
   protected useStateClassSkin = false;
@@ -42,28 +43,115 @@ export default class PlayerUI extends Player {
   private fullScreenElement; // Keep a reference to a previous fullscreen element
   constructor(options: YuanPlayerOptions) {
     super(options);
-    this.cssSelectorAncestor = options.cssSelectorAncestor || `#yuan_container_${uuidv4()}`;
-    this.useStateClassSkin = !!options.useStateClassSkin;
-    this.cssSelector = {
-      ...this.cssSelector,
-      ...options.cssSelector
-    };
-    this.stateClass = {
-      ...this.stateClass,
-      ...options.stateClass
-    };
-    if (!this.nativeControls && this.isAudioSupported) {
-      this.addEventListeners();
-    }
-    if (!this.isAudioSupported) {
-      setTimeout(() => {
-        const element = document.querySelector(`${this.cssSelectorAncestor} ${this.cssSelector.noSolution}`) as HTMLElement;
-        if (element) {
-          element.style.display = 'block';
-        }
-      }, 0);
+    // If no valid container exists, we do nothing.
+    if(this.container) {
+      this.addMediaElement();
+      this.bindMediaEvents();
+      this.cssSelectorAncestor = options.cssSelectorAncestor || `#yuan_container_${uuidv4()}`;
+      this.useStateClassSkin = !!options.useStateClassSkin;
+      this.cssSelector = {
+        ...this.cssSelector,
+        ...options.cssSelector
+      };
+      this.stateClass = {
+        ...this.stateClass,
+        ...options.stateClass
+      };
+      if (!this.nativeControls && this.isAudioSupported) {
+        this.addEventListeners();
+      }
+      if (!this.isAudioSupported) {
+        setTimeout(() => {
+          const element = document.querySelector(`${this.cssSelectorAncestor} ${this.cssSelector.noSolution}`) as HTMLElement;
+          if (element) {
+            element.style.display = 'block';
+          }
+        }, 0);
+      }
     }
   }
+  protected addMediaElement() {
+    const div = createElement('div');
+    const mediaElement = this.addMediaElementTag();
+
+    this.addMediaSource();
+
+    div.appendChild(mediaElement);
+    this.container.appendChild(div);
+  }
+  protected addMediaSource() {
+    if (!this.media || !this.media.src || !this.mediaElement) return false;
+
+    this.mediaElement.innerHTML = '';
+    this.mediaElement.removeAttribute('src');
+    let src = this.media.src;
+    if (typeof src === 'string') {
+      src = [src];
+    }
+    for (let i = 0; i < src.length; i++) {
+      this.addSourceElement(src[i], !!this.media.isVideo);
+    }
+  }
+  private addSourceElement(src: string, isVideo = false) {
+    if (!this.mediaElement) return;
+    const sourceElement = createElement('source', {
+      src: this.processSrc(src),
+      type: getMediaMimeType(src, isVideo)
+    });
+    this.mediaElement.appendChild(sourceElement);
+  }
+  private processSrc(src: string): string {
+    const fileExtension = src.split('.').pop();
+    if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
+      if (isHLSJSSupported()) {
+        const hlsInstance = new Hls();
+        hlsInstance.loadSource(src);
+        hlsInstance.attachMedia(this.mediaElement);
+      } else {
+        console.warn(`HLS is not supported in your browsers. Please make sure you are using a modern browser and/or have imported hls.js correctly.`);
+      }
+    }
+    return src;
+  }
+  protected addMediaElementTag() {
+    const attrs = {
+      preload: "metadata",
+      controls: !!this.nativeControls,
+      loop: typeof this.loop !== "undefined" ? !!this.loop : false
+    };
+    const videoAttrs: any =  {
+      ...attrs,
+      style: "width: 100%;"
+    };
+    if (this.media?.poster) {
+      videoAttrs.poster = this.media.poster;
+    }
+    const mediaElement = this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
+    this.mediaElement = mediaElement;
+    return mediaElement;
+  }
+
+  /**
+   * Determine if current track is a video.
+   * @param media - The media object
+   * @returns boolean
+   */
+  protected isVideo(media: any): boolean {
+    if (typeof media.isVideo === 'boolean') return media.isVideo;
+    const src = media.src;
+    if (!src) return false;
+    // .ogg, mp4 can be used as both video and audio
+    const videoExts = ['ogm', 'ogv', 'webm', 'mp4', 'm4v'];
+    const srcs = isArray(src) ? [...src] : [src];
+    for (const link of srcs) {
+      const ext = link.split('.').pop();
+      if (includes(videoExts, ext)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private addEventListeners() {
     setTimeout(() => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
@@ -197,8 +285,34 @@ export default class PlayerUI extends Player {
         if (!this.cssSelector.duration) return false;
         const element = domElement.querySelector(this.cssSelector.duration);
         if (element) {
-          element.textContent = this.formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
+          element.textContent = formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
         }
+      });
+      this.on('setmedia', () => {
+        const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
+        // If the new media file has a different tag name
+        // Remove the existing tag, remove its event handlers
+        // Then create a new tag and add events listeners again.
+        if (this.mediaElement && this.mediaElement?.tagName.toLowerCase() !== expectedTag) {
+          const div = this.mediaElement.parentNode;
+          this.eventListeners.forEach(([target, type, listener]) => {
+            // Only those event handlers attached to the old tag need to be removed
+            if (target === this.mediaElement) {
+              target.removeEventListener(type, listener);
+            }
+          });
+          this.clearMedia();
+          this.eventListeners.length = 0;
+          this.mediaElement.remove();
+          this.mediaElement = null;
+
+          // add new tag
+          const mediaElement = this.addMediaElementTag();
+          div?.appendChild(mediaElement);
+          this.bindMediaEvents();
+        }
+        this.addMediaSource();
+        this.mediaElement?.load();
       });
       this.on('setmedia', () => {
         if (!this.cssSelector?.fullScreen) return false;
@@ -223,10 +337,10 @@ export default class PlayerUI extends Player {
       this.on('error', () => {
         if (this.errorCode === -2 || this.errorCode === 4) {
           if (this.cssSelector.currentTime) {
-            domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+            domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
           }
           if (this.cssSelector.duration) {
-            domElement.querySelector(this.cssSelector.duration)!.textContent = this.formatTime(0);
+            domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
           }
           if (this.cssSelector.playBar) {
             (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
@@ -236,7 +350,7 @@ export default class PlayerUI extends Player {
       this.on('timeupdate', () => {
         const second = this.mediaElement ? Math.floor(this.mediaElement.currentTime) : 0;
         if (this.cssSelector.currentTime) {
-          domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(second);
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(second);
         }
         if (this.cssSelector.playBar) {
           const element = (domElement.querySelector(this.cssSelector.playBar) as HTMLElement);
@@ -258,7 +372,7 @@ export default class PlayerUI extends Player {
       this.on('stop', () => {
         domElement.classList.remove(this.stateClass.playing);
         if (this.cssSelector.currentTime) {
-          domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
         }
         if (this.cssSelector.playBar) {
           (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
@@ -267,10 +381,10 @@ export default class PlayerUI extends Player {
       this.on('clearmedia', () => {
         domElement?.classList.remove(this.stateClass.playing);
         if (this.cssSelector.currentTime) {
-          domElement.querySelector(this.cssSelector.currentTime)!.textContent = this.formatTime(0);
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
         }
         if (this.cssSelector.duration) {
-          domElement.querySelector(this.cssSelector.duration)!.textContent = this.formatTime(0);
+          domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
         }
         if (this.cssSelector.playBar) {
           (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;

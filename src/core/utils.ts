@@ -236,3 +236,24 @@ export function getMediaMimeType(fileName, isVideo = false): string {
   }
   return `${category}/${type}`;
 }
+
+/**
+ * Convert a number in seconds into a string in the format of 'h-mm-ss'
+ * @param secs - A number in seconds
+ * @returns A string
+ */
+export function formatTime(secs: number): string {
+  let minutes = Math.floor(secs / 60);
+  const hours = Math.floor(minutes / 60);
+  const seconds = Math.floor(secs % 60);
+  const ans: string[] = [];
+  if (hours > 0) {
+    ans.push(String(hours));
+  }
+  minutes = hours > 0 ? minutes % 60 : minutes;
+  const minutesStr = minutes < 10 ? `0${minutes}` : String(minutes);
+  ans.push(minutesStr);
+  const secondsStr = seconds < 10 ? `0${seconds}` : `${seconds}`;
+  ans.push(secondsStr);
+  return ans.join(':');
+}

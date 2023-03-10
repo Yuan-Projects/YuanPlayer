@@ -41,7 +41,7 @@ class YuanPlayer {
         }) : null;
         this.setPlaylistInstance();
 
-        ['formatTime', 'play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
+        ['play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
           this[f] = (...args) => {
             if (!this.playerInstance) {
               console.warn(`The player instance has not been initialized`);

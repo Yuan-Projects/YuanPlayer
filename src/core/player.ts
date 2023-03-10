@@ -1,18 +1,17 @@
-import { createElement, getMediaMimeType, includes, isArray, isHtml5AudioSupported, isHLSJSSupported, isHLSNativelySupported } from './utils';
+import { isHtml5AudioSupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
-declare var Hls;
+
 
 /**
- * Render the <audio> tag into a specific DOM element
- * And add listeners for media playback events
+ * The base Player class
  * This file does not contains the player UI
  */
 class Player extends Emitter {
   container: HTMLElement;
   mediaElement: HTMLMediaElement | null;
-  errorCode: number;
-  errorMessage: string;
+  errorCode: number = 0;
+  errorMessage: string = '';
   loop = false;
   media: MediaItem | null;
   nativeControls = false;
@@ -50,77 +49,12 @@ class Player extends Emitter {
       //throw new Error("Your browser does not support HTML5 Audio.");
       this.isAudioSupported = true;
     }
-
-    this.errorCode = 0;
-    this.errorMessage = '';
-    this.eventHandlers = {};
-
-    this.init(options);
-  }
-
-  private init(options: YuanPlayerOptions) {
-    this.initOptions(options);
-    // If no valid container exists, we do nothing.
-    if(!this.container) return ;
-    this.addMediaElement();
-    this.bindMediaEvents();
-  }
-
-  private initOptions(options: YuanPlayerOptions) {
     for (const prop in options) {
       this[prop] = prop === 'loop' ? options[prop] === 'one' : options[prop];
     }
   }
 
-  private addMediaElement() {
-    const div = createElement('div');
-    const mediaElement = this.addMediaElementTag();
-
-    this.addMediaSource();
-
-    div.appendChild(mediaElement);
-    this.container.appendChild(div);
-  }
-
-  private addMediaElementTag() {
-    const attrs = {
-      preload: "metadata",
-      controls: !!this.nativeControls,
-      loop: typeof this.loop !== "undefined" ? !!this.loop : false
-    };
-    const videoAttrs: any =  {
-      ...attrs,
-      style: "width: 100%;"
-    };
-    if (this.media?.poster) {
-      videoAttrs.poster = this.media.poster;
-    }
-    const mediaElement = this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
-    this.mediaElement = mediaElement;
-    return mediaElement;
-  }
-  /**
-   * Determine if current track is a video.
-   * @param media - The media object
-   * @returns boolean
-   */
-  private isVideo(media: any): boolean {
-    if (typeof media.isVideo === 'boolean') return media.isVideo;
-    const src = media.src;
-    if (!src) return false;
-    // TODO: .ogg, mp4 can be used as both video and audio
-    const videoExts = ['ogm', 'ogv', 'webm', 'mp4', 'm4v'];
-    const srcs = isArray(src) ? [...src] : [src];
-    for (const link of srcs) {
-      const ext = link.split('.').pop();
-      if (includes(videoExts, ext)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private bindMediaEvents() {
+  protected bindMediaEvents() {
     const that = this;
     const media = this.mediaElement;
     if (!media) return ;
@@ -183,60 +117,13 @@ class Player extends Emitter {
     }
   }
 
-  private addMediaSource() {
-    if (!this.media || !this.media.src || !this.mediaElement) return false;
-
-    this.mediaElement.innerHTML = '';
-    this.mediaElement.removeAttribute('src');
-    let src = this.media.src;
-    if (typeof src === 'string') {
-      src = [src];
-    }
-    for (let i = 0; i < src.length; i++) {
-      this.addSourceElement(src[i], !!this.media.isVideo);
-    }
-    setTimeout(() => {
-      this.trigger('setmedia');
-    }, 30);
-  }
-
   /**
    * Defines the media to play.
    * @param media 
    */
   public setMedia(media: MediaItem) {
     this.media = media;
-    const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
-    // If the new media file has a different tag name
-    // Remove the existing tag, remove its event handlers
-    // Then create a new tag and add events listeners again.
-    if (this.mediaElement && this.mediaElement?.tagName.toLowerCase() !== expectedTag) {
-      const div = this.mediaElement.parentNode;
-      this.eventListeners.forEach(([target, type, listener]) => {
-        // Only those event handlers attached to the old tag need to be removed
-        if (target === this.mediaElement) {
-          target.removeEventListener(type, listener);
-        }
-      });
-      this.clearMedia();
-      this.eventListeners.length = 0;
-      this.mediaElement.remove();
-      this.mediaElement = null;
-
-      // add new tag
-      const mediaElement = this.addMediaElementTag();
-      div?.appendChild(mediaElement);
-      this.bindMediaEvents();
-    }
-    this.addMediaSource();
-    this.mediaElement?.load();
-  }
-
-  public formatTime(secs: number): string {
-    const minutes = Math.floor(secs / 60);
-    const seconds = Math.floor(secs % 60);
-    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    return `${minutes}:${returnedSeconds}`;
+    this.trigger('setmedia');
   }
 
   /**
@@ -312,30 +199,6 @@ class Player extends Emitter {
 
   }
 
-  private addSourceElement(src: string, isVideo = false) {
-    const sourceElement = createElement('source', {
-      src: this.processSrc(src),
-      type: getMediaMimeType(src, isVideo)
-    });
-    if (this.mediaElement) {
-      this.mediaElement.appendChild(sourceElement);
-    }
-  }
-
-  private processSrc(src: string): string {
-    const fileExtension = src.split('.').pop();
-    if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
-      if (isHLSJSSupported()) {
-        const hlsInstance = new Hls();
-        hlsInstance.loadSource(src);
-        hlsInstance.attachMedia(this.mediaElement);
-      } else {
-        console.warn(`HLS is not supported in your browsers. Please make sure you are using a modern browser and/or have imported hls.js correctly.`);
-      }
-    }
-    return src;
-  }
-
   /**
    * Mutes the media's sounds
    */
@@ -382,7 +245,6 @@ class Player extends Emitter {
     this.mediaElement.src = '';
     this.trigger('clearmedia');
   }
-  // TODO
   /**
    * Removes YuanPlayer.
    * All event and interface bindings created are removed.
