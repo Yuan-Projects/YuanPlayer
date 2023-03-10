@@ -70,6 +70,67 @@ export default class PlayerUI extends Player {
       }
     }
   }
+  protected bindMediaEvents() {
+    const that = this;
+    const media = this.mediaElement;
+    if (!media) return ;
+
+    const t = window.setInterval(function() {
+      if (media?.networkState === 3) {
+        that.errorCode = Player.error.MEDIA_ERR_URLEMPTY.code;
+        that.errorMessage = Player.error.MEDIA_ERR_URLEMPTY.message;
+        clearInterval(t);
+        that.trigger('error');
+      }
+    }, 100);
+
+    const mediaEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'];
+    mediaEvents.forEach(event => {
+      this.addEventListener(media, event, () => this.trigger(event));
+    });
+
+    this.addEventListener(media, 'error', function(e: any) {
+      switch (e.target.error.code) {
+        case e.target.error.MEDIA_ERR_ABORTED:
+          that.errorCode = Player.error.MEDIA_ERR_ABORTED.code;
+          that.errorMessage = Player.error.MEDIA_ERR_ABORTED.message;
+          break;
+        case e.target.error.MEDIA_ERR_NETWORK:
+          that.errorCode = Player.error.MEDIA_ERR_NETWORK.code;
+          that.errorMessage = Player.error.MEDIA_ERR_NETWORK.message;
+          break;
+        case e.target.error.MEDIA_ERR_DECODE:
+          that.errorCode = Player.error.MEDIA_ERR_DECODE.code;
+          that.errorMessage = Player.error.MEDIA_ERR_DECODE.message;
+          break;
+        case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          that.errorCode = Player.error.MEDIA_ERR_SRC_NOT_SUPPORTED.code;
+          that.errorMessage = Player.error.MEDIA_ERR_SRC_NOT_SUPPORTED.message;
+          break;
+        default:
+          that.errorCode = Player.error.MEDIA_ERR_UNKNOWN.code;
+          that.errorMessage = Player.error.MEDIA_ERR_UNKNOWN.message;
+          break;
+      }
+      clearInterval(t);
+      that.trigger('error');
+    });
+  }
+  protected addEventListener(target, type, listener) {
+    target.addEventListener(type, listener);
+    this.eventListeners.push([target, type, listener]);
+  }
+
+  protected removeEventListener(target, type, listener) {
+    target.removeEventListener(type, listener);
+    for (let i = 0; i < this.eventListeners.length; i++) {
+      const [target1, type1, listener1] = this.eventListeners[i];
+      if (target1 === target && type1 === type && listener1 === listener) {
+        this.eventListeners.splice(i, 1);
+        break;
+      }
+    }
+  }
   protected addMediaElement() {
     const div = createElement('div');
     const mediaElement = this.addMediaElementTag();
