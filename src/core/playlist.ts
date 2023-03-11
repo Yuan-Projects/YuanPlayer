@@ -31,7 +31,6 @@ class PlayList extends Emitter {
         this.select(0);
       }
     }
-    this.addEvents();
   }
   /**
    * Tested 1
@@ -58,6 +57,7 @@ class PlayList extends Emitter {
     } else {
       this.restoreList();
     }
+    this.trigger('playlistset');
 
     if (playNow) {
       this.play(0);
@@ -184,39 +184,7 @@ class PlayList extends Emitter {
     this.modeIndex = PlayList.modes.indexOf(modeString);
     this.trigger('modechange');
   }
-  private addEvents() {
-    this.on('select', index => {
-      this.updatePlayerLyric(index);
-    });
-    this.player.on('ended', () => {
-      const mode = PlayList.modes[this.modeIndex];
-      let index = -1;
-      if (mode === 'off') {
-        // Have played the last music
-        if (this.index === this.list.length - 1) {
-          // Reach the end;
-          return;
-        } else {
-          index = this.index + 1;
-          // Play the next one in the list
-        }
-      } else if (mode === 'one') {
-        // Play current one
-        index = this.index;
-      } else if (mode === 'all') {
-        if (this.index === this.list.length - 1) {
-          // Reach the end;
-          index = 0;
-        } else {
-          index = this.index + 1;
-          // Play the next one in the list
-        }
-      }
-      if (index > -1) {
-        this.play(index);
-      }
-    });
-  }
+
   /**
    * Tested 1
    * Move to and play the next item in the playlist.
@@ -247,7 +215,6 @@ class PlayList extends Emitter {
     if (index !== this.index) {
       this.select(index);
     }
-    //this.updatePlayerLyric(index);
     if (this.player) {
       this.player.play();
     }
@@ -262,19 +229,6 @@ class PlayList extends Emitter {
   public pause() {
     if (this.player) {
       this.player.pause();
-    }
-  }
-  protected updatePlayerLyric(index) {
-    if (index > this.list.length - 1) return false;
-    if (this.player) {
-      this.player.setMedia(this.list[index]);
-    }
-
-    if (this.lyricObj) {
-      this.lyricObj.lyric = this.list[index].lyric;
-      if (this.lyricObj && this.lyricObj.addLyric) {
-        this.lyricObj.addLyric();
-      }
     }
   }
 }

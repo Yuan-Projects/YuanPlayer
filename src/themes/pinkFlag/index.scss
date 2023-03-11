@@ -115,13 +115,15 @@
    z-index: 1001;
    /* 1 layer above the others. */ }
 
-  .jp-full-screen {
-    background-position: 0 -420px;
-    margin-left: 6px;
-    display: none;
+   .jp-toggles {
+    .jp-full-screen {
+      background-position: 0 -420px;
+      margin-left: 6px;
+      display: none;
 
-    &:focus {
-      background-position: -30px -420px;
+      &:focus {
+        background-position: -30px -420px;
+      }
     }
   }
 

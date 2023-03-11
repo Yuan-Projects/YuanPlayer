@@ -353,14 +353,16 @@
     margin-top: 11px;
   }
   
-  .yuan-full-screen {
-    background: url("./images/jplayer.blue.monday2.png") 0 -310px no-repeat;
-    display: none;
+  .yuan-toggles {
+    .yuan-full-screen {
+      background: url("./images/jplayer.blue.monday2.png") 0 -310px no-repeat;
+      display: none;
+      &:focus {
+        background: url("./images/jplayer.blue.monday2.png") -30px -310px no-repeat;
+      }
+    }
   }
-  
-  .yuan-full-screen:focus {
-    background: url("./images/jplayer.blue.monday2.png") -30px -310px no-repeat; }
-  
+
   &.yuan-state-full-screen {
     position: fixed;
     left: 0px;

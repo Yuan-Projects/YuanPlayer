@@ -1,5 +1,5 @@
 import type { PlayListOptions } from "../../core/playlist.d";
-import { merge } from "../../core/utils";
+import { matches, merge } from "../../core/utils";
 // @ts-ignore
 import itemTpl from './playlistItem.ejs';
 
@@ -31,24 +31,34 @@ function getClass(Base) {
       super(mergedOptions);
       this.options = mergedOptions;
       this.addEventListeners();
+    }
+    private addEventListeners() {
+      const player = this.player;
+      this.container.addEventListener('click', (e: Event) => {
+        const target = e.target as HTMLElement;
+        if (player.cssSelector.repeat && matches(target, player.cssSelector?.repeat)) {
+          if (this.modeIndex === 0) {
+            this.setMode('all');
+          } else {
+            this.setMode('off');
+          }
+        }
+      });
+    }
+    protected onReady() {
       this.renderList();
       this._highlightItem();
     }
-    addEventListeners() {
-      this.on('shuffledchanged', () => {
-        this.renderList();
-      });
-      this.on('playlistset', () => {
-        this.renderList();
-        this._highlightItem();
-      })
-      this.on('add', (trackItem) => {
-        this.renderList();
-        this._highlightItem();
-      });
+    protected onAdd() {
+      this.renderList();
+      this._highlightItem();
     }
-    renderList() {
-      const ulElement = document.querySelector(this.options.cssSelectorAncestor).querySelector('.jp-playlist ul');
+    protected onListUpdated() {
+      this.renderList();
+      this._highlightItem();
+    }
+    protected renderList() {
+      const ulElement = this.container.querySelector('.jp-playlist ul');
       ulElement.innerHTML = this.list.map(item => {
         return itemTpl({track: item});
       }).join('');

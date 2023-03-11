@@ -1,5 +1,4 @@
-import { isFullScreenEnabled } from '../../core/utils';
-import type { CSSSelector, YuanPlayerOptions } from '../../core/player.d';
+import type { YuanPlayerOptions } from '../../core/player.d';
 // @ts-ignore
 import playerTpl from './player.ejs';
 import './player.scss';
@@ -15,12 +14,9 @@ function getClass(Base) {
     constructor(options: YuanPlayerOptions) {
       options.useStateClassSkin = true;
       super(options);
-      if (!this.nativeControls) {
-        this.renderPlayerUI();
-      }
     }
   
-    renderPlayerUI() {
+    protected onReady() {
       const div = document.createElement('div');
       if (this.cssSelectorAncestor) {
         const substr = this.cssSelectorAncestor.substring(1);

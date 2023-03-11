@@ -37,15 +37,11 @@ function getClass(Base) {
       }
       const mergedOptions = merge(defaultOptions, options)
       super(mergedOptions);
-      this.options = mergedOptions;
-      if (!this.nativeControls) {
-        this.renderPlayerUI();
-      }
     }
   
-    renderPlayerUI() {
+    protected onReady() {
       const div = document.createElement('div');
-      div.id = this.options.cssSelectorAncestor?.substring(1) || '';
+      div.id = this.cssSelectorAncestor?.substring(1) || '';
       div.classList.add('yuanplayer-pinkflag-player');
       div.innerHTML = playerTpl();
       this.container.appendChild(div);

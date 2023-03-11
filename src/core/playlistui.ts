@@ -2,7 +2,7 @@ import PlayList from "./playlist";
 import { matches } from "./utils";
 import type { CSSSelector, PlayListOptions } from './playlist.d';
 
-export default class PlayListUI extends PlayList {
+export default abstract class PlayListUI extends PlayList {
   cssSelector: CSSSelector = {
     remove: '.yuan-playlist-item-remove',
     next: '.yuan-next',
@@ -14,8 +14,13 @@ export default class PlayListUI extends PlayList {
     shuffled: "yuan-state-shuffled",
     currentItem: 'yuan-playlist-current',
   };
+  protected abstract onReady();
+  protected abstract onListUpdated();
+  protected abstract onRemove();
+  protected abstract onAdd();
   constructor(options: PlayListOptions) {
     super(options);
+    this.addEvents();
     this.autoPlay = !!options.autoPlay;
     this.enableRemoveControls = !!options.enableRemoveControls;
     this.cssSelector = {
@@ -26,7 +31,63 @@ export default class PlayListUI extends PlayList {
       ...this.stateClass,
       ...options.stateClass
     };
+    this?.onReady();
     this._addEventListeners();
+  }
+  private addEvents() {
+    this.on('add', () => {
+      if (this.onAdd) {
+        this.onAdd();
+      }
+    });
+    this.on('playlistset', () => {
+      this.onListUpdated();
+    });
+    this.on('select', index => {
+      this.updatePlayerLyric(index);
+      this._highlightItem(index);
+    });
+    this.player.on('ended', () => {
+      const mode = PlayList.modes[this.modeIndex];
+      let index = -1;
+      if (mode === 'off') {
+        // Have played the last music
+        if (this.index === this.list.length - 1) {
+          // Reach the end;
+          return;
+        } else {
+          index = this.index + 1;
+          // Play the next one in the list
+        }
+      } else if (mode === 'one') {
+        // Play current one
+        index = this.index;
+      } else if (mode === 'all') {
+        if (this.index === this.list.length - 1) {
+          // Reach the end;
+          index = 0;
+        } else {
+          index = this.index + 1;
+          // Play the next one in the list
+        }
+      }
+      if (index > -1) {
+        this.play(index);
+      }
+    });
+  }
+  protected updatePlayerLyric(index) {
+    if (index > this.list.length - 1) return false;
+    if (this.player) {
+      this.player.setMedia(this.list[index]);
+    }
+
+    if (this.lyricObj) {
+      this.lyricObj.lyric = this.list[index].lyric;
+      if (this.lyricObj && this.lyricObj.addLyric) {
+        this.lyricObj.addLyric();
+      }
+    }
   }
   private _addEventListeners() {
     setTimeout(() => {
@@ -46,9 +107,9 @@ export default class PlayListUI extends PlayList {
       this.on('remove', (index) => {
         this.container.querySelectorAll(this.cssSelector.item || '')[index]?.remove();
         this._highlightItem();
-      });
-      this.on('select', (index) => {
-        this._highlightItem(index);
+        if (this.onRemove) {
+          this.onRemove();
+        }
       });
       this.container.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
