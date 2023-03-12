@@ -26,7 +26,7 @@ function getClass(Base) {
       });
       this.on('add', () => {
         this.container.querySelector('.yuanplayer-yuan-playlist .track-list').innerHTML = this.list.map(item => itemTpl({ track: item })).join('');
-        this._highlightItem();
+        this.highlightItem();
       });
     }
     renderUI() {
@@ -34,7 +34,7 @@ function getClass(Base) {
       const div = document.createElement('div');
       div.innerHTML = tpl({tracks: this.list});
       container.appendChild(div);
-      container.addEventListener('click', (e) => {
+      this.addEventListener(container, 'click', (e) => {
         const target = e.target as HTMLElement;
         if (target.classList.contains('yuanplayer-yuan-playlist-repeat')) {
           this.switchModes();

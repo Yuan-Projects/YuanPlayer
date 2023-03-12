@@ -8,7 +8,6 @@ function getClass(Base) {
       otpions.cssSelectorAncestor = '.yuanplayer-bluemonday-lyric';
       super(otpions);
       this.addContainer();
-      this.addEvents();
     }
     addContainer() {
       if (typeof this.lyric === 'string') {
@@ -28,11 +27,6 @@ function getClass(Base) {
           lyricDiv.appendChild(emptyElement);
         }
       }
-    }
-    addEvents() {
-      this.on('lyricfetched', (lyricItems) => {
-        this.addLyricItems(lyricItems);
-      });
     }
     addLyricItems(items: any) {
       const wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  

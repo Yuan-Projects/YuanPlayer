@@ -1,7 +1,7 @@
 import Lyric from "./lyric";
 import type { LyricObject, LyricOptions } from "./lyric.d";
 
-export default class LyricUI extends Lyric {
+export default abstract class LyricUI extends Lyric {
   cssSelectorAncestor = '';
   cssSelector = {
     item: '.yuanplayer-lyric-item',
@@ -18,18 +18,22 @@ export default class LyricUI extends Lyric {
       ...this.cssSelector,
       ...options.cssSelector
     };
-    this._addEventListeners();
+    this.addEventListeners();
     setTimeout(() => {
       this.loadLyricPlugin();
     }, 0);
   }
-  private _addEventListeners() {
+  protected abstract addLyricItems(addLyricItems);
+  private addEventListeners() {
     setTimeout(() => {
       this.on('lyricfetched', (lyricItems) => {
         // @ts-ignore
         this.container.querySelector(this.cssSelectorAncestor)?.scrollTop = 0;
         // empty previous lyric items
         this._removeAllItems();
+        if (this.addLyricItems) {
+          this.addLyricItems(lyricItems);
+        }
         this._updatePanel();
       });
       this.on('timeupdated', (currentTime) => {

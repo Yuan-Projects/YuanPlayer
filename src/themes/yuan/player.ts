@@ -76,13 +76,13 @@ function getClass(Base) {
 
       const seekSlider = div.querySelector('.seek-slider') as HTMLInputElement;
 
-      seekSlider?.addEventListener('input', () => {
+      this.addEventListener(seekSlider, 'input', () => {
         this.mediaElement.currentTime = parseInt(seekSlider.value);
       });
 
       const volumeSlider = div.querySelector('.volume-slider');
       this.setVolumeSlider();
-      volumeSlider?.addEventListener('input', (e) => {
+      this.addEventListener(volumeSlider, 'input', (e) => {
         const value = (e.target as HTMLInputElement).value;
         this.mediaElement.volume = (parseFloat(value) / 100);
       });

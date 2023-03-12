@@ -231,6 +231,10 @@ class PlayList extends Emitter {
       this.player.pause();
     }
   }
+  public destroy() {
+    this.remove();
+    this.trigger('destroy');
+  }
 }
 
 export default PlayList;

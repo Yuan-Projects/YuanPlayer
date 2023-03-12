@@ -16,7 +16,6 @@ class Player extends Emitter {
   media: MediaItem | null;
   nativeControls = false;
   isAudioSupported = false;
-  eventListeners: Array<any> = [];
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -188,10 +187,7 @@ class Player extends Emitter {
    */
   public destroy() {
     this.clearMedia();
-    this.eventListeners.forEach(([target, type, listener]) => {
-      target.removeEventListener(type, listener);
-    });
-    this.eventListeners.length = 0;
+    this.removeAllEventListeners();
     this.eventHandlers = {};
     if (this.mediaElement) {
       this.mediaElement.remove();

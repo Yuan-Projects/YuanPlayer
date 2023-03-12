@@ -58,6 +58,7 @@ export default abstract class PlayerUI extends Player {
       if (!this.nativeControls && this.isAudioSupported) {
         this.onReady();
         this.addEventListeners();
+        this.setMedia(options.media);
       }
       if (!this.isAudioSupported) {
         setTimeout(() => {
@@ -67,7 +68,6 @@ export default abstract class PlayerUI extends Player {
           }
         }, 0);
       }
-      this.setMedia(options.media);
     }
   }
   protected abstract onReady();
@@ -119,21 +119,6 @@ export default abstract class PlayerUI extends Player {
       clearInterval(t);
       that.trigger('error');
     });
-  }
-  protected addEventListener(target, type, listener) {
-    target.addEventListener(type, listener);
-    this.eventListeners.push([target, type, listener]);
-  }
-
-  protected removeEventListener(target, type, listener) {
-    target.removeEventListener(type, listener);
-    for (let i = 0; i < this.eventListeners.length; i++) {
-      const [target1, type1, listener1] = this.eventListeners[i];
-      if (target1 === target && type1 === type && listener1 === listener) {
-        this.eventListeners.splice(i, 1);
-        break;
-      }
-    }
   }
   /**
    * Create a div which contains the `<audio>` or `<video>` element.
@@ -250,7 +235,7 @@ export default abstract class PlayerUI extends Player {
           (this.mediaElement as HTMLElement).style.position = 'static';
           (this.mediaElement as HTMLElement).style.height = 'auto';
           clearTimeout(debouncedHide.timer());
-          this.removeEventListener(this.mediaElement, 'mousemove', fullScreenVideoHandler);
+          this.removeEventListener(this.mediaElement as HTMLElement, 'mousemove', fullScreenVideoHandler);
           this.removeEventListener(domElement, 'mouseenter', fullScreenGUIHandler);
           this.removeEventListener(domElement, 'mouseleave', fullScreenGUIHandler2);
           if (scrollIntoView) {
@@ -415,6 +400,10 @@ export default abstract class PlayerUI extends Player {
       if (this.mediaElement?.tagName === 'AUDIO') {
         this.handleFullscreen(false);
       }
+    });
+    this.on('setmedia', () => {
+      this.updateVolume();
+      this.updateLoopState();
     });
     this.on('error', () => {
       if (this.errorCode === -2 || this.errorCode === 4) {

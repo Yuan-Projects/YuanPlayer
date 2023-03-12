@@ -30,11 +30,8 @@ function getClass(Base) {
       mergedOptions.cssSelectorAncestor = options.player.cssSelectorAncestor;
       super(mergedOptions);
       this.options = mergedOptions;
-      this.addEventListeners();
-    }
-    private addEventListeners() {
       const player = this.player;
-      this.container.addEventListener('click', (e: Event) => {
+      this.addEventListener(this.container, 'click', (e: Event) => {
         const target = e.target as HTMLElement;
         if (player.cssSelector.repeat && matches(target, player.cssSelector?.repeat)) {
           if (this.modeIndex === 0) {
@@ -47,15 +44,15 @@ function getClass(Base) {
     }
     protected onReady() {
       this.renderList();
-      this._highlightItem();
+      this.highlightItem();
     }
     protected onAdd() {
       this.renderList();
-      this._highlightItem();
+      this.highlightItem();
     }
     protected onListUpdated() {
       this.renderList();
-      this._highlightItem();
+      this.highlightItem();
     }
     protected renderList() {
       const ulElement = this.container.querySelector('.jp-playlist ul');

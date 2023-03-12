@@ -3,6 +3,7 @@ import { matches } from "./utils";
 import type { CSSSelector, PlayListOptions } from './playlist.d';
 
 export default abstract class PlayListUI extends PlayList {
+  protected cssSelectorAncestor: string = '';
   cssSelector: CSSSelector = {
     remove: '.yuan-playlist-item-remove',
     next: '.yuan-next',
@@ -23,6 +24,7 @@ export default abstract class PlayListUI extends PlayList {
     this.addEvents();
     this.autoPlay = !!options.autoPlay;
     this.enableRemoveControls = !!options.enableRemoveControls;
+    this.cssSelectorAncestor = options.cssSelectorAncestor || '';
     this.cssSelector = {
       ...this.cssSelector,
       ...options.cssSelector
@@ -35,6 +37,12 @@ export default abstract class PlayListUI extends PlayList {
     this._addEventListeners();
   }
   private addEvents() {
+    this.on('destroy', () => {
+      this.removeAllEventListeners();
+      if (this.cssSelectorAncestor) {
+        this.container.querySelector(this.cssSelectorAncestor)?.remove();
+      }
+    });
     this.on('add', () => {
       if (this.onAdd) {
         this.onAdd();
@@ -45,7 +53,8 @@ export default abstract class PlayListUI extends PlayList {
     });
     this.on('select', index => {
       this.updatePlayerLyric(index);
-      this._highlightItem(index);
+      this.highlightItem(index);
+      this.updateRepeatButtonState();
     });
     this.player.on('ended', () => {
       const mode = PlayList.modes[this.modeIndex];
@@ -103,15 +112,15 @@ export default abstract class PlayListUI extends PlayList {
       this.on('modechange', () => {
         this.updateRepeatButtonState();
       });
-      this._highlightItem();
+      this.highlightItem();
       this.on('remove', (index) => {
         this.container.querySelectorAll(this.cssSelector.item || '')[index]?.remove();
-        this._highlightItem();
+        this.highlightItem();
         if (this.onRemove) {
           this.onRemove();
         }
       });
-      this.container.addEventListener('click', (e) => {
+      this.addEventListener(this.container, 'click', (e) => {
         const target = e.target as HTMLElement;
         if (this.isMatchedWithSelector(target, this.cssSelector.remove)) {
           const itemElement = this.findItemElement(target);
@@ -172,7 +181,7 @@ export default abstract class PlayListUI extends PlayList {
     } while (dom !== this.container && dom !== document);
     return null;
   }
-  protected _highlightItem(index = this.index) {
+  protected highlightItem(index = this.index) {
     this.container.querySelector(this.cssSelector.item + '.' + this.stateClass.currentItem)?.classList.remove(this.stateClass.currentItem || '');
     const itemElements = this.container.querySelectorAll(this.cssSelector.item || '');
     if (itemElements.length) {

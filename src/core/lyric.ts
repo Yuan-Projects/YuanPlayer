@@ -14,11 +14,13 @@ class Lyric extends Emitter {
   lyricCurrentPosition = 0;
   mediaElement: any;
   container: HTMLElement;
+  player;
   constructor(options: LyricOptions) {
     super();
     this.mediaElement = options.mediaElement;
     this.lyric = options.lyric;
     this.container = options.container;
+    this.player = options.player;
   }
   private parseLyricItems(items: Array<any>): Array<any> {
     const result: Array<any> = [];
@@ -85,19 +87,16 @@ class Lyric extends Emitter {
     const that = this;
     const media = this.mediaElement;
     if (!media) return;
-    media.addEventListener(
-      "timeupdate",
-      function () {
-        if (
-          that.lyric &&
-          that.lyricObj.timeArray.length &&
-          that.lyricObj.lyricArray.length
-        ) {
-          that.trigger("timeupdated", media.currentTime);
-        }
-      },
-      false
-    );
+    // TODO
+    this.player.addEventListener(media, "timeupdate", function () {
+      if (
+        that.lyric &&
+        that.lyricObj.timeArray.length &&
+        that.lyricObj.lyricArray.length
+      ) {
+        that.trigger("timeupdated", media.currentTime);
+      }
+    });
   }
 
   protected getNewLyricIndex(currentTime:any): number {
@@ -135,6 +134,10 @@ class Lyric extends Emitter {
     this.lyricObj.timeArray.length = 0;
     this.lyricCurrentPosition = 0;
     this.trigger('reset');
+  }
+  public destroy() {
+    this.unload();
+    this.removeAllEventListeners();
   }
 }
 

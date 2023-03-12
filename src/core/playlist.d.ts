@@ -22,6 +22,7 @@ export interface PlayListStateClass {
 
 export interface PlayListOptions {
   container: HTMLElement
+  cssSelectorAncestor: string
   player: any
   lyricObj?: any
   loop?: 'off' | 'one' | 'all'

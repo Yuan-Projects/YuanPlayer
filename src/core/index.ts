@@ -1,4 +1,5 @@
 import "./element-remove";
+import { isArray } from './utils';
 import Player from "./playerui";
 import Lyric from "./lyricui";
 import PlayList from "./playlistui";
@@ -16,7 +17,7 @@ class YuanPlayer {
     };
     class MyClass {
       // Events Group
-      static playerEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'error', 'stalled', 'setmedia', 'stop', 'loopchanged', 'clearmedia', 'destroy'];
+      static playerEvents = ['abort', 'canplay', 'canplaythrough', 'durationchange', 'emptied', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 'seeked', 'seeking', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'error', 'stalled', 'setmedia', 'stop', 'loopchanged', 'clearmedia', 'destroy']; // TODO 'destroy'
       static lyricEvents = ['lyricfetched', 'timeupdated', 'reset'];
       static playlistEvents = ['shuffledchanged', 'add', 'select', 'remove', 'modechange'];
       playerClass = obj.Player;
@@ -30,18 +31,19 @@ class YuanPlayer {
         this.options = options;
         this.playerInstance = this.playerClass ? new this.playerClass({
           ...options,
-          media: Array.isArray(options.media) && options.media.length ? options.media[0] : options.media,
+          media: isArray(options.media) && options.media.length ? options.media[0] : options.media,
           container: options.container
         }) : null;
         this.lyricInstance = this.lyricClass ? new this.lyricClass({
           ...options,
-          lyric: Array.isArray(options.media) && options.media.length ? options.media[0].lyric : (options.media?.lyric || ''),
+          player: this.playerInstance,
+          lyric: isArray(options.media) && options.media.length ? options.media[0].lyric : (options.media?.lyric || ''),
           mediaElement: this.playerInstance.mediaElement,
           container: options.container
         }) : null;
         this.setPlaylistInstance();
 
-        ['play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia', 'destroy'].forEach((f) => {
+        ['play', 'playHead', 'isPlaying', 'stop', 'toggleLoop', 'pause', 'mute', 'unmute', 'volume', 'clearMedia'].forEach((f) => {
           this[f] = (...args) => {
             if (!this.playerInstance) {
               console.warn(`The player instance has not been initialized`);
@@ -73,10 +75,10 @@ class YuanPlayer {
         YuanPlayer.instances.push(this);
       }
       private setPlaylistInstance(options = this.options) {
-        this.playlistInstance = this.playlistClass && Array.isArray(options.media) ? new this.playlistClass({
+        this.playlistInstance = this.playlistClass && isArray(options.media) ? new this.playlistClass({
           ...options,
           container: options.container,
-          list: Array.isArray(options.media) && options.media.length ? [...options.media] : [],
+          list: isArray(options.media) && options.media.length ? [...options.media] : [],
           player: this.playerInstance,
           lyricObj: this.lyricInstance
         }) : null;
@@ -88,21 +90,21 @@ class YuanPlayer {
         if (this.lyricInstance) {
           this.lyricInstance.setLyric(media.lyric);
         }
+        // destroy the playlist instance
         if (this.playlistInstance) {
-          this.playlistInstance.remove();
+          this.playlistInstance.destroy();
+          this.playlistInstance = null;
         }
       }
       setPlaylist(playlist) {
-        if (!Array.isArray(playlist)) return;
+        if (!isArray(playlist)) return;
         if (!this.playlistInstance) {
           this.setPlaylistInstance({
             ...this.options,
             media: playlist
           });
         }
-        if (this.playlistInstance) {
-          this.playlistInstance.setPlaylist(playlist);
-        }
+        this.playlistInstance?.setPlaylist(playlist);
       }
       on(event: string, callback: Function) {
         if (MyClass.playerEvents.indexOf(event) > -1) {
@@ -128,6 +130,17 @@ class YuanPlayer {
             instance.pause();
           }
         })
+      }
+      destroy() {
+        if (this.playerInstance) {
+          this.playerInstance.destroy();
+        }
+        if (this.lyricInstance) {
+          this.lyricInstance.destroy();
+        }
+        if (this.playlistInstance) {
+          this.playlistInstance.destroy();
+        }
       }
     }
     return MyClass;
