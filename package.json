@@ -29,7 +29,7 @@
     "web player"
   ],
   "author": "rainyjune <rainyjune@live.cn>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Yuan-Projects/YuanPlayer/issues"
   },
