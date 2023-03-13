@@ -237,7 +237,7 @@ export default abstract class PlayerUI extends Player {
       if (!this.cssSelector.duration) return false;
       const element = domElement?.querySelector(this.cssSelector.duration);
       if (element) {
-        element.textContent = formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
+        element.textContent = formatTime(this.mediaElement && isFinite(this.mediaElement.duration) ? Math.floor(this.mediaElement.duration) : 0);
       }
     });
     this.on('setmedia', () => {
