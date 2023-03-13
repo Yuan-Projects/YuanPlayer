@@ -56,9 +56,10 @@ export default abstract class PlayerUI extends Player {
         ...options.stateClass
       };
       if (!this.nativeControls && this.isAudioSupported) {
+        this.addSyntheticEventListeners();
         this.onReady();
+        this.setMedia(options.media); // `setMedia()` must be called after `this.addSyntheticEventListeners()`
         this.addEventListeners();
-        this.setMedia(options.media);
       }
       if (!this.isAudioSupported) {
         setTimeout(() => {
@@ -210,6 +211,187 @@ export default abstract class PlayerUI extends Player {
     return false;
   }
 
+  private addSyntheticEventListeners() {
+    const seekingFn = () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement || !this.cssSelector.seekBar || !this.stateClass.seeking) return;
+      const element = domElement.querySelector(this.cssSelector.seekBar);
+      element?.classList.add(this.stateClass.seeking);
+    };
+    const seekedFn = () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement || !this.cssSelector.seekBar || !this.stateClass.seeking) return;
+      const element = domElement.querySelector(this.cssSelector.seekBar);
+      element?.classList.remove(this.stateClass.seeking);
+    };
+    this.on('waiting', seekingFn);
+    this.on('seeking', seekingFn);
+    this.on('playing', seekedFn);
+    this.on('seeked', seekedFn);
+    this.on('ended', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      domElement?.classList.remove(this.stateClass.playing);
+    });
+    this.on('durationchange', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!this.cssSelector.duration) return false;
+      const element = domElement?.querySelector(this.cssSelector.duration);
+      if (element) {
+        element.textContent = formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
+      }
+    });
+    this.on('setmedia', () => {
+      const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
+      if (!this.mediaElement) { // The media element has not been created
+        this.addMediaElement();
+        this.bindMediaEvents();
+      } else {
+        // If the new media file has a different tag name
+        // Remove the existing tag, remove its event handlers
+        // Then create a new tag and add events listeners again.
+        if (this.mediaElement.tagName.toLowerCase() !== expectedTag) {
+          const div = this.mediaElement.parentNode;
+          let i = 0;
+          while (i < this.eventListeners.length) {
+            const [target, type, listener] = this.eventListeners[i];
+            // Only those event handlers attached to the old tag need to be removed
+            if (target === this.mediaElement) {
+              target.removeEventListener(type, listener);
+              this.eventListeners.splice(i, 1);
+            } else {
+              i++;
+            }
+          }
+          this.clearMedia();
+          this.mediaElement.remove();
+          this.mediaElement = null;
+
+          // add new tag
+          const mediaElement = this.addMediaElementTag();
+          div?.appendChild(mediaElement);
+          this.bindMediaEvents();
+        }
+        // Update `<source>` elements and load the media file
+        this.addMediaSource();
+        this.mediaElement?.load();
+      }
+    });
+    this.on('setmedia', () => {
+      if (!this.cssSelector?.fullScreen) return false;
+      const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
+      if (!fullScreenBtn || !isFullScreenEnabled()) return;
+      if (this.isVideo(this.media)) {
+        fullScreenBtn.style.display = 'inline-block';
+      } else {
+        fullScreenBtn.style.display = 'none';
+      }
+    });
+    this.on('setmedia', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!this.cssSelector.title) return false;
+      const element = domElement?.querySelector(this.cssSelector.title);
+      if (element) {
+        element.textContent = this.media?.title || '';
+      }
+      if (this.mediaElement?.tagName === 'AUDIO') {
+        this.handleFullscreen(false);
+      }
+    });
+    this.on('setmedia', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return false;
+      if (this.cssSelector.currentTime) {
+        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
+      }
+      if (this.cssSelector.duration) {
+        domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
+      }
+    });
+    this.on('setmedia', () => {
+      this.updateVolume();
+      this.updateLoopState();
+    });
+    this.on('error', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return;
+      if (this.errorCode === -2 || this.errorCode === 4) {
+        if (this.cssSelector.currentTime) {
+          domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
+        }
+        if (this.cssSelector.duration) {
+          domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
+        }
+        if (this.cssSelector.playBar) {
+          (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
+        }
+      }
+    });
+    this.on('timeupdate', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return false;
+      const second = this.mediaElement ? Math.floor(this.mediaElement.currentTime) : 0;
+      if (this.cssSelector.currentTime) {
+        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(second);
+      }
+      if (this.cssSelector.playBar) {
+        const element = (domElement.querySelector(this.cssSelector.playBar) as HTMLElement);
+        if (element) {
+          const perc = this.mediaElement && isFinite(this.mediaElement.duration) ? this.mediaElement.currentTime / this.mediaElement.duration : 0;
+          element.style.width = `${perc * 100}%`;
+        }
+      }
+    });
+    this.on('play', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return;
+      // If current src is empty, we should not add the state class
+      if (this.mediaElement?.currentSrc) {
+        domElement.classList.add(this.stateClass.playing);
+      }
+    });
+    this.on('pause', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return;
+      domElement.classList.remove(this.stateClass.playing);
+    });
+    this.on('stop', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return;
+      domElement.classList.remove(this.stateClass.playing);
+      if (this.cssSelector.currentTime) {
+        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
+      }
+      if (this.cssSelector.playBar) {
+        (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
+      }
+    });
+    this.on('clearmedia', () => {
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (!domElement) return;
+      domElement?.classList.remove(this.stateClass.playing);
+      if (this.cssSelector.currentTime) {
+        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
+      }
+      if (this.cssSelector.duration) {
+        domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
+      }
+      if (this.cssSelector.playBar) {
+        (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
+      }
+      if (this.cssSelector.title) {
+        const element = (domElement.querySelector(this.cssSelector.title) as HTMLElement);
+        if (element) {
+          element.textContent = '';
+        }
+      }
+    });
+    this.on('volumechange', () => {
+      this.updateVolume();
+    });
+    this.on('loopchanged', () => {
+      this.updateLoopState();
+    });
+  }
   private addEventListeners() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
@@ -335,144 +517,6 @@ export default abstract class PlayerUI extends Player {
       }
     };
     this.addEventListener(domElement, 'click', clickHandler);
-    this.on('ended', () => {
-      domElement.classList.remove(this.stateClass.playing);
-    })
-    this.on('durationchange', () => {
-      if (!this.cssSelector.duration) return false;
-      const element = domElement.querySelector(this.cssSelector.duration);
-      if (element) {
-        element.textContent = formatTime(this.mediaElement ? Math.floor(this.mediaElement.duration) : 0);
-      }
-    });
-    this.on('setmedia', () => {
-      const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
-      if (!this.mediaElement) { // The media element has not been created
-        this.addMediaElement();
-        this.bindMediaEvents();
-      } else {
-        // If the new media file has a different tag name
-        // Remove the existing tag, remove its event handlers
-        // Then create a new tag and add events listeners again.
-        if (this.mediaElement.tagName.toLowerCase() !== expectedTag) {
-          const div = this.mediaElement.parentNode;
-          let i = 0;
-          while (i < this.eventListeners.length) {
-            const [target, type, listener] = this.eventListeners[i];
-            // Only those event handlers attached to the old tag need to be removed
-            if (target === this.mediaElement) {
-              target.removeEventListener(type, listener);
-              this.eventListeners.splice(i, 1);
-            } else {
-              i++;
-            }
-          }
-          this.clearMedia();
-          this.mediaElement.remove();
-          this.mediaElement = null;
-
-          // add new tag
-          const mediaElement = this.addMediaElementTag();
-          div?.appendChild(mediaElement);
-          this.bindMediaEvents();
-        }
-        // Update `<source>` elements and load the media file
-        this.addMediaSource();
-        this.mediaElement?.load();
-      }
-    });
-    this.on('setmedia', () => {
-      if (!this.cssSelector?.fullScreen) return false;
-      const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
-      if (!fullScreenBtn || !isFullScreenEnabled()) return;
-      if (this.isVideo(this.media)) {
-        fullScreenBtn.style.display = 'inline-block';
-      } else {
-        fullScreenBtn.style.display = 'none';
-      }
-    });
-    this.on('setmedia', () => {
-      if (!this.cssSelector.title) return false;
-      const element = domElement.querySelector(this.cssSelector.title);
-      if (element) {
-        element.textContent = this.media?.title || '';
-      }
-      if (this.mediaElement?.tagName === 'AUDIO') {
-        this.handleFullscreen(false);
-      }
-    });
-    this.on('setmedia', () => {
-      this.updateVolume();
-      this.updateLoopState();
-    });
-    this.on('error', () => {
-      if (this.errorCode === -2 || this.errorCode === 4) {
-        if (this.cssSelector.currentTime) {
-          domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
-        }
-        if (this.cssSelector.duration) {
-          domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
-        }
-        if (this.cssSelector.playBar) {
-          (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
-        }
-      }
-    });
-    this.on('timeupdate', () => {
-      const second = this.mediaElement ? Math.floor(this.mediaElement.currentTime) : 0;
-      if (this.cssSelector.currentTime) {
-        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(second);
-      }
-      if (this.cssSelector.playBar) {
-        const element = (domElement.querySelector(this.cssSelector.playBar) as HTMLElement);
-        if (element) {
-          const perc = this.mediaElement && isFinite(this.mediaElement.duration) ? this.mediaElement.currentTime / this.mediaElement.duration : 0;
-          element.style.width = `${perc * 100}%`;
-        }
-      }
-    });
-    this.on('play', () => {
-      // If current src is empty, we should not add the state class
-      if (this.mediaElement?.currentSrc) {
-        domElement.classList.add(this.stateClass.playing);
-      }
-    });
-    this.on('pause', () => {
-      domElement.classList.remove(this.stateClass.playing);
-    });
-    this.on('stop', () => {
-      domElement.classList.remove(this.stateClass.playing);
-      if (this.cssSelector.currentTime) {
-        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
-      }
-      if (this.cssSelector.playBar) {
-        (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
-      }
-    });
-    this.on('clearmedia', () => {
-      domElement?.classList.remove(this.stateClass.playing);
-      if (this.cssSelector.currentTime) {
-        domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
-      }
-      if (this.cssSelector.duration) {
-        domElement.querySelector(this.cssSelector.duration)!.textContent = formatTime(0);
-      }
-      if (this.cssSelector.playBar) {
-        (domElement.querySelector(this.cssSelector.playBar) as HTMLElement).style.width = `0%`;
-      }
-      if (this.cssSelector.title) {
-        const element = (domElement.querySelector(this.cssSelector.title) as HTMLElement);
-        if (element) {
-          element.textContent = '';
-        }
-      }
-    });
-    this.on('volumechange', () => {
-      this.updateVolume();
-    });
-    this.on('loopchanged', () => {
-      this.updateLoopState();
-    });
     this.updateVolume();
     this.updateLoopState();
   }

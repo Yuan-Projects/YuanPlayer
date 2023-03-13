@@ -1,3 +1,7 @@
+## 1.2.1 (March 13, 2023)
+
+- Optimise user experience by adding a loading indicator when media file is loading
+
 ## 1.2.0 (March 9, 2023)
 
 - Add video support
