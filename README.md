@@ -27,6 +27,10 @@ YuanPlayer is a simple, customisable media player for HTML5 video and audio.
 
 You can visit the [Developer Guide](https://github.com/Yuan-Projects/YuanPlayer/wiki/Developer-Guide) doc for more information.
 
+## Demo
+
+Please visit this [GitHub page](https://yuan-projects.github.io/YuanPlayer/demo/).
+
 ## Usage
 
 ### NPM
@@ -91,7 +95,3 @@ const bmplayer = new BMPlayer({
 });
 </script>
 ```
-
-## Demo
-
-Please visit [GitHub Pages](https://yuan-projects.github.io/YuanPlayer/demo/).
