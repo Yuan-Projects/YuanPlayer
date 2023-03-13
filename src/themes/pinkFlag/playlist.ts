@@ -1,7 +1,9 @@
 import type { PlayListOptions } from "../../core/playlist.d";
-import { matches, merge } from "../../core/utils";
+import { matches, merge, uuidv4 } from "../../core/utils";
 // @ts-ignore
 import itemTpl from './playlistItem.ejs';
+// @ts-ignore
+import listTpl from './playlist.ejs';
 
 function getClass(Base) {
   return class YuanPlayerPlayList extends Base {
@@ -27,7 +29,7 @@ function getClass(Base) {
       });
       mergedOptions.player = options.player;
       mergedOptions.lyricObj = options.lyricObj;
-      mergedOptions.cssSelectorAncestor = options.player.cssSelectorAncestor;
+      mergedOptions.cssSelectorAncestor = `#yuanplayer-pf-playlist_${uuidv4()}`;
       super(mergedOptions);
       this.options = mergedOptions;
       const player = this.player;
@@ -45,6 +47,8 @@ function getClass(Base) {
     protected onReady() {
       this.renderList();
       this.highlightItem();
+      const playlistContaner = this.container.querySelector('.jp-playlist');
+      playlistContaner.id = this.cssSelectorAncestor.substring(1);
     }
     protected onAdd() {
       this.renderList();
@@ -55,6 +59,9 @@ function getClass(Base) {
       this.highlightItem();
     }
     protected renderList() {
+      if (!document.querySelector(this.cssSelectorAncestor)) {
+        this.container.querySelector('.jp-gui').insertAdjacentHTML('afterend', listTpl());
+      }
       const ulElement = this.container.querySelector('.jp-playlist ul');
       ulElement.innerHTML = this.list.map(item => {
         return itemTpl({track: item});
