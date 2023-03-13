@@ -1,7 +1,6 @@
 import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import styles from "rollup-plugin-styles";
-import ejs from 'rollup-plugin-ejs';
 import { terser } from "rollup-plugin-terser";
 
 export default [
