@@ -13,6 +13,9 @@ function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {
       options.useStateClassSkin = true;
+      options.stateClass = {
+        seeking: 'yuan-seeking-bg'
+      };
       super(options);
     }
   
