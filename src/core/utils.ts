@@ -6,8 +6,12 @@ export function isArray(vArg: any) {
   return Object.prototype.toString.call(vArg) === "[object Array]";
 }
 
-export const isHtml5AudioSupported = function () {
-  return document.createElement("audio").play;
+export const isHtml5AudioSupported = function (): boolean {
+  return !!(document.createElement("audio").play);
+};
+
+export const isHtml5VideoSupported = function (): boolean {
+  return !!(document.createElement("video").play);
 };
 
 export const innerText = function(element: HTMLElement, text: string) {
@@ -101,16 +105,25 @@ export function includes(arr, searchElement) {
   return false;
 }
 
-// Check if the browser supports the Fullscreen API
+/**
+ * Check if the browser supports the Fullscreen API
+ * @returns boolean
+ */
 export function isFullScreenEnabled() {
   return !!(document.fullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitSupportsFullscreen || document.webkitFullscreenEnabled || document.createElement('video').webkitRequestFullScreen);
 }
 
-// Checks if the document is currently in fullscreen mode
+/**
+ * Checks if the document is currently in fullscreen mode
+ * @returns boolean
+ */
 export function isFullScreen() {
   return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
 }
 
+/**
+ * Exit full screen.
+ */
 export function exitFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
@@ -256,4 +269,17 @@ export function formatTime(secs: number): string {
   const secondsStr = seconds < 10 ? `0${seconds}` : `${seconds}`;
   ans.push(secondsStr);
   return ans.join(':');
+}
+
+/**
+ * Determines whether a string ends with the characters of a specified string, returning `true` or `false` as appropriate.
+ * @param string - The full string
+ * @param searchString - The characters to be searched.
+ * @returns boolean
+ */
+export function endsWith(string: string, searchString: string): boolean {
+  if (typeof String.prototype.endsWith == 'function') {
+    return string.endsWith(searchString);
+  }
+  return string.indexOf(searchString, string.length - searchString.length) !== -1;
 }

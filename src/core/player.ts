@@ -15,7 +15,6 @@ class Player extends Emitter {
   loop = false;
   media: MediaItem | null;
   nativeControls = false;
-  isAudioSupported = false;
   static error = {
     MEDIA_ERR_URLEMPTY: {
       code: -2,
@@ -44,10 +43,6 @@ class Player extends Emitter {
   };
   constructor(options: YuanPlayerOptions) {
     super();
-    if (isHtml5AudioSupported()) {
-      //throw new Error("Your browser does not support HTML5 Audio.");
-      this.isAudioSupported = true;
-    }
     for (const prop in options) {
       this[prop] = prop === 'loop' ? options[prop] === 'one' : options[prop];
     }
@@ -198,7 +193,6 @@ class Player extends Emitter {
     this.loop = false;
     this.media = null;
     this.nativeControls = false;
-    this.isAudioSupported = false;
     this.trigger('destroy');
   }
 }

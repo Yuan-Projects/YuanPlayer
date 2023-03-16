@@ -1,5 +1,5 @@
 import Player from "./player";
-import { includes, isArray, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { includes, isArray, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
@@ -41,6 +41,7 @@ export default abstract class PlayerUI extends Player {
     noVolume: "yuan-state-no-volume"
   };
   private fullScreenElement; // Keep a reference to a previous fullscreen element
+  private debouncedHide;
   constructor(options: YuanPlayerOptions) {
     super(options);
     // If no valid container exists, we do nothing.
@@ -55,20 +56,27 @@ export default abstract class PlayerUI extends Player {
         ...this.stateClass,
         ...options.stateClass
       };
-      if (!this.nativeControls && this.isAudioSupported) {
-        this.addSyntheticEventListeners();
-        this.onReady();
-        this.setMedia(options.media); // `setMedia()` must be called after `this.addSyntheticEventListeners()`
-        this.addEventListeners();
+      const nativeMediaSupported = (this.isVideo(options.media) && isHtml5VideoSupported()) || (!this.isVideo(options.media) && isHtml5AudioSupported());
+      if (!this.nativeControls) {
+        // TODO: support native controls
+        if (nativeMediaSupported) {
+          this.addSyntheticEventListeners();
+          this.onReady();
+          this.setMedia(options.media); // `setMedia()` must be called after `this.addSyntheticEventListeners()`
+          this.addEventListeners();
+        }
       }
-      if (!this.isAudioSupported) {
-        setTimeout(() => {
-          const element = document.querySelector(`${this.cssSelectorAncestor} ${this.cssSelector.noSolution}`) as HTMLElement;
-          if (element) {
-            element.style.display = 'block';
-          }
-        }, 0);
+      if (!nativeMediaSupported) {
+        const element = document.querySelector(`${this.cssSelectorAncestor} ${this.cssSelector.noSolution}`) as HTMLElement;
+        if (element) {
+          element.style.display = 'block';
+        }
       }
+      this.debouncedHide = debounce(() => {
+        const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+        if (!domElement) return false;
+        domElement.style.display = 'none';
+      }, 1000);
     }
   }
   protected abstract onReady();
@@ -134,6 +142,10 @@ export default abstract class PlayerUI extends Player {
     div.appendChild(mediaElement);
     this.container.insertAdjacentElement('afterbegin', div);
   }
+  /**
+   * Update the `<audio>` or `<video>` element's `<source>` elements.
+   * It will remove existing `<source>` tags if any.
+   */
   protected addMediaSource() {
     if (!this.media || !this.media.src || !this.mediaElement) return false;
 
@@ -147,6 +159,11 @@ export default abstract class PlayerUI extends Player {
       this.addSourceElement(src[i], !!this.media.isVideo);
     }
   }
+  /**
+   * Create a `<source>` element and append it to the `<audio>` or `<video>` element.
+   * @param src - The media file URL
+   * @param isVideo - If it's a video file
+   */
   private addSourceElement(src: string, isVideo = false) {
     if (!this.mediaElement) return;
     const sourceElement = createElement('source', {
@@ -392,131 +409,135 @@ export default abstract class PlayerUI extends Player {
       this.updateLoopState();
     });
   }
+  private handleGUIClick = (e) => {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    const target = e.target as HTMLElement;
+    if (this.isMatchedWithSelector(target, this.cssSelector.play)) {
+      if (this.useStateClassSkin) {
+        this.togglePlay();
+      } else {
+        this.play();
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.pause)) {
+      if (this.useStateClassSkin) {
+        this.togglePlay();
+      } else {
+        this.pause();
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.fullScreen)) {
+      if (this.useStateClassSkin) {
+        this.handleFullscreen();
+      } else {
+        this.handleFullscreen(true);
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.stop)) {
+      this.stop();
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.repeat)) {
+      // TODO
+      domElement.classList.toggle(this.stateClass.looped);
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.volumeMax)) {
+      this.volume(1);
+      this.unmute();
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.mute)) {
+      if (this.useStateClassSkin) {
+        this.toggleMute();
+      } else {
+        this.mute();
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.unmute)) {
+      if (this.useStateClassSkin) {
+        this.toggleMute();
+      } else {
+        this.unmute();
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.volumeBar) || this.isMatchedWithSelector(target, this.cssSelector.volumeBarValue)) {
+      if (this.cssSelector.volumeBar) {
+        const volumeSlider = domElement.querySelector(this.cssSelector.volumeBar) as HTMLElement;
+        const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(volumeSlider).width);
+        this.volume(perc);
+      }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.seekBar) || this.isMatchedWithSelector(target, this.cssSelector.playBar)) {
+      if (this.cssSelector.seekBar) {
+        const seekSlider = domElement.querySelector(this.cssSelector.seekBar) as HTMLElement;
+        const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(seekSlider).width);
+        this.playHead(perc);
+      }
+    }
+  }
+  private fullscreenchangeFn = () => {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (!domElement) return false;
+    const isFullScreenMode = isFullScreen();
+    const fullScreenElement = getFullScreenElement();
+    const restoreGUI = (scrollIntoView: boolean = false) => {
+      domElement.style.display = 'block';
+      (this.mediaElement as HTMLElement).style.position = 'static';
+      (this.mediaElement as HTMLElement).style.height = 'auto';
+      clearTimeout(this.debouncedHide.timer());
+      this.removeEventListener(this.mediaElement as HTMLElement, 'mousemove', this.fullScreenVideoHandler);
+      this.removeEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
+      this.removeEventListener(domElement, 'mouseleave', this.hideCssAncestor);
+      if (scrollIntoView) {
+        this.mediaElement?.scrollIntoView({
+          block: "center",
+          inline: "center"
+        });
+      }
+    };
+    const bindFullScreenListeners = () => {
+      domElement.style.display = 'none';
+      (this.mediaElement as HTMLElement).style.position = 'fixed';
+      (this.mediaElement as HTMLElement).style.height = '100%';
+      this.addEventListener(this.mediaElement, 'mousemove', this.fullScreenVideoHandler);
+      this.addEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
+      this.addEventListener(domElement, 'mouseleave', this.hideCssAncestor);
+    };
+    if (isFullScreenMode) { // enter fullscreen
+      this.fullScreenElement = fullScreenElement;
+      // if the fullscreenchange is not triggered by current player
+      // we restore the GUI of current player
+      if (fullScreenElement !== this.container) {
+        restoreGUI(false);
+        this.setFullscreenData(false);
+        return false;
+      } else {
+        bindFullScreenListeners();
+        this.setFullscreenData(true);
+        return false;
+      }
+    } else { // exit fullscreen
+      if (this.fullScreenElement === this.container) {
+        restoreGUI(true);
+        this.setFullscreenData(false);
+      }
+      this.fullScreenElement = null;
+    }
+  }
+  private fullScreenVideoHandler = () => {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (!domElement) return false;
+    domElement.style.display = 'block';
+    this.debouncedHide();
+  }
+  private fullScreenGUIHandler = () => {
+    clearTimeout(this.debouncedHide.timer());
+  }
+  private hideCssAncestor = () => {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (!domElement) return false;
+    domElement.style.display = 'none';
+  }
   private addEventListeners() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
     if (isFullScreenEnabled()) {
-      const debouncedHide = debounce(() => {
-        domElement.style.display = 'none';
-      }, 1000);
-      const fullScreenVideoHandler = () => {
-        domElement.style.display = 'block';
-        debouncedHide();
-      };
-      const fullScreenGUIHandler = () => {
-        clearTimeout(debouncedHide.timer());
-      };
-      const fullScreenGUIHandler2 = () => {
-        domElement.style.display = 'none';
-      };
-      const fullscreenchangeFn = () => {
-        const isFullScreenMode = isFullScreen();
-        const fullScreenElement = getFullScreenElement();
-        const restoreGUI = (scrollIntoView: boolean = false) => {
-          domElement.style.display = 'block';
-          (this.mediaElement as HTMLElement).style.position = 'static';
-          (this.mediaElement as HTMLElement).style.height = 'auto';
-          clearTimeout(debouncedHide.timer());
-          this.removeEventListener(this.mediaElement as HTMLElement, 'mousemove', fullScreenVideoHandler);
-          this.removeEventListener(domElement, 'mouseenter', fullScreenGUIHandler);
-          this.removeEventListener(domElement, 'mouseleave', fullScreenGUIHandler2);
-          if (scrollIntoView) {
-            this.mediaElement?.scrollIntoView({
-              block: "center",
-              inline: "center"
-            });
-          }
-        };
-        const bindFullScreenListeners = () => {
-          domElement.style.display = 'none';
-          (this.mediaElement as HTMLElement).style.position = 'fixed';
-          (this.mediaElement as HTMLElement).style.height = '100%';
-          this.addEventListener(this.mediaElement, 'mousemove', fullScreenVideoHandler);
-          this.addEventListener(domElement, 'mouseenter', fullScreenGUIHandler);
-          this.addEventListener(domElement, 'mouseleave', fullScreenGUIHandler2);
-        };
-        if (isFullScreenMode) { // enter fullscreen
-          this.fullScreenElement = fullScreenElement;
-          // if the fullscreenchange is not triggered by current player
-          // we restore the GUI of current player
-          if (fullScreenElement !== this.container) {
-            restoreGUI(false);
-            this.setFullscreenData(false);
-            return false;
-          } else {
-            bindFullScreenListeners();
-            this.setFullscreenData(true);
-            return false;
-          }
-        } else { // exit fullscreen
-          if (this.fullScreenElement === this.container) {
-            restoreGUI(true);
-            this.setFullscreenData(false);
-          }
-          this.fullScreenElement = null;
-        }
-      };
-      this.addEventListener(document, 'fullscreenchange', fullscreenchangeFn);
-      this.addEventListener(document, 'webkitfullscreenchange', fullscreenchangeFn);
-      this.addEventListener(document, 'mozfullscreenchange', fullscreenchangeFn);
-      this.addEventListener(document, 'msfullscreenchange', fullscreenchangeFn);
-      this.addEventListener(document, 'MSFullscreenChange', fullscreenchangeFn);
+      this.addEventListener(document, 'fullscreenchange', this.fullscreenchangeFn);
+      this.addEventListener(document, 'webkitfullscreenchange', this.fullscreenchangeFn);
+      this.addEventListener(document, 'mozfullscreenchange', this.fullscreenchangeFn);
+      this.addEventListener(document, 'msfullscreenchange', this.fullscreenchangeFn);
+      this.addEventListener(document, 'MSFullscreenChange', this.fullscreenchangeFn);
     }
-    const clickHandler = (e) => {
-      const target = e.target as HTMLElement;
-      if (this.isMatchedWithSelector(target, this.cssSelector.play)) {
-        if (this.useStateClassSkin) {
-          this.togglePlay();
-        } else {
-          this.play();
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.pause)) {
-        if (this.useStateClassSkin) {
-          this.togglePlay();
-        } else {
-          this.pause();
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.fullScreen)) {
-        if (this.useStateClassSkin) {
-          this.handleFullscreen();
-        } else {
-          this.handleFullscreen(true);
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.stop)) {
-        this.stop();
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.repeat)) {
-        // TODO
-        domElement.classList.toggle(this.stateClass.looped);
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.volumeMax)) {
-        this.volume(1);
-        this.unmute();
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.mute)) {
-        if (this.useStateClassSkin) {
-          this.toggleMute();
-        } else {
-          this.mute();
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.unmute)) {
-        if (this.useStateClassSkin) {
-          this.toggleMute();
-        } else {
-          this.unmute();
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.volumeBar) || this.isMatchedWithSelector(target, this.cssSelector.volumeBarValue)) {
-        if (this.cssSelector.volumeBar) {
-          const volumeSlider = domElement.querySelector(this.cssSelector.volumeBar) as HTMLElement;
-          const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(volumeSlider).width);
-          this.volume(perc);
-        }
-      } else if (this.isMatchedWithSelector(target, this.cssSelector.seekBar) || this.isMatchedWithSelector(target, this.cssSelector.playBar)) {
-        if (this.cssSelector.seekBar) {
-          const seekSlider = domElement.querySelector(this.cssSelector.seekBar) as HTMLElement;
-          const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(seekSlider).width);
-          this.playHead(perc);
-        }
-      }
-    };
-    this.addEventListener(domElement, 'click', clickHandler);
+    this.addEventListener(domElement, 'click', this.handleGUIClick);
     this.updateVolume();
     this.updateLoopState();
   }
@@ -534,51 +555,40 @@ export default abstract class PlayerUI extends Player {
     const fullScreenEnabled = isFullScreenEnabled();
     // If the browser doesn't support the Fulscreen API then hide the fullscreen button
     if (!fullScreenEnabled) {
-      const btn = document.querySelector(this.cssSelectorAncestor)?.querySelector(this.cssSelector?.fullScreen || '') as HTMLElement;
+      const btn = document.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector?.fullScreen) as HTMLElement;
       btn.style.display = 'none';
       console.warn('Your browser does not support the Fullscreen API.');
       return;
     }
-    const enterFullFn = () => {
-      requestFullscreen(this.container);
-    };
-    const exitFullFn = () => {
-      exitFullscreen();
-    };
     if (typeof enterFullScreen === 'boolean') {
       if (enterFullScreen) {
-        enterFullFn();
+        requestFullscreen(this.container);
       } else if (isFullScreen()) {
-        exitFullFn();
+        exitFullscreen();
       }
       return;
     }
-    // If fullscreen mode is active...
     if (isFullScreen()) {
-      // ...exit fullscreen mode
-      exitFullFn();
+      exitFullscreen();
     } else {
-       // ...otherwise enter fullscreen mode
-       enterFullFn();
-     }
+      requestFullscreen(this.container);
+    }
   }
   private updateLoopState() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
     if (this.mediaElement?.loop) {
       domElement.classList.add(this.stateClass.looped);
-      if(this.cssSelector.repeat) {
-        const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
-        if (repeatBtn) {
-          repeatBtn.classList.add(this.stateClass?.repeatOne || '');
-        }
-      }
     } else {
       domElement.classList.remove(this.stateClass.looped);
-      if(this.cssSelector.repeat) {
-        const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
-        if (repeatBtn) {
-          repeatBtn.classList.remove(this.stateClass?.repeatOne || '');
+    }
+    if(this.cssSelector.repeat) {
+      const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
+      if (repeatBtn && this.stateClass?.repeatOne) {
+        if (this.mediaElement?.loop) {
+          repeatBtn.classList.add(this.stateClass.repeatOne);
+        } else {
+          repeatBtn.classList.remove(this.stateClass.repeatOne);
         }
       }
     }
@@ -602,7 +612,7 @@ export default abstract class PlayerUI extends Player {
       domElement.classList.remove(this.stateClass.muted);
     }
     if (this.cssSelector.volumeValue) {
-      const element = domElement.querySelector(this.cssSelector.volumeValue);
+      const element = domElement.querySelector(this.cssSelector.volumeValue) as HTMLElement;
       if (element) {
         element.textContent = String(trunc(this.mediaElement ? this.mediaElement.volume * 100 : 0));
       }
