@@ -1,6 +1,6 @@
 import Player from "./player";
 import { includes, isArray, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
-import type { CSSSelector, YuanPlayerOptions } from "./player.d";
+import type { CSSSelector, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
 export default abstract class PlayerUI extends Player {
@@ -202,7 +202,7 @@ export default abstract class PlayerUI extends Player {
     if (this.media?.poster) {
       videoAttrs.poster = this.media.poster;
     }
-    const mediaElement = this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
+    const mediaElement = this.media && this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
     this.mediaElement = mediaElement;
     return mediaElement;
   }
@@ -212,15 +212,15 @@ export default abstract class PlayerUI extends Player {
    * @param media - The media object
    * @returns boolean
    */
-  protected isVideo(media: any): boolean {
+  protected isVideo(media: MediaItem): boolean {
     if (typeof media.isVideo === 'boolean') return media.isVideo;
     const src = media.src;
     if (!src) return false;
     // .ogg, mp4 can be used as both video and audio
     const videoExts = ['ogm', 'ogv', 'webm', 'mp4', 'm4v'];
-    const srcs = isArray(src) ? [...src] : [src];
-    for (const link of srcs) {
-      const ext = link.split('.').pop();
+    const srcs = typeof src === 'string' ? [src] : src.slice(0);
+    for (let i = 0; i < srcs.length; i++) {
+      const ext = srcs[i].split('.').pop();
       if (includes(videoExts, ext)) {
         return true;
       }
@@ -258,7 +258,7 @@ export default abstract class PlayerUI extends Player {
       }
     });
     this.on('setmedia', () => {
-      const expectedTag = this.isVideo(this.media) ? 'video' : 'audio';
+      const expectedTag = this.media && this.isVideo(this.media) ? 'video' : 'audio';
       if (!this.mediaElement) { // The media element has not been created
         this.addMediaElement();
         this.bindMediaEvents();
@@ -297,7 +297,7 @@ export default abstract class PlayerUI extends Player {
       if (!this.cssSelector?.fullScreen) return false;
       const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
       if (!fullScreenBtn || !isFullScreenEnabled()) return;
-      if (this.isVideo(this.media)) {
+      if (this.media && this.isVideo(this.media)) {
         fullScreenBtn.style.display = 'inline-block';
       } else {
         fullScreenBtn.style.display = 'none';

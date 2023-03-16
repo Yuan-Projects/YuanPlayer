@@ -30,7 +30,7 @@ function getClass(Base) {
         }
       }
     }
-    addLyricItems(items: any) {
+    addLyricItems(items: string[]) {
       const wrapContainer = this.container.querySelector('.lyric-wrapcontainer');
       wrapContainer.innerHTML = '';
   

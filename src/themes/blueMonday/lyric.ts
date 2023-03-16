@@ -28,7 +28,7 @@ function getClass(Base) {
         }
       }
     }
-    addLyricItems(items: any) {
+    addLyricItems(items: string[]) {
       const wrapContainer = this.container.querySelector('.lyric-wrapcontainer');  
       for (let i = 0, l = items.length; i < l; i++) {
         const div = document.createElement('div');

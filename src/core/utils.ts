@@ -1,5 +1,5 @@
 // @ts-nocheck
-export function isArray(vArg: any) {
+export function isArray(vArg) {
   if (Array.isArray) {
     return Array.isArray(vArg);
   }
