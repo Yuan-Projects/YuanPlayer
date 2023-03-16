@@ -1,5 +1,5 @@
 import Lyric from "./lyric";
-import type { LyricObject, LyricOptions } from "./lyric.d";
+import type { LyricOptions } from "./lyric.d";
 
 export default abstract class LyricUI extends Lyric {
   cssSelectorAncestor = '';

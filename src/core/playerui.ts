@@ -1,5 +1,5 @@
 import Player from "./player";
-import { includes, isArray, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 

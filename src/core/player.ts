@@ -1,4 +1,3 @@
-import { isHtml5AudioSupported } from './utils';
 import Emitter from './emitter';
 import type { MediaItem, YuanPlayerOptions } from './player.d';
 
