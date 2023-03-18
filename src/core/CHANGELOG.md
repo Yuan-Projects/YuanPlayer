@@ -1,3 +1,7 @@
+## 1.3.0 (March 18, 2023)
+
+- New feature: Lock the orientation to landscape while playing in fullscreen mode
+
 ## 1.2.2 (March 13, 2023)
 
 - Fix the duration issue of HLS live streaming
