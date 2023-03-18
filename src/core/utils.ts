@@ -291,7 +291,7 @@ export function unlockScreenOrientation() {
 
 export function makeLandscape() {
   if (screen.orientation && screen.orientation.lock) {
-    var promise = screen.orientation.lock('landscape');
+    const promise = screen.orientation.lock('landscape');
     if (promise) {
       promise.then(function() {
         console.log("Locked to " + screen.orientation.type);
