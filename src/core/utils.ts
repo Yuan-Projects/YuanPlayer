@@ -136,19 +136,18 @@ export function exitFullscreen() {
   }
 }
 
-export function requestFullscreen(element) {
+export function requestFullscreen(element: HTMLElement) {
   if (element.requestFullscreen) {
     element.requestFullscreen();
   } else if (element.mozRequestFullScreen) {
     element.mozRequestFullScreen();
   } else if (element.webkitRequestFullScreen) {
-    // Safari 5.1 only allows proper fullscreen on the video element. This also works fine on other WebKit browsers as the following CSS (set in styles.css) hides the default controls that appear again, and 
-    // ensures that our custom controls are visible:
-    // figure[data-fullscreen=true] video::-webkit-media-controls { display:none !important; }
-    // figure[data-fullscreen=true] .controls { z-index:2147483647; }
-    element.webkitRequestFullScreen();
+    // Safari 5.1 only allows proper fullscreen on the video element.
+    element.querySelector('video')?.webkitRequestFullScreen();
   } else if (element.msRequestFullscreen) {
     element.msRequestFullscreen();
+  } else {
+    console.log('not support request full screen api')
   }
 }
 
@@ -282,4 +281,40 @@ export function endsWith(string: string, searchString: string): boolean {
     return string.endsWith(searchString);
   }
   return string.indexOf(searchString, string.length - searchString.length) !== -1;
+}
+
+export function unlockScreenOrientation() {
+  if (screen.orientation && screen.orientation.unlock) {
+    screen.orientation.unlock();
+  }
+}
+
+export function makeLandscape() {
+  if (screen.orientation && screen.orientation.lock) {
+    var promise = screen.orientation.lock('landscape');
+    if (promise) {
+      promise.then(function() {
+        console.log("Locked to " + screen.orientation.type);
+      }).catch(function(e) {
+        console.log('Lock failed:' + e);
+      })
+    }
+  } else {
+    console.log('Does not support lock orientation!')
+  }
+}
+
+/**
+ * Check to see if a DOM element is a descendant of another DOM element.
+ * @param container - The DOM element that may contain the other element.
+ * @param contained - The DOM element that may be contained by (a descendant of) the other element.
+ */
+export function contains(container, contained): boolean {
+  do {
+    if (contained === container) {
+      return true;
+    }
+    contained = contained.parentNode;
+  } while (contained !== document);
+  return false;
 }

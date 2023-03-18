@@ -1,5 +1,5 @@
 import Player from "./player";
-import { includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
@@ -496,7 +496,8 @@ export default abstract class PlayerUI extends Player {
       this.fullScreenElement = fullScreenElement;
       // if the fullscreenchange is not triggered by current player
       // we restore the GUI of current player
-      if (fullScreenElement !== this.container) {
+      //if (fullScreenElement !== this.container) {
+      if (contains(this.container, fullScreenElement) === false) {
         restoreGUI(false);
         this.setFullscreenData(false);
         return false;
@@ -506,7 +507,7 @@ export default abstract class PlayerUI extends Player {
         return false;
       }
     } else { // exit fullscreen
-      if (this.fullScreenElement === this.container) {
+      if (contains(this.container, this.fullScreenElement)) {
         restoreGUI(true);
         this.setFullscreenData(false);
       }
@@ -563,15 +564,19 @@ export default abstract class PlayerUI extends Player {
     if (typeof enterFullScreen === 'boolean') {
       if (enterFullScreen) {
         requestFullscreen(this.container);
+        makeLandscape();
       } else if (isFullScreen()) {
         exitFullscreen();
+        unlockScreenOrientation();
       }
       return;
     }
     if (isFullScreen()) {
       exitFullscreen();
+      unlockScreenOrientation();
     } else {
       requestFullscreen(this.container);
+      makeLandscape();
     }
   }
   private updateLoopState() {

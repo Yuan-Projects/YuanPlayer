@@ -82,4 +82,4 @@ export default abstract class LyricUI extends Lyric {
       emptyElement.style.display = isEmpty ? 'block' : 'none';
     }
   }
-};
+}
