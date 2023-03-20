@@ -15,6 +15,7 @@ YuanPlayer is a simple, customisable media player for HTML5 video and audio.
 ## Features:
 
 - **HTML Video & Audio** - support for the major formats
+- **Accessible** - support for VTT captions and screen readers
 - **Customizable** - choose from open source themes for YuanPlayer, or create your own unique one.
 - **Responsive** - works with any screen size
 - **Streaming** - support for hls.js streaming playback

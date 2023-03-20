@@ -1,3 +1,7 @@
+## 1.4.0 (March 20, 2023)
+
+- New feature: Add text tracks support
+
 ## 1.3.0 (March 18, 2023)
 
 - New feature: Lock the orientation to landscape while playing in fullscreen mode
