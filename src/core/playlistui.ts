@@ -160,7 +160,7 @@ export default abstract class PlayListUI extends PlayList {
         return true;
       }
       dom = dom.parentNode;
-    } while (dom !== rootElement && dom !== document);
+    } while (dom && dom !== rootElement && dom !== document);
     return false;
   }
   protected findDomIndex(element: HTMLElement): number {
@@ -174,7 +174,7 @@ export default abstract class PlayListUI extends PlayList {
   }
   protected findItemElement(dom) {
     do {
-      if (matches(dom, this.cssSelector.item)) {
+      if (this.cssSelector.item && matches(dom, this.cssSelector.item)) {
         return dom;
       }
       dom = dom.parentNode;

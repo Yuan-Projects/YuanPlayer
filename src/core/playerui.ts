@@ -1,6 +1,6 @@
 import Player from "./player";
-import { contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
-import type { CSSSelector, MediaItem, YuanPlayerOptions } from "./player.d";
+import { setActiveCC, getCCList, createTrackElement, isArray, contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import type { CSSSelector, PlayerStateClass, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
 export default abstract class PlayerUI extends Player {
@@ -29,9 +29,11 @@ export default abstract class PlayerUI extends Player {
     repeat: ".yuan-repeat",
     repeatOff: ".yuan-repeat-off",
     gui: ".yuan-gui",
+    closedCaption: ".yuan-closed-caption",
     noSolution: ".yuan-no-solution"
   };
-  protected stateClass = {
+  protected stateClass: PlayerStateClass = {
+    closedCaption: "yuan-state-closed-caption",
     repeatOne: "yuan-repeat-one",
     playing: "yuan-state-playing",
     seeking: "yuan-state-seeking",
@@ -42,6 +44,7 @@ export default abstract class PlayerUI extends Player {
   };
   private fullScreenElement; // Keep a reference to a previous fullscreen element
   private debouncedHide;
+  private hlsInstance;
   constructor(options: YuanPlayerOptions) {
     super(options);
     // If no valid container exists, we do nothing.
@@ -138,6 +141,7 @@ export default abstract class PlayerUI extends Player {
     const mediaElement = this.addMediaElementTag();
 
     this.addMediaSource();
+    this.addTextTracks();
 
     div.appendChild(mediaElement);
     this.container.insertAdjacentElement('afterbegin', div);
@@ -159,6 +163,12 @@ export default abstract class PlayerUI extends Player {
       this.addSourceElement(src[i], !!this.media.isVideo);
     }
   }
+  protected addTextTracks() {
+    if (!this.media || isArray(this.media.tracks) === false || !this.mediaElement) return false;
+    this.media.tracks?.forEach((track) => {
+      this.mediaElement?.appendChild(createTrackElement(track));
+    });
+  }
   /**
    * Create a `<source>` element and append it to the `<audio>` or `<video>` element.
    * @param src - The media file URL
@@ -179,6 +189,7 @@ export default abstract class PlayerUI extends Player {
         const hlsInstance = new Hls();
         hlsInstance.loadSource(src);
         hlsInstance.attachMedia(this.mediaElement);
+        this.hlsInstance = hlsInstance;
       } else {
         console.warn(`HLS is not supported in your browsers. Please make sure you are using a modern browser and/or have imported hls.js correctly.`);
       }
@@ -202,7 +213,7 @@ export default abstract class PlayerUI extends Player {
     if (this.media?.poster) {
       videoAttrs.poster = this.media.poster;
     }
-    const mediaElement = this.media && this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs);
+    const mediaElement = (this.media && this.isVideo(this.media) ? createElement('video', videoAttrs) : createElement('audio', attrs)) as HTMLMediaElement;
     this.mediaElement = mediaElement;
     return mediaElement;
   }
@@ -246,6 +257,7 @@ export default abstract class PlayerUI extends Player {
     this.on('playing', seekedFn);
     this.on('seeked', seekedFn);
     this.on('ended', () => {
+      if (!this.stateClass.playing) return ;
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       domElement?.classList.remove(this.stateClass.playing);
     });
@@ -263,10 +275,16 @@ export default abstract class PlayerUI extends Player {
         this.addMediaElement();
         this.bindMediaEvents();
       } else {
-        // If the new media file has a different tag name
-        // Remove the existing tag, remove its event handlers
+        if (this.hlsInstance) {
+          this.hlsInstance.detachMedia();
+          this.hlsInstance.destroy();
+        }
+        // If the new media file has a different tag name, remove the existing tag, remove its event handlers,
         // Then create a new tag and add events listeners again.
-        if (this.mediaElement.tagName.toLowerCase() !== expectedTag) {
+        // We need to the same thing if a hls.js instance has attached to the media element,
+        // because hlj.js uses `addTextTrack` to create text tracks, which cannot be removed, there's no `removeTextTrack` in HTMLVideoElement spec.
+        // See https://github.com/video-dev/hls.js/issues/2198
+        if (this.mediaElement.tagName.toLowerCase() !== expectedTag || this.hlsInstance) {
           const div = this.mediaElement.parentNode;
           let i = 0;
           while (i < this.eventListeners.length) {
@@ -282,6 +300,7 @@ export default abstract class PlayerUI extends Player {
           this.clearMedia();
           this.mediaElement.remove();
           this.mediaElement = null;
+          this.hlsInstance = null;
 
           // add new tag
           const mediaElement = this.addMediaElementTag();
@@ -290,6 +309,7 @@ export default abstract class PlayerUI extends Player {
         }
         // Update `<source>` elements and load the media file
         this.addMediaSource();
+        this.addTextTracks();
         this.mediaElement?.load();
       }
     });
@@ -327,6 +347,9 @@ export default abstract class PlayerUI extends Player {
     this.on('setmedia', () => {
       this.updateVolume();
       this.updateLoopState();
+      setTimeout(() => {
+        this.updateCCButton();
+      });
     });
     this.on('error', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
@@ -360,7 +383,7 @@ export default abstract class PlayerUI extends Player {
     });
     this.on('play', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
-      if (!domElement) return;
+      if (!domElement || !this.stateClass.playing) return;
       // If current src is empty, we should not add the state class
       if (this.mediaElement?.currentSrc) {
         domElement.classList.add(this.stateClass.playing);
@@ -368,13 +391,15 @@ export default abstract class PlayerUI extends Player {
     });
     this.on('pause', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
-      if (!domElement) return;
+      if (!domElement || !this.stateClass.playing) return;
       domElement.classList.remove(this.stateClass.playing);
     });
     this.on('stop', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (!domElement) return;
-      domElement.classList.remove(this.stateClass.playing);
+      if (this.stateClass.playing) {
+        domElement.classList.remove(this.stateClass.playing);
+      }
       if (this.cssSelector.currentTime) {
         domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
       }
@@ -385,7 +410,9 @@ export default abstract class PlayerUI extends Player {
     this.on('clearmedia', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (!domElement) return;
-      domElement?.classList.remove(this.stateClass.playing);
+      if (this.stateClass.playing) {
+        domElement?.classList.remove(this.stateClass.playing);
+      }
       if (this.cssSelector.currentTime) {
         domElement.querySelector(this.cssSelector.currentTime)!.textContent = formatTime(0);
       }
@@ -434,7 +461,9 @@ export default abstract class PlayerUI extends Player {
       this.stop();
     } else if (this.isMatchedWithSelector(target, this.cssSelector.repeat)) {
       // TODO
-      domElement.classList.toggle(this.stateClass.looped);
+      if (this.stateClass.looped) {
+        domElement.classList.toggle(this.stateClass.looped);
+      }
     } else if (this.isMatchedWithSelector(target, this.cssSelector.volumeMax)) {
       this.volume(1);
       this.unmute();
@@ -541,8 +570,10 @@ export default abstract class PlayerUI extends Player {
     this.addEventListener(domElement, 'click', this.handleGUIClick);
     this.updateVolume();
     this.updateLoopState();
+    this.updateCCButton();
   }
   protected setFullscreenData(state: boolean) {
+    if (!this.stateClass.fullScreen) return;
     if (state) {
       this.container.classList.add(this.stateClass.fullScreen);
       document.querySelector(this.cssSelectorAncestor)?.classList.add(this.stateClass.fullScreen);
@@ -582,10 +613,12 @@ export default abstract class PlayerUI extends Player {
   private updateLoopState() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
-    if (this.mediaElement?.loop) {
-      domElement.classList.add(this.stateClass.looped);
-    } else {
-      domElement.classList.remove(this.stateClass.looped);
+    if (this.stateClass.looped) {
+      if (this.mediaElement?.loop) {
+        domElement.classList.add(this.stateClass.looped);
+      } else {
+        domElement.classList.remove(this.stateClass.looped);
+      }
     }
     if(this.cssSelector.repeat) {
       const repeatBtn = domElement.querySelector(this.cssSelector.repeat);
@@ -605,16 +638,18 @@ export default abstract class PlayerUI extends Player {
         return true;
       }
       dom = dom.parentNode;
-    } while (dom !== document.querySelector(this.cssSelectorAncestor) && dom !== document);
+    } while (dom && dom !== document.querySelector(this.cssSelectorAncestor) && dom !== document);
     return false;
   }
   private updateVolume() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
-    if (this.mediaElement?.muted) {
-      domElement.classList.add(this.stateClass.muted);
-    } else {
-      domElement.classList.remove(this.stateClass.muted);
+    if (this.stateClass.muted) {
+      if (this.mediaElement?.muted) {
+        domElement.classList.add(this.stateClass.muted);
+      } else {
+        domElement.classList.remove(this.stateClass.muted);
+      }
     }
     if (this.cssSelector.volumeValue) {
       const element = domElement.querySelector(this.cssSelector.volumeValue) as HTMLElement;
@@ -627,6 +662,36 @@ export default abstract class PlayerUI extends Player {
     const val = trunc(this.mediaElement ? this.mediaElement.volume * 100 : 0);
     if (ele) {
       ele!.style.width = this.mediaElement?.muted ? '0%' : val + "%";
+    }
+  }
+  protected setActiveCC(value: string) {
+    setActiveCC(this.mediaElement, value);
+  }
+  protected getCCList() {
+    return getCCList(this.mediaElement as HTMLVideoElement);
+  }
+  protected updateCCButton() {
+    if (!this.cssSelector.closedCaption) return;
+    const element = this.container.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector.closedCaption) as HTMLElement;
+    if (!element) return;
+    if (!this.mediaElement || this.mediaElement?.tagName !== "VIDEO") {
+      element.style.display = 'none';
+    } else {
+      const ccList = this.getCCList();
+      if (ccList.length < 2) { // No .vtt files provided or not supported by current browser
+        element.style.display = 'none';
+      } else {
+        element.style.display = 'inline-block';
+        if (this.stateClass.closedCaption) {
+          if (ccList[0].checked === true) { // CC is turned off
+            this.container.classList.remove(this.stateClass.closedCaption);
+            this.container.querySelector(this.cssSelectorAncestor)?.classList.remove(this.stateClass.closedCaption);
+          } else {
+            this.container.classList.add(this.stateClass.closedCaption);
+            this.container.querySelector(this.cssSelectorAncestor)?.classList.add(this.stateClass.closedCaption);
+          }
+        }
+      }
     }
   }
 }

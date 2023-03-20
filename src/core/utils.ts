@@ -59,13 +59,23 @@ export function trunc(x: number) {
   return x < 0 ? Math.ceil(x) : Math.floor(x);
 }
 
-export function matches(element, selectors) {
-  if (element.matches) {
-    return element.matches(selectors);
-  } else if (element.msMatchesSelector) {
-    return element.msMatchesSelector(selectors);
-  } else if (element.webkitMatchesSelector) {
-    return element.webkitMatchesSelector(selectors);
+/**
+ * Test whether the element would be selected by the specified CSS selector.
+ * @param element - An element
+ * @param selectors - A string containing valid CSS selectors to test the Element against.
+ * @returns 
+ */
+export function matches(element: Element, selectors: string): boolean {
+  try {
+    if (element.matches) {
+      return element.matches(selectors);
+    } else if (element.msMatchesSelector) {
+      return element.msMatchesSelector(selectors);
+    } else if (element.webkitMatchesSelector) {
+      return element.webkitMatchesSelector(selectors);
+    }
+  } catch(e) {
+    return false;
   }
   return false;
 }
@@ -79,7 +89,7 @@ export function isHLSJSSupported() {
   return typeof Hls === 'function' && Hls.isSupported();
 }
 
-export function createElement(tag, attributes = {}) {
+export function createElement(tag: string, attributes = {}) {
   const element = document.createElement(tag);
   for (const attr in attributes) {
     if (attributes.hasOwnProperty(attr)) {
@@ -91,6 +101,19 @@ export function createElement(tag, attributes = {}) {
     }
   }
   return element;
+}
+
+export function createTrackElement(trackObject) {
+  const attrs = {
+    default: !!trackObject.default,
+    src: trackObject.src,
+    kind: trackObject.kind || 'subtitles',
+    label: trackObject.label
+  };
+  if (trackObject.srclang) {
+    attrs.srclang = trackObject.srclang;
+  }
+  return createElement('track', attrs);
 }
 
 export function includes(arr, searchElement) {
@@ -317,4 +340,41 @@ export function contains(container, contained): boolean {
     contained = contained.parentNode;
   } while (contained !== document);
   return false;
+}
+
+export function getCCList(video: HTMLVideoElement) {
+  if (!video.textTracks) {
+    console.log('Your browser does not support the TextTrack interface.');
+    return [];
+  }
+  var list = [{
+    label: 'Off',
+    checked: true
+  }];
+  for (var i = 0; i < video.textTracks.length; i++) {
+    var track = video.textTracks[i];
+    if (track.mode === 'showing') {
+      list[0].checked = false;
+    }
+    list.push({
+      label: track.label || track.language,
+      checked: track.mode === 'showing'
+    });
+  }
+  return list;
+}
+
+export function setActiveCC(video, value) {
+  if (!video.textTracks) {
+    console.log('Your browser does not support the TextTrack interface.');
+    return false;
+  }
+  for (var i = 0; i < video.textTracks.length; i++) {
+    var track = video.textTracks[i];
+    if (track.label === value || track.language === value) {
+      track.mode = 'showing';
+    } else {
+      track.mode = 'hidden';
+    }
+  }
 }

@@ -23,22 +23,26 @@ export interface CSSSelector {
   gui?: string
   noSolution?: string
   shuffle?: string
+  closedCaption?: string
 }
 
 export interface PlayerStateClass{
+  fullScreen?: string
+  repeatOne?: string
   playing?: string
   seeking?: string
   muted?: string
   looped?: string
   fullScreen?: string
   noVolume?: string
+  closedCaption?: string
 }
 
 export interface MediaItem {
   poster?: string
   title?: string
   duration?: string | number
-  track?: Array<object>
+  tracks?: Array<object>
   src: string | Array<string>
   isVideo?: boolean
 }
