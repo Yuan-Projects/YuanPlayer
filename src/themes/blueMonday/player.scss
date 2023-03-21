@@ -136,21 +136,39 @@
     width: 40px;
     height: 40px;
   }
+
+  .yuan-play,
+  .yuan-stop,
+  .yuan-previous,
+  .yuan-next,
+  .yuan-seek-bar,
+  .yuan-play-bar,
+  .yuan-mute,
+  .yuan-volume-max,
+  .yuan-volume-bar,
+  .yuan-volume-bar-value,
+  .yuan-full-screen,
+  .yuan-repeat,
+  .yuan-repeat-one,
+  .yuan-shuffle {
+    background-image: url("./images/jplayer.blue.monday2.png");
+    background-repeat: no-repeat;
+  }
   
   .yuan-play {
-    background: url("./images/jplayer.blue.monday2.png") 0 0 no-repeat;
+    background-position: 0 0;
   }
   
   .yuan-play:focus {
-    background: url("./images/jplayer.blue.monday2.png") -41px 0 no-repeat;
+    background-position: -41px 0;
   }
   
   &.yuan-state-playing {
     .yuan-play {
-      background: url("./images/jplayer.blue.monday2.png") 0 -42px no-repeat;
+      background-position: 0 -42px;
 
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -41px -42px no-repeat;
+        background-position: -41px -42px;
       }
     }
   }
@@ -162,28 +180,28 @@
   }
   
   .yuan-stop {
-    background: url("./images/jplayer.blue.monday2.png") 0 -83px no-repeat;
+    background-position: 0 -83px;
     margin-left: 10px;
   }
   
   .yuan-stop:focus {
-    background: url("./images/jplayer.blue.monday2.png") -29px -83px no-repeat;
+    background-position: -29px -83px;
   }
   
   .yuan-previous {
-    background: url("./images/jplayer.blue.monday2.png") 0 -112px no-repeat;
+    background-position: 0 -112px;
   }
   
   .yuan-previous:focus {
-    background: url("./images/jplayer.blue.monday2.png") -29px -112px no-repeat;
+    background-position: -29px -112px;
   }
   
   .yuan-next {
-    background: url("./images/jplayer.blue.monday2.png") 0 -141px no-repeat;
+    background-position: 0 -141px;
   }
   
   .yuan-next:focus {
-    background: url("./images/jplayer.blue.monday2.png") -29px -141px no-repeat;
+    background-position: -29px -141px;
   }
   
   /* @end */
@@ -196,14 +214,16 @@
   }
 
   .yuan-seek-bar {
-    background: url("./images/jplayer.blue.monday2.png") 0 -202px repeat-x;
+    background-position: 0 -202px;
+    background-repeat:  repeat-x;
     width: 0px;
     height: 100%;
     cursor: pointer;
   }
 
   .yuan-play-bar {
-    background: url("./images/jplayer.blue.monday2.png") 0 -218px repeat-x;
+    background-position: 0 -218px;
+    background-repeat: repeat-x;
     width: 0px;
     height: 100%;
   }
@@ -248,34 +268,35 @@
   }
 
   .yuan-mute {
-    background: url("./images/jplayer.blue.monday2.png") 0 -170px no-repeat;
+    background-position: 0 -170px;
   }
 
   .yuan-mute:focus {
-    background: url("./images/jplayer.blue.monday2.png") -19px -170px no-repeat;
+    background-position: -19px -170px;
   }
 
   &.yuan-state-muted {
     .yuan-mute {
-      background: url("./images/jplayer.blue.monday2.png") -60px -170px no-repeat;
+      background-position: -60px -170px;
 
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -79px -170px no-repeat;
+        background-position: -79px -170px;
       }
     }
   }
 
   .yuan-volume-max {
-    background: url("./images/jplayer.blue.monday2.png") 0 -186px no-repeat;
+    background-position: 0 -186px;
     margin-left: 5px;
   }
   
   .yuan-volume-max:focus {
-    background: url("./images/jplayer.blue.monday2.png") -19px -186px no-repeat; }
+    background-position: -19px -186px; }
   
   .yuan-volume-bar {
     overflow: hidden;
-    background: url("./images/jplayer.blue.monday2.png") 0 -250px repeat-x;
+    background-position: 0 -250px;
+    background-repeat: repeat-x;
     margin-top: 5px;
     width: 46px;
     height: 5px;
@@ -283,7 +304,8 @@
   }
   
   .yuan-volume-bar-value {
-    background: url("./images/jplayer.blue.monday2.png") 0 -256px repeat-x;
+    background-position: 0 -256px;
+    background-repeat: repeat-x;
     width: 0px;
     height: 5px; }
   
@@ -325,7 +347,9 @@
   .yuan-toggles {
     padding: 0;
     margin: 0 auto;
+    /*
     overflow: hidden;
+    */
   }
   
   .yuan-audio .yuan-type-single .yuan-toggles {
@@ -355,11 +379,16 @@
   
   .yuan-toggles {
     .yuan-full-screen {
-      background: url("./images/jplayer.blue.monday2.png") 0 -310px no-repeat;
+      background-position: 0 -310px;
       display: none;
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -30px -310px no-repeat;
+        background-position: -30px -310px;
       }
+    }
+
+    .yuan-closed-caption {
+      background: url("./images/closed_caption.svg") 0 -2px no-repeat;
+      display: none;
     }
   }
 
@@ -369,37 +398,36 @@
     bottom: 0;
     width: 100%;
     .yuan-full-screen {
-      background: url("./images/jplayer.blue.monday2.png") -60px -310px no-repeat;
+      background-position: -60px -310px;
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -90px -310px no-repeat;
+        background-position: -90px -310px;
       }
     }
   }
 
   .yuan-repeat {
-    background: url("./images/jplayer.blue.monday2.png") 0 -290px no-repeat; }
+    background-position: 0 -290px; }
   
   .yuan-repeat:focus {
-    background: url("./images/jplayer.blue.monday2.png") -30px -290px no-repeat; }
+    background-position: -30px -290px; }
   
   &.yuan-state-looped {
     .yuan-repeat {
-      background: url("./images/jplayer.blue.monday2.png") -60px -290px no-repeat;
+      background-position: -60px -290px;
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -90px -290px no-repeat;
+        background-position: -90px -290px;
       }
     }
   }
 
   .yuan-repeat-one {
-    background: url("./images/jplayer.blue.monday2.png") -120px -290px no-repeat;
+    background-position: -120px -290px;
     &:focus {
       background-position-x: -150px;
     }
   }
   &.yuan-state-looped {
     .yuan-repeat-one {
-      //background: url("./images/jplayer.blue.monday2.png") -120px -290px no-repeat;
       background-position-x: -180px;
       &:focus {
         background-position-x: -210px;
@@ -408,17 +436,17 @@
   }
 
   .yuan-shuffle {
-    background: url("./images/jplayer.blue.monday2.png") 0 -270px no-repeat;
+    background-position: 0 -270px;
     margin-left: 5px; }
   
   .yuan-shuffle:focus {
-    background: url("./images/jplayer.blue.monday2.png") -30px -270px no-repeat; }
+    background-position: -30px -270px; }
   
   &.yuan-state-shuffled {
     .yuan-shuffle {
-      background: url("./images/jplayer.blue.monday2.png") -60px -270px no-repeat;
+      background-position: -60px -270px;
       &:focus {
-        background: url("./images/jplayer.blue.monday2.png") -90px -270px no-repeat;
+        background-position: -90px -270px;
       }
     }
   }
@@ -484,5 +512,29 @@
     .yuan-volume-controls {
       display: block;
     }
+  }
+}
+
+.yuan-state-closed-caption {
+  .yuanplayer-bluemonday-player {
+    .yuan-toggles {
+      overflow: visible;
+      .yuan-closed-caption {
+        background-color: #dedede;
+        border-left: 1px solid #a1a1a1;
+        border-top: 1px solid #a1a1a1;
+        border-radius: 3px;
+        background-position: -1px -3px;
+      }
+    }
+  }
+}
+
+.cclist {
+  ul {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    min-width: 100px;
   }
 }
