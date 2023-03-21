@@ -35,6 +35,28 @@ window.playlist = [
 
 window.videolist = [
   {
+    title: 'Hello',
+    artist: 'Adele',
+    isVideo: true,
+    src: ['https://www.vidlii.com/usfi/v/3lEVk36WBQf.N-XAsDPW2aikTl64QnDUoSRwCOEgLkOoN8COl88f-Xb90egFcWj3AtXsI5j5fwKFHbLhm0yPzjFrr7Nz.mp4'],
+    tracks: [
+      {
+        default: true,
+        kind: "subtitles",
+        srclang: "en",
+        src: "vvt/hello-en.vtt",
+        label: 'English'
+      },
+      {
+        default: false,
+        kind: "subtitles",
+        srclang: "zh",
+        src: "vvt/hello-zh.vtt",
+        label: '简体中文'
+      }
+    ]
+  },
+  {
     title: 'Mountains',
     artist: 'Test',
     isVideo: true,
