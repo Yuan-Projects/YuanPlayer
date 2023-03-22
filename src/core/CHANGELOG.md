@@ -1,3 +1,7 @@
+## 1.4.1 (March 22, 2023)
+
+- Hide the mouse cursor in fullscreen mode
+
 ## 1.4.0 (March 20, 2023)
 
 - New feature: Add text tracks support
