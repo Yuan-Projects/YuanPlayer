@@ -378,3 +378,14 @@ export function setActiveCC(video, value) {
     }
   }
 }
+export function showMouseCursor(timeout) {
+  clearTimeout(timeout);
+  if (document.body.style.cursor !== 'default') {
+    document.body.style.cursor = 'default';
+  }
+}
+export function hideMouseCursor() {
+  if (document.body.style.cursor !== 'none') {
+    document.body.style.cursor = 'none';
+  }
+}

@@ -1,5 +1,5 @@
 import Player from "./player";
-import { setActiveCC, getCCList, createTrackElement, isArray, contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { showMouseCursor, hideMouseCursor, setActiveCC, getCCList, createTrackElement, isArray, contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, PlayerStateClass, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
@@ -45,6 +45,7 @@ export default abstract class PlayerUI extends Player {
   private fullScreenElement; // Keep a reference to a previous fullscreen element
   private debouncedHide;
   private hlsInstance;
+  private cursorTimer;
   constructor(options: YuanPlayerOptions) {
     super(options);
     // If no valid container exists, we do nothing.
@@ -520,6 +521,7 @@ export default abstract class PlayerUI extends Player {
       this.addEventListener(this.mediaElement, 'mousemove', this.fullScreenVideoHandler);
       this.addEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.addEventListener(domElement, 'mouseleave', this.hideCssAncestor);
+      hideMouseCursor();
     };
     if (isFullScreenMode) { // enter fullscreen
       this.fullScreenElement = fullScreenElement;
@@ -539,6 +541,7 @@ export default abstract class PlayerUI extends Player {
       if (contains(this.container, this.fullScreenElement)) {
         restoreGUI(true);
         this.setFullscreenData(false);
+        showMouseCursor(this.cursorTimer);
       }
       this.fullScreenElement = null;
     }
@@ -548,14 +551,21 @@ export default abstract class PlayerUI extends Player {
     if (!domElement) return false;
     domElement.style.display = 'block';
     this.debouncedHide();
+    // restore cursor
+    showMouseCursor(this.cursorTimer);
+    // goto sleep after a few moments
+    this.cursorTimer = setTimeout(hideMouseCursor, 1000);
   }
   private fullScreenGUIHandler = () => {
+    showMouseCursor(this.cursorTimer);
     clearTimeout(this.debouncedHide.timer());
   }
   private hideCssAncestor = () => {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
     domElement.style.display = 'none';
+    // // goto sleep after a few moments
+    this.cursorTimer = setTimeout(hideMouseCursor, 1000);
   }
   private addEventListeners() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
