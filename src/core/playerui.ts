@@ -65,9 +65,10 @@ export default abstract class PlayerUI extends Player {
         // TODO: support native controls
         if (nativeMediaSupported) {
           this.addSyntheticEventListeners();
-          this.onReady();
           this.setMedia(options.media); // `setMedia()` must be called after `this.addSyntheticEventListeners()`
+          this.onReady();
           this.addEventListeners();
+          this.updateFullScreenButton();
         }
       }
       if (!nativeMediaSupported) {
@@ -80,7 +81,7 @@ export default abstract class PlayerUI extends Player {
         const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
         if (!domElement) return false;
         domElement.style.display = 'none';
-      }, 1000);
+      }, 2000);
     }
   }
   protected abstract onReady();
@@ -132,6 +133,27 @@ export default abstract class PlayerUI extends Player {
       clearInterval(t);
       that.trigger('error');
     });
+
+    this.addEventListener(media, 'mousemove', this.handleVideoMouseMove);
+    this.addEventListener(media, 'click', this.handleClickMedia);
+  }
+  private handleClickMedia = (e) => {
+    const target = e.target;
+    if (target.tagName !== 'VIDEO') return false;
+    this.togglePlay();
+    if (this.isPlaying() === false) {
+      console.log('handleClickMedia is not playing');
+      // show the controls and will not hide them automatically
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (domElement && domElement.style.display !== 'block') {
+        domElement.style.display = 'block';
+      }
+      showMouseCursor(this.cursorTimer);
+      clearTimeout(this.debouncedHide.timer());
+    } else {
+      hideMouseCursor();
+      this.debouncedHide();
+    }
   }
   /**
    * Create a div which contains the `<audio>` or `<video>` element.
@@ -142,10 +164,19 @@ export default abstract class PlayerUI extends Player {
     const mediaElement = this.addMediaElementTag();
 
     this.addMediaSource();
+    this.setMediaPoster();
     this.addTextTracks();
 
     div.appendChild(mediaElement);
     this.container.insertAdjacentElement('afterbegin', div);
+  }
+  protected setMediaPoster() {
+    if (!this.mediaElement) return false;
+    if (!this.media?.poster || this.mediaElement.tagName !== 'VIDEO') {
+      this.mediaElement.removeAttribute('poster');
+    } else {
+      (this.mediaElement as HTMLVideoElement).poster = this.media.poster;
+    }
   }
   /**
    * Update the `<audio>` or `<video>` element's `<source>` elements.
@@ -209,7 +240,7 @@ export default abstract class PlayerUI extends Player {
     };
     const videoAttrs: any =  {
       ...attrs,
-      style: "width: 100%;"
+      style: "width: 100%; display: block;"
     };
     if (this.media?.poster) {
       videoAttrs.poster = this.media.poster;
@@ -286,7 +317,7 @@ export default abstract class PlayerUI extends Player {
         // because hlj.js uses `addTextTrack` to create text tracks, which cannot be removed, there's no `removeTextTrack` in HTMLVideoElement spec.
         // See https://github.com/video-dev/hls.js/issues/2198
         if (this.mediaElement.tagName.toLowerCase() !== expectedTag || this.hlsInstance) {
-          const div = this.mediaElement.parentNode;
+          const div = this.mediaElement.parentNode as Element;
           let i = 0;
           while (i < this.eventListeners.length) {
             const [target, type, listener] = this.eventListeners[i];
@@ -305,25 +336,18 @@ export default abstract class PlayerUI extends Player {
 
           // add new tag
           const mediaElement = this.addMediaElementTag();
-          div?.appendChild(mediaElement);
+          div.insertAdjacentElement('afterbegin', mediaElement);
+
           this.bindMediaEvents();
         }
         // Update `<source>` elements and load the media file
         this.addMediaSource();
+        this.setMediaPoster();
         this.addTextTracks();
         this.mediaElement?.load();
       }
     });
-    this.on('setmedia', () => {
-      if (!this.cssSelector?.fullScreen) return false;
-      const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
-      if (!fullScreenBtn || !isFullScreenEnabled()) return;
-      if (this.media && this.isVideo(this.media)) {
-        fullScreenBtn.style.display = 'inline-block';
-      } else {
-        fullScreenBtn.style.display = 'none';
-      }
-    });
+    this.on('setmedia', this.updateFullScreenButton);
     this.on('setmedia', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (!this.cssSelector.title) return false;
@@ -437,6 +461,16 @@ export default abstract class PlayerUI extends Player {
       this.updateLoopState();
     });
   }
+  protected updateFullScreenButton = () => {
+    if (!this.cssSelector?.fullScreen) return false;
+    const fullScreenBtn = this.container?.querySelector(this.cssSelector?.fullScreen) as HTMLElement;
+    if (!fullScreenBtn || !isFullScreenEnabled()) return;
+    if (this.media && this.isVideo(this.media)) {
+      fullScreenBtn.style.display = 'inline-block';
+    } else {
+      fullScreenBtn.style.display = 'none';
+    }
+  }
   private handleGUIClick = (e) => {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     const target = e.target as HTMLElement;
@@ -504,7 +538,6 @@ export default abstract class PlayerUI extends Player {
       (this.mediaElement as HTMLElement).style.position = 'static';
       (this.mediaElement as HTMLElement).style.height = 'auto';
       clearTimeout(this.debouncedHide.timer());
-      this.removeEventListener(this.mediaElement as HTMLElement, 'mousemove', this.fullScreenVideoHandler);
       this.removeEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.removeEventListener(domElement, 'mouseleave', this.hideCssAncestor);
       if (scrollIntoView) {
@@ -518,7 +551,6 @@ export default abstract class PlayerUI extends Player {
       domElement.style.display = 'none';
       (this.mediaElement as HTMLElement).style.position = 'fixed';
       (this.mediaElement as HTMLElement).style.height = '100%';
-      this.addEventListener(this.mediaElement, 'mousemove', this.fullScreenVideoHandler);
       this.addEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.addEventListener(domElement, 'mouseleave', this.hideCssAncestor);
       hideMouseCursor();
@@ -527,7 +559,6 @@ export default abstract class PlayerUI extends Player {
       this.fullScreenElement = fullScreenElement;
       // if the fullscreenchange is not triggered by current player
       // we restore the GUI of current player
-      //if (fullScreenElement !== this.container) {
       if (contains(this.container, fullScreenElement) === false) {
         restoreGUI(false);
         this.setFullscreenData(false);
@@ -546,15 +577,25 @@ export default abstract class PlayerUI extends Player {
       this.fullScreenElement = null;
     }
   }
-  private fullScreenVideoHandler = () => {
+  private handleVideoMouseMove = () => {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
-    domElement.style.display = 'block';
-    this.debouncedHide();
+    if (domElement.style.display !== 'block') {
+      domElement.style.display = 'block';
+    }
     // restore cursor
     showMouseCursor(this.cursorTimer);
+    if (this.isPlaying() === false) {
+      console.log('handleVideoMouseMove is not playing');
+      return false;
+    }
+    this.debouncedHide();
     // goto sleep after a few moments
-    this.cursorTimer = setTimeout(hideMouseCursor, 1000);
+    this.cursorTimer = setTimeout(() => {
+      if (contains(this.container, getFullScreenElement())) {
+        hideMouseCursor();
+      }
+    }, 2000);
   }
   private fullScreenGUIHandler = () => {
     showMouseCursor(this.cursorTimer);
@@ -565,7 +606,7 @@ export default abstract class PlayerUI extends Player {
     if (!domElement) return false;
     domElement.style.display = 'none';
     // // goto sleep after a few moments
-    this.cursorTimer = setTimeout(hideMouseCursor, 1000);
+    this.cursorTimer = setTimeout(hideMouseCursor, 2000);
   }
   private addEventListeners() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;

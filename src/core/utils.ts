@@ -333,6 +333,7 @@ export function makeLandscape() {
  * @param contained - The DOM element that may be contained by (a descendant of) the other element.
  */
 export function contains(container, contained): boolean {
+  if (!container || !contained) return false;
   do {
     if (contained === container) {
       return true;
