@@ -22,6 +22,7 @@ YuanPlayer is a simple, customisable media player for HTML5 video and audio.
 - **API** - toggle playback, volume, seeking, and more
 - **Events** - all events are standardized across formats
 - **Fullscreen** - support full window mode
+- **Shortcuts** - supports keyboard shortcuts
 - **No frameworks** - written in TypeScript, no jQuery required
 - **Modules support** - supports various JavaScript modules: AMD, CommonJS, UMD and ESM.
 - **Lyric and playlist** - The lyric and playlist features are built in its core.
