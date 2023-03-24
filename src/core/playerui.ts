@@ -619,9 +619,24 @@ export default abstract class PlayerUI extends Player {
       this.addEventListener(document, 'MSFullscreenChange', this.fullscreenchangeFn);
     }
     this.addEventListener(domElement, 'click', this.handleGUIClick);
+    this.addEventListener(document, 'keydown', this.handleKeyboardEvents);
     this.updateVolume();
     this.updateLoopState();
     this.updateCCButton();
+  }
+  private handleKeyboardEvents = (e) => {
+    if (this.mediaElement?.tagName !== 'VIDEO' || isFinite(this.mediaElement?.currentTime) === false || isFinite(this.mediaElement.duration) === false) return false;
+    if (e.key === ' ' || e.keyCode === 32) {
+      this.togglePlay();
+    } else if (e.key === 'ArrowRight' || e.keyCode === 39) {
+      if (this.mediaElement?.currentTime + 10 < this.mediaElement.duration) {
+        this.mediaElement.currentTime += 10;
+      }
+    } else if (e.key === 'ArrowLeft' || e.keyCode === 37) {
+      if (this.mediaElement?.currentTime - 10 > 0) {
+        this.mediaElement.currentTime -= 10;
+      }
+    }
   }
   protected setFullscreenData(state: boolean) {
     if (!this.stateClass.fullScreen) return;
