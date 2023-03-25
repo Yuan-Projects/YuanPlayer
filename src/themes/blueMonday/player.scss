@@ -16,6 +16,11 @@
  */
 
 .yuanplayer-bluemonday-player {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+
   .hidden {
     display: none !important;
   }
@@ -43,6 +48,145 @@
 
   .yuan-audio-stream {
     width: 182px;
+  }
+
+  .yuan-video {
+    .yuan-previous,
+    .yuan-next,
+    .yuan-play,
+    .yuan-mute,
+    .yuan-volume-max {
+      width: 28px;
+      height: 28px;
+      margin: 0;
+    }
+    .yuan-repeat-one,
+    .yuan-repeat-one:focus,
+    .yuan-repeat,
+    .yuan-repeat:focus {
+      background-position: 0 0 !important;
+    }
+
+    .yuan-volume-bar {
+      margin-top: 9px;
+    }
+
+    .yuan-toggles {
+      button {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+      }
+    }
+
+    .yuan-repeat {
+      background: url(images/repeat.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-shuffle {
+      background: url(images/shuffle.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-closed-caption {
+      background: url(images/closed_caption.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-full-screen {
+      background: url(images/fullscreen.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-mute {
+      background: url(images/volume_down.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-volume-max {
+      background: url(images/volume_up.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-play {
+      background: url(images/play_arrow.svg) 0 0 no-repeat;
+
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-previous {
+      background: url(images/skip_previous.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-next {
+      background: url(images/skip_next.svg) 0 0 no-repeat;
+      &:focus {
+        background-position: 0 0;
+      }
+    }
+    .yuan-current-time,
+    .yuan-duration {
+      color: white;
+    }
+  }
+
+  &.yuan-state-playing {
+    .yuan-video {
+      .yuan-play {
+        background-image: url(images/pause.svg);
+        background-position: 0 0;
+  
+        &:focus {
+          background-position: 0 0;
+        }
+      }
+      .yuan-previous {
+        background: url(images/skip_previous.svg) 0 0 no-repeat;
+        &:focus {
+          background-position: 0 0;
+        }
+      }
+    }
+  }
+
+  &.yuan-state-muted {
+    .yuan-video {
+      .yuan-mute:focus {
+        background-position: 0 0;
+      }
+    }
+    
+  }
+
+  &.yuan-state-looped {
+    .yuan-video {
+      .yuan-repeat-one,
+      .yuan-repeat-one:focus,
+      .yuan-repeat,
+      .yuan-repeat:focus {
+        /*
+        background: none;
+        */
+        background-color: gray;
+        background-position: 0 0;
+      }
+      .yuan-repeat {
+        background-image: url(images/repeat.svg);
+      }
+      .yuan-repeat-one {
+        background-image: url(images/repeat_one.svg);
+      }
+    }
   }
 
   .flexbox {
@@ -90,7 +234,10 @@
 
   .yuan-interface {
     position: static;
+    /*
     background-color: #eee;
+    */
+    background-color: transparent;
     width: 100%;
     box-sizing: border-box;
     padding: .6rem;
@@ -283,6 +430,17 @@
         background-position: -79px -170px;
       }
     }
+
+    .yuan-video {
+      .yuan-mute {
+        background-image: url(images/volume_off.svg);
+        background-position: 0 0;
+  
+        &:focus {
+          background-position: 0 0;
+        }
+      }
+    }
   }
 
   .yuan-volume-max {
@@ -379,15 +537,10 @@
   
   .yuan-toggles {
     .yuan-full-screen {
-      background-position: 0 -310px;
       display: none;
-      &:focus {
-        background-position: -30px -310px;
-      }
     }
 
     .yuan-closed-caption {
-      background: url("./images/closed_caption.svg") 0 -2px no-repeat;
       display: none;
     }
   }
@@ -397,12 +550,6 @@
     left: 0px;
     bottom: 0;
     width: 100%;
-    .yuan-full-screen {
-      background-position: -60px -310px;
-      &:focus {
-        background-position: -90px -310px;
-      }
-    }
   }
 
   .yuan-repeat {
@@ -447,6 +594,16 @@
       background-position: -60px -270px;
       &:focus {
         background-position: -90px -270px;
+      }
+    }
+
+    .yuan-video {
+      .yuan-shuffle {
+        background-color: gray;
+        background-position: 0 0;
+        &:focus {
+          background-position: 0 0;
+        }
       }
     }
   }
@@ -519,13 +676,6 @@
   .yuanplayer-bluemonday-player {
     .yuan-toggles {
       overflow: visible;
-      .yuan-closed-caption {
-        background-color: #dedede;
-        border-left: 1px solid #a1a1a1;
-        border-top: 1px solid #a1a1a1;
-        border-radius: 3px;
-        background-position: -1px -3px;
-      }
     }
   }
 }

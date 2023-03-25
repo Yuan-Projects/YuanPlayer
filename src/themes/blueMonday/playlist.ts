@@ -22,7 +22,7 @@ function getClass(Base) {
       this.container.querySelector('.yuanplayer-bluemonday-playlist').innerHTML = tpl({tracks: this.list});
       this.updateList();
     }
-    protected onAdd() {
+    protected onAdd(trackItem) {
       const ul = this.container.querySelector('.yuan-playlist ul');
       const li = document.createElement('li');
       li.classList.add('yuan-playlist-item');

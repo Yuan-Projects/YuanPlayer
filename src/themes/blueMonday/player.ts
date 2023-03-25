@@ -1,6 +1,8 @@
 import type { YuanPlayerOptions } from '../../core/player.d';
 // @ts-ignore
 import playerTpl from './player.ejs';
+// @ts-ignore
+import playerVideoTpl from './player-video.ejs';
 import './player.scss';
 
 /**
@@ -30,8 +32,11 @@ function getClass(Base) {
         }
       }
       div.classList.add('yuanplayer-bluemonday-player');
-      div.innerHTML = playerTpl();
-      this.container.appendChild(div);
+      div.innerHTML = this.mediaElement.tagName === 'AUDIO' ? playerTpl() : playerVideoTpl();
+      //this.container.appendChild(div);
+      this.mediaElement.parentNode.appendChild(div);
+      this.mediaElement.parentNode.style.position = 'relative';
+      this.mediaElement.parentNode.style.minHeight = '78px';
 
       // If current browser support flex wrapping, use flexbox layout
       // Some old browsers does not support this feature, such as Android 4.2 default browsers
