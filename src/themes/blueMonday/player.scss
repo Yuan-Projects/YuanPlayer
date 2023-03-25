@@ -686,5 +686,18 @@
     padding: 5px;
     margin: 0;
     min-width: 100px;
+
+    label {
+      display: block;
+
+      input[type="radio"] {
+        float: right;
+        display: none;
+
+        &:checked {
+          display: inline-block;
+        }
+      }
+    }
   }
 }

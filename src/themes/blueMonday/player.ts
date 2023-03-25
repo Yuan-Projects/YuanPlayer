@@ -19,6 +19,23 @@ function getClass(Base) {
         seeking: 'yuan-seeking-bg'
       };
       super(options);
+      this.on('setmedia', this.updateGUI);
+    }
+
+    private updateGUI = () => {
+      if (!this.mediaElement) return false;
+      const mediaType = this.mediaElement.tagName.toLowerCase();
+      const div = this.container.querySelector(this.cssSelectorAncestor);
+      const con = div.querySelector(`.yuan-${mediaType}`);
+      if (con) return;
+      div.innerHTML = this.mediaElement.tagName === 'AUDIO' ? playerTpl() : playerVideoTpl();
+      this.updateVolume();
+      this.updateFullScreenButton();
+      // If current browser support flex wrapping, use flexbox layout
+      // Some old browsers does not support this feature, such as Android 4.2 default browsers
+      if (document.createElement("p").style.flexWrap === '') {
+        div.querySelector('.yuan-interface')?.classList.add('flexbox');
+      }
     }
   
     protected onReady() {
@@ -44,19 +61,18 @@ function getClass(Base) {
         div.querySelector('.yuan-interface')?.classList.add('flexbox');
       }
 
-      const cclist = div.querySelector('.cclist') as HTMLDivElement;
-      const ccbtn = div.querySelector('.yuan-closed-caption') as HTMLElement;
-      cclist.addEventListener('click', (e) => {
+      this.addEventListener(div, 'click', (e) => {
+        const div = this.container.querySelector(this.cssSelectorAncestor);
         const target = e.target as HTMLElement;
-        if (target.tagName !== 'INPUT') return false;
-        const value = (target as HTMLInputElement).value;
-        this.setActiveCC(value);
-        cclist.innerHTML = '';
-        this.updateCCButton();
-      });
-
-      ccbtn.addEventListener('click', () => {
-        this.showList();
+        if (target.tagName === 'INPUT') {
+          const value = (target as HTMLInputElement).value;
+          this.setActiveCC(value);
+          const cclist = div.querySelector('.cclist') as HTMLDivElement;
+          cclist.innerHTML = '';
+          this.updateCCButton();
+        } else if (this.isMatchedWithSelector(target, '.yuan-closed-caption')) {
+          this.showList();
+        }
       });
     }
     showList() {
