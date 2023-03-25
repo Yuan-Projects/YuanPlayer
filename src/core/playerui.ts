@@ -60,6 +60,11 @@ export default abstract class PlayerUI extends Player {
         ...this.stateClass,
         ...options.stateClass
       };
+      this.debouncedHide = debounce(() => {
+        const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+        if (!domElement) return false;
+        domElement.style.display = 'none';
+      }, 2000);
       const nativeMediaSupported = (this.isVideo(options.media) && isHtml5VideoSupported()) || (!this.isVideo(options.media) && isHtml5AudioSupported());
       if (!this.nativeControls) {
         // TODO: support native controls
@@ -77,11 +82,6 @@ export default abstract class PlayerUI extends Player {
           element.style.display = 'block';
         }
       }
-      this.debouncedHide = debounce(() => {
-        const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
-        if (!domElement) return false;
-        domElement.style.display = 'none';
-      }, 2000);
     }
   }
   protected abstract onReady();
@@ -393,6 +393,13 @@ export default abstract class PlayerUI extends Player {
       }
     });
     this.on('setmedia', () => {
+      // show the controls and will not hide them automatically
+      const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+      if (domElement && domElement.style.display !== 'block') {
+        domElement.style.display = 'block';
+      }
+      showMouseCursor(this.cursorTimer);
+      clearTimeout(this.debouncedHide.timer());
       this.updateVolume();
       this.updateLoopState();
       setTimeout(() => {
@@ -645,9 +652,13 @@ export default abstract class PlayerUI extends Player {
     }
     this.addEventListener(domElement, 'click', this.handleGUIClick);
     this.addEventListener(document, 'keydown', this.handleKeyboardEvents);
+    this.addEventListener(document, 'scroll', this.handleDocumentScroll);
     this.updateVolume();
     this.updateLoopState();
     this.updateCCButton();
+  }
+  private handleDocumentScroll = (e) => {
+    showMouseCursor(this.cursorTimer);
   }
   private handleKeyboardEvents = (e) => {
     if (this.mediaElement?.tagName !== 'VIDEO' || isFinite(this.mediaElement?.currentTime) === false || isFinite(this.mediaElement.duration) === false) return false;
@@ -732,7 +743,7 @@ export default abstract class PlayerUI extends Player {
     } while (dom && dom !== document.querySelector(this.cssSelectorAncestor) && dom !== document);
     return false;
   }
-  private updateVolume() {
+  protected updateVolume() {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
     if (this.stateClass.muted) {
