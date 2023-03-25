@@ -170,7 +170,7 @@ export function requestFullscreen(element: HTMLElement) {
   } else if (element.msRequestFullscreen) {
     element.msRequestFullscreen();
   } else {
-    console.log('not support request full screen api')
+    //console.log('not support request full screen api')
   }
 }
 
@@ -317,13 +317,13 @@ export function makeLandscape() {
     const promise = screen.orientation.lock('landscape');
     if (promise) {
       promise.then(function() {
-        console.log("Locked to " + screen.orientation.type);
+        //console.log("Locked to " + screen.orientation.type);
       }).catch(function(e) {
-        console.log('Lock failed:' + e);
+        //console.log('Lock failed:' + e);
       })
     }
   } else {
-    console.log('Does not support lock orientation!')
+    //console.log('Does not support lock orientation!')
   }
 }
 
@@ -345,7 +345,7 @@ export function contains(container, contained): boolean {
 
 export function getCCList(video: HTMLVideoElement) {
   if (!video.textTracks) {
-    console.log('Your browser does not support the TextTrack interface.');
+    //console.log('Your browser does not support the TextTrack interface.');
     return [];
   }
   var list = [{
@@ -367,7 +367,7 @@ export function getCCList(video: HTMLVideoElement) {
 
 export function setActiveCC(video, value) {
   if (!video.textTracks) {
-    console.log('Your browser does not support the TextTrack interface.');
+    //console.log('Your browser does not support the TextTrack interface.');
     return false;
   }
   for (var i = 0; i < video.textTracks.length; i++) {

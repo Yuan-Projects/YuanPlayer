@@ -136,13 +136,36 @@ export default abstract class PlayerUI extends Player {
 
     this.addEventListener(media, 'mousemove', this.handleVideoMouseMove);
     this.addEventListener(media, 'click', this.handleClickMedia);
+    this.addEventListener(media, 'touchstart', this.handleVideoTouch);
+    this.addEventListener(media, 'playing', this.handlePlaying);
+  }
+  private handlePlaying = (e) => {
+    const target = e.target;
+    if (target.tagName !== 'VIDEO') return false;
+    hideMouseCursor();
+    this.debouncedHide();
+  }
+  private handleVideoTouch = (e) => {
+    e.preventDefault();
+    const target = e.target;
+    if (target.tagName !== 'VIDEO') return false;
+    // show the controls
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (domElement && domElement.style.display !== 'block') {
+      domElement.style.display = 'block';
+    }
+    if (this.isPlaying() === false) {
+      clearTimeout(this.debouncedHide.timer());
+    } else {
+      hideMouseCursor();
+      this.debouncedHide();
+    }
   }
   private handleClickMedia = (e) => {
     const target = e.target;
     if (target.tagName !== 'VIDEO') return false;
     this.togglePlay();
     if (this.isPlaying() === false) {
-      console.log('handleClickMedia is not playing');
       // show the controls and will not hide them automatically
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (domElement && domElement.style.display !== 'block') {
@@ -418,6 +441,9 @@ export default abstract class PlayerUI extends Player {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
       if (!domElement || !this.stateClass.playing) return;
       domElement.classList.remove(this.stateClass.playing);
+      // show the controls
+      domElement.style.display = 'block';
+      clearTimeout(this.debouncedHide.timer());
     });
     this.on('stop', () => {
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
@@ -586,7 +612,6 @@ export default abstract class PlayerUI extends Player {
     // restore cursor
     showMouseCursor(this.cursorTimer);
     if (this.isPlaying() === false) {
-      console.log('handleVideoMouseMove is not playing');
       return false;
     }
     this.debouncedHide();

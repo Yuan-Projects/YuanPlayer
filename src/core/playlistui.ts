@@ -18,7 +18,7 @@ export default abstract class PlayListUI extends PlayList {
   protected abstract onReady();
   protected abstract onListUpdated();
   protected abstract onRemove();
-  protected abstract onAdd();
+  protected abstract onAdd(args);
   constructor(options: PlayListOptions) {
     super(options);
     this.addEvents();
@@ -43,9 +43,9 @@ export default abstract class PlayListUI extends PlayList {
         this.container.querySelector(this.cssSelectorAncestor)?.remove();
       }
     });
-    this.on('add', () => {
+    this.on('add', (args) => {
       if (this.onAdd) {
-        this.onAdd();
+        this.onAdd(args);
       }
     });
     this.on('playlistset', () => {
