@@ -285,7 +285,8 @@ export default abstract class PlayerUI extends Player {
    * @param media - The media object
    * @returns boolean
    */
-  protected isVideo(media: MediaItem): boolean {
+  protected isVideo(media: MediaItem | null): boolean {
+    if (!media) return false;
     if (typeof media.isVideo === 'boolean') return media.isVideo;
     const src = media.src;
     if (!src) return false;
@@ -660,9 +661,19 @@ export default abstract class PlayerUI extends Player {
     this.addEventListener(domElement, 'click', this.handleGUIClick);
     this.addEventListener(document, 'keydown', this.handleKeyboardEvents);
     this.addEventListener(document, 'scroll', this.handleDocumentScroll);
+    if (screen.orientation) {
+      this.addEventListener(screen.orientation, 'change', this.orientationChangeFn);
+    }
     this.updateVolume();
     this.updateLoopState();
     this.updateCCButton();
+  }
+  private orientationChangeFn = (e) => {
+    if (this.isVideo(this.media) === false) return;
+    if (this.isPlaying()) {
+      hideMouseCursor();
+      this.debouncedHide();
+    }
   }
   private handleDocumentScroll = (e) => {
     showMouseCursor(this.cursorTimer);
@@ -696,8 +707,10 @@ export default abstract class PlayerUI extends Player {
     const fullScreenEnabled = isFullScreenEnabled();
     // If the browser doesn't support the Fulscreen API then hide the fullscreen button
     if (!fullScreenEnabled) {
-      const btn = document.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector?.fullScreen) as HTMLElement;
-      btn.style.display = 'none';
+      const btn = document.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector?.fullScreen);
+      if (btn) {
+        (btn as HTMLElement).style.display = 'none';
+      }
       console.warn('Your browser does not support the Fullscreen API.');
       return;
     }
