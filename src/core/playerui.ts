@@ -72,6 +72,13 @@ export default abstract class PlayerUI extends Player {
           this.addSyntheticEventListeners();
           this.setMedia(options.media); // `setMedia()` must be called after `this.addSyntheticEventListeners()`
           this.onReady();
+          if (this.cssSelectorAncestor && this.mediaElement) {
+            const guiHeight = Math.ceil(parseFloat(getComputedStyle(this.container.querySelector(this.cssSelectorAncestor) as HTMLElement).height));
+            const parentNode = ((this.mediaElement as HTMLMediaElement).parentNode as HTMLElement);
+            if (isFinite(guiHeight) && parentNode) {
+              parentNode.style.minHeight = `${guiHeight}px`;
+            }
+          }
           this.addEventListeners();
           this.updateFullScreenButton();
         }
