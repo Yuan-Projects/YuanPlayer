@@ -582,10 +582,7 @@ export default abstract class PlayerUI extends Player {
       this.removeEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.removeEventListener(domElement, 'mouseleave', this.hideCssAncestor);
       if (scrollIntoView) {
-        this.mediaElement?.scrollIntoView({
-          block: "center",
-          inline: "center"
-        });
+        this.mediaElement?.scrollIntoView();
       }
     };
     const bindFullScreenListeners = () => {
