@@ -165,8 +165,7 @@ export function requestFullscreen(element: HTMLElement) {
   } else if (element.mozRequestFullScreen) {
     element.mozRequestFullScreen();
   } else if (element.webkitRequestFullScreen) {
-    // Safari 5.1 only allows proper fullscreen on the video element.
-    element.querySelector('video')?.webkitRequestFullScreen();
+    element.webkitRequestFullScreen();
   } else if (element.msRequestFullscreen) {
     element.msRequestFullscreen();
   } else {
