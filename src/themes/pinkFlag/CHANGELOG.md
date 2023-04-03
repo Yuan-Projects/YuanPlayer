@@ -1,3 +1,9 @@
+## 1.2.0 (April 3, 2023)
+
+Note: This theme requires yuanplayer-core@1.5.0.
+
+- Refactor codebase to support yuanplayer-core@1.5.0
+
 ## 1.1.1 (March 13, 2023)
 
 - Optimise user experience by adding a loading indicator when media file is loading
