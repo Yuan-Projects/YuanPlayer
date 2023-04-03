@@ -578,6 +578,8 @@ export default abstract class PlayerUI extends Player {
       domElement.style.display = 'block';
       (this.mediaElement as HTMLElement).style.position = 'static';
       (this.mediaElement as HTMLElement).style.height = 'auto';
+      (this.mediaElement as HTMLElement).style.left = 'auto';
+      (this.mediaElement as HTMLElement).style.top = 'auto';
       clearTimeout(this.debouncedHide.timer());
       this.removeEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.removeEventListener(domElement, 'mouseleave', this.hideCssAncestor);
@@ -589,6 +591,8 @@ export default abstract class PlayerUI extends Player {
       domElement.style.display = 'none';
       (this.mediaElement as HTMLElement).style.position = 'fixed';
       (this.mediaElement as HTMLElement).style.height = '100%';
+      (this.mediaElement as HTMLElement).style.left = '0';
+      (this.mediaElement as HTMLElement).style.top = '0';
       this.addEventListener(domElement, 'mouseenter', this.fullScreenGUIHandler);
       this.addEventListener(domElement, 'mouseleave', this.hideCssAncestor);
       hideMouseCursor();
