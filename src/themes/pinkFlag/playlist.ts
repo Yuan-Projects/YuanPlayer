@@ -4,6 +4,7 @@ import { matches, merge, uuidv4 } from "../../core/utils";
 import itemTpl from './playlistItem.ejs';
 // @ts-ignore
 import listTpl from './playlist.ejs';
+import './playlist.css';
 
 function getClass(Base) {
   return class YuanPlayerPlayList extends Base {
@@ -45,10 +46,14 @@ function getClass(Base) {
       });
     }
     protected onReady() {
+      const div = document.createElement('div');
+      div.id = this.cssSelectorAncestor.replace('#', '');
+      div.className = 'yuanplayer-pinkflag-playlist';
+      div.innerHTML = listTpl({tracks: this.list});
+      this.container.appendChild(div);
+
       this.renderList();
       this.highlightItem();
-      const playlistContaner = this.container.querySelector('.jp-playlist');
-      playlistContaner.id = this.cssSelectorAncestor.substring(1);
     }
     protected onAdd() {
       this.renderList();
@@ -60,7 +65,7 @@ function getClass(Base) {
     }
     protected renderList() {
       if (!document.querySelector(this.cssSelectorAncestor)) {
-        this.container.querySelector('.jp-gui').insertAdjacentHTML('afterend', listTpl());
+        this.onReady();
       }
       const ulElement = this.container.querySelector('.jp-playlist ul');
       ulElement.innerHTML = this.list.map(item => {

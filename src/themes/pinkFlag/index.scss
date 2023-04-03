@@ -15,6 +15,11 @@
  * Date: 13th November 2014
  */
 .yuanplayer-pinkflag-player {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+
   .hidden {
     display: none !important;
   }
@@ -135,25 +140,23 @@
    left: 0; }
  
  .jp-interface {
+  padding-left: 5px;
+  padding-right: 5px;
+  box-sizing: border-box;
+
    position: relative;
    width: 100%;
    background-color: #3a2a45;
    /* Required for the full screen */ }
  
  /* @group CONTROLS */
- .jp-video .jp-controls-holder {
+ .jp-controls-holder {
    clear: both;
-   margin: 0 auto 10px;
+   margin: 0;
    position: relative;
    overflow: hidden;
    height: 36px;
   }
- 
- .jp-audio .jp-controls-holder {
-   height: 80px; }
- 
- .jp-audio-stream .jp-controls-holder {
-   height: 50px; }
  
   .jp-controls {
     background-position: 0 0;
@@ -227,11 +230,11 @@
  
  /* @end */
  /* @group playlist player controls */
- .jp-type-playlist .jp-controls button {
+ .jp-controls button {
    width: 40px;
   }
  
- .jp-type-playlist .jp-play {
+ .jp-play {
    background-position: -28px -40px;
    &:focus {
     background-position: -128px -40px;
@@ -239,37 +242,35 @@
   }
  
   &.jp-state-playing {
-    div.jp-type-playlist {
       .jp-play {
         background-position: -28px -120px;
         &:focus {
           background-position: -128px -120px;
         }
       }
-    }
   }
  
- .jp-type-playlist .jp-stop {
+ .jp-stop {
    background-position: -28px -80px;
  }
  
- .jp-type-playlist .jp-stop:focus {
+ .jp-stop:focus {
    background-position: -128px -80px;
   }
  
- .jp-type-playlist .jp-previous {
+ .jp-previous {
    background-position: -28px -200px;
   }
  
- .jp-type-playlist .jp-previous:focus {
+ .jp-previous:focus {
    background-position: -128px -200px;
   }
  
- .jp-type-playlist .jp-next {
+ .jp-next {
    background-position: -28px -160px;
   }
  
- .jp-type-playlist .jp-next:focus {
+ .jp-next:focus {
    background-position: -128px -160px;
   }
  
@@ -361,7 +362,7 @@
    margin-bottom: 4px;
    overflow: hidden; }
  
- div.jp-video .jp-progress {
+ .jp-progress {
    border-top: 1px solid #180a1f;
    border-bottom: 1px solid #554560;
    width: 100%;
@@ -558,6 +559,7 @@
    padding: 0; }
  
  .jp-details .jp-title {
+  color: white;
    padding: 0;
    margin: 0;
    overflow: hidden;
@@ -566,71 +568,6 @@
  
  .jp-video .jp-details {
    margin: 0 90px 10px; }
- 
- .jp-playlist ul {
-   list-style-type: none;
-   font-size: .7em;
-   margin: 0;
-   padding: 0; }
- 
- .jp-video .jp-playlist ul {
-   margin: 0 20px; }
- 
- .jp-playlist li {
-   position: relative;
-   padding: 2px 0;
-   border-top: 1px solid #554461;
-   border-bottom: 1px solid #180a1f;
-   overflow: hidden; }
- 
- /* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
- div.jp-type-playlist div.jp-playlist li:first-child {
-   border-top: none;
-   padding-top: 3px; }
- 
- div.jp-type-playlist div.jp-playlist li:last-child {
-   border-bottom: none;
-   padding-bottom: 3px; }
- 
- div.jp-type-playlist div.jp-playlist a {
-   color: #fff;
-   text-decoration: none; }
- 
- div.jp-type-playlist div.jp-playlist a:hover {
-   color: #e892e9; }
- 
- div.jp-type-playlist div.jp-playlist li.jp-playlist-current {
-   background-color: #26102e;
-   margin: 0 -20px;
-   padding: 2px 20px;
-   border-top: 1px solid #26102e;
-   border-bottom: 1px solid #26102e; }
- 
- div.jp-type-playlist div.jp-playlist li.jp-playlist-current a {
-   color: #e892e9; }
- 
- div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
-   float: right;
-   display: inline;
-   text-align: right;
-   margin-left: 10px;
-   font-weight: bold;
-   color: #8C7A99; }
- 
- div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
-   color: #E892E9; }
- 
- div.jp-type-playlist div.jp-playlist span.jp-free-media {
-   float: right;
-   display: inline;
-   text-align: right;
-   color: #8C7A99; }
- 
- div.jp-type-playlist div.jp-playlist span.jp-free-media a {
-   color: #8C7A99; }
- 
- div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover {
-   color: #E892E9; }
  
  span.jp-artist {
    font-size: .8em;

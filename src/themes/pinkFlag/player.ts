@@ -1,6 +1,6 @@
 import type { YuanPlayerOptions } from '../../core/player.d';
 // @ts-ignore
-import playerTpl from './player.ejs';
+import controlGUITpl from './player-gui.ejs';
 import { merge, uuidv4 } from '../../core/utils';
 import './index.scss';
 
@@ -41,16 +41,17 @@ function getClass(Base) {
     }
   
     protected onReady() {
-      const div = document.createElement('div');
-      div.id = this.cssSelectorAncestor?.substring(1) || '';
-      div.classList.add('yuanplayer-pinkflag-player');
-      div.innerHTML = playerTpl();
-      this.container.appendChild(div);
+      const guiDiv = document.createElement('div');
+      guiDiv.id = this.cssSelectorAncestor.substring(1);
+      guiDiv.classList.add('yuanplayer-pinkflag-player');
+      guiDiv.innerHTML = controlGUITpl();
+      this.mediaElement.parentNode.appendChild(guiDiv);
+      this.mediaElement.parentNode.style.position = 'relative';
 
       // If current browser support flex wrapping, use flexbox layout
       // Some old browsers does not support this feature, such as Android 4.2 default browsers
       if (document.createElement("p").style.flexWrap === '') {
-        div.querySelector('.jp-toggles')?.classList.add('flexbox');
+        guiDiv.querySelector('.jp-toggles')?.classList.add('flexbox');
       }
     }
   }
