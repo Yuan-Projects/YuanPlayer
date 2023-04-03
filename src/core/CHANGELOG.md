@@ -1,3 +1,12 @@
+## 1.5.0 (April 3, 2023)
+
+- New feature: Click the video to play/pause playback
+- Add keyboard events support
+- Fix the issue of custom controls not visible when video playing in fullscreen mode
+- Fix the issue of video not in the screen center in fullscreen mode on iPad
+- Remove scrollIntoView: options parameter as it is not supported by many browsers
+- Optimise for mobile browsers
+
 ## 1.4.1 (March 22, 2023)
 
 - Hide the mouse cursor in fullscreen mode

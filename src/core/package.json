@@ -1,6 +1,6 @@
 {
   "name": "yuanplayer-core",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "YuanPlayer",
   "type": "module",
   "main": "lib/cjs/YuanPlayer.js",
