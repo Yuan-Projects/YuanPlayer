@@ -38,6 +38,7 @@ window.videolist = [
     title: 'Hello',
     artist: 'Adele',
     isVideo: true,
+    poster: 'https://www.vidlii.com/usfi/prvw/ztc8CefviYF.jpg',
     src: ['https://www.vidlii.com/usfi/v/3lEVk36WBQf.N-XAsDPW2aikTl64QnDUoSRwCOEgLkOoN8COl88f-Xb90egFcWj3AtXsI5j5fwKFHbLhm0yPzjFrr7Nz.mp4'],
     tracks: [
       {
