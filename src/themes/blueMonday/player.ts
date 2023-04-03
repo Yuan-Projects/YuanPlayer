@@ -53,7 +53,6 @@ function getClass(Base) {
       //this.container.appendChild(div);
       this.mediaElement.parentNode.appendChild(div);
       this.mediaElement.parentNode.style.position = 'relative';
-      this.mediaElement.parentNode.style.minHeight = '78px';
 
       // If current browser support flex wrapping, use flexbox layout
       // Some old browsers does not support this feature, such as Android 4.2 default browsers
