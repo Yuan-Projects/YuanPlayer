@@ -1,3 +1,10 @@
+## 1.3.0 (April 3, 2023)
+
+Note: This theme requires yuanplayer-core@1.5.0.
+
+- Add separate controls for video player
+- Add Closed Caption support
+
 ## 1.2.0 (March 21, 2023)
 
 - Add text tracks support
