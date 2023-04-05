@@ -4,17 +4,13 @@ import { test, expect } from '@playwright/test';
 
 test('click the first play/pause button', async ({ page }) => {
   await page.goto('https://yuan-projects.github.io/YuanPlayer/demo/index-test.html');
-  await expect(page).toHaveTitle(/YuanPlayer/);
-
-  //await page.goto('https://www.google.com/');
-  //await expect(page).toHaveTitle(/YuanPlayer/);
 
   // Select the audio tag by its selector
-  //const audioTag = await page.locator('//*[@id="blueMondayPlayerContainer1"]/div[1]/audio');
-  //const playPauseBtn = await page.getByRole('button', { name: 'play' }).nth(0);
+  const audioTag = await page.locator('//*[@id="blueMondayPlayerContainer1"]/div[1]/audio');
+  const playPauseBtn = await page.getByRole('button', { name: 'play' }).nth(0);
 
-  //await expect(audioTag).toBeTruthy();
-  //await expect(playPauseBtn).toBeTruthy();
+  await expect(audioTag).toBeTruthy();
+  await expect(playPauseBtn).toBeTruthy();
   /*
 
   // it should be paused at first
