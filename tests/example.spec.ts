@@ -3,8 +3,11 @@ import { test, expect } from '@playwright/test';
 // Theme: BlueMonday - audio
 
 test('click the first play/pause button', async ({ page }) => {
-  await page.goto('https://yuan-projects.github.io/YuanPlayer/demo/index-test.html');
+  //await page.goto('https://yuan-projects.github.io/YuanPlayer/demo/index-test.html');
 
+  //await expect(page).toHaveTitle(/YuanPlayer/);
+
+  await page.goto('https://www.google.com/');
   await expect(page).toHaveTitle(/YuanPlayer/);
 
   // Select the audio tag by its selector
