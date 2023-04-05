@@ -1,6 +1,7 @@
 YuanPlayer
 ==========
 
+[![Playwright Tests](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml/badge.svg?branch=master)](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml)
 [![npm](https://img.shields.io/npm/v/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
 [![](https://data.jsdelivr.com/v1/package/npm/yuanplayer-core/badge)](https://www.jsdelivr.com/package/npm/yuanplayer-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
