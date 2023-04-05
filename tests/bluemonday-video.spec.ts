@@ -81,3 +81,27 @@ test('BlueMonday-video: click the previous button', async ({ page }) => {
   // Expects the video file is playing
   await expect(isPlaying2).toBeTruthy();
 });
+
+test('BlueMonday-video: click the volume bar', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  //const nextBtn = await page.locator('//*[@id="yuan_container_b4545927-2009-42ab-bc31-769a2d12e526"]/div/div[1]/div[2]/div[2]/div');
+  const volumeBar = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-volume-bar');
+
+  let volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  const volumeWidth = await volumeBar.evaluate((node) => (node as HTMLElement).clientWidth);
+  await expect(volume).toBe(1);
+
+  // Click the next button.
+  await volumeBar.click({
+    position: {
+      x: volumeWidth / 2,
+      y: 0
+    }
+  });
+  volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  //await expect(volume).toBeCloseTo(0.5);
+  await expect(Math.abs(volume - 0.5) <= 0.1).toBeTruthy();
+});
