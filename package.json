@@ -13,6 +13,7 @@
     "buildcore": "rollup --no-strict --config rollup.config.core.js",
     "buildpf": "rollup --no-strict --config rollup.config.pinkflag.js",
     "buildbm": "rollup --no-strict --config rollup.config.bluemonday.js",
+    "buildandstart": "npm run build && npm run start",
     "watch": "rollup --config --watch",
     "start": "serve",
     "test": "npx playwright test",
