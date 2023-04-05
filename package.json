@@ -14,7 +14,10 @@
     "buildpf": "rollup --no-strict --config rollup.config.pinkflag.js",
     "buildbm": "rollup --no-strict --config rollup.config.blueMonday.js",
     "watch": "rollup --config --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "serve",
+    "test": "npx playwright test",
+    "testheaded": "npx playwright test --headed",
+    "showreport": "npx playwright show-report"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
   },
   "homepage": "https://github.com/Yuan-Projects/YuanPlayer#readme",
   "devDependencies": {
+    "@playwright/test": "^1.32.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "copyfiles": "^2.4.1",
     "node-sass": "^8.0.0",
@@ -45,6 +49,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1",
     "sass": "^1.58.0",
+    "serve": "^14.2.0",
     "typescript": "^4.9.5"
   },
   "dependencies": {

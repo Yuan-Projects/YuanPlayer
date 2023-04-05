@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>YuanPlayer</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!--
+    <h2>Theme 1: Yuan</h2>
+    <div style="display: flex; border: 1px solid black; padding: 3rem; gap: 1rem;">
+      <div id="listcontainer3" style="width: 400px; border: 1px solid black;"></div>
+      <div style="display: flex; flex-direction: column;">
+        <div id="playercontainer3" style="border: 2px solid black; width: 400px; padding: 2rem;"></div>
+        <div id="lyriccontainer3"></div>
+      </div>
+    </div>
+    
+
+    <h2>Theme: Use native controls</h2>
+    <div id="noThemeContainer"></div>
+    <hr />-->
+
+    <h2>Theme: BlueMonday - audio</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
+      <div id="blueMondayPlayerContainer1"></div>
+    </div>
+
+    <h2>Theme: BlueMonday - video</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
+      <div id="blueMondayPlayerContainer2"></div>
+    </div>
+
+    <h2>Theme: PinkFlag - audio</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
+      <div id="pinkFlagPlayerContainer1" style="border: 2px solid black; max-width: 500px; box-sizing: border-box;"></div>
+    </div>
+
+    <h2>Theme: PinkFlag - video</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;">
+      <div id="pinkFlagPlayerContainer2" style="border: 2px solid black; max-width: 500px; box-sizing: border-box;"></div>
+    </div>
+
+    <h2>Theme: PinkFlag - radio</h2>
+    <div style="border: 1px solid black; padding: 3rem; gap: 3rem;" id="radiocontainer">
+      <div id="radioContainer1"></div>
+    </div>
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0-beta.2/dist/hls.js"></script>
+    -->
+    <script src="../lib/umd/YuanPlayer.js"></script>
+    <script src="../lib/umd/YuanPlayerThemeBlueMonday.js"></script>
+    <script src="../lib/umd/YuanPlayerThemePinkFlag.js"></script>
+    
+    <script src="playlist.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
