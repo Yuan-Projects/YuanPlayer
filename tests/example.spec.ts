@@ -9,10 +9,6 @@ test('click the first play/pause button', async ({ page }) => {
   const audioTag = await page.locator('//*[@id="blueMondayPlayerContainer1"]/div[1]/audio');
   const playPauseBtn = await page.getByRole('button', { name: 'play' }).nth(0);
 
-  await expect(audioTag).toBeTruthy();
-  await expect(playPauseBtn).toBeTruthy();
-  /*
-
   // it should be paused at first
   const isPlaying1 = await audioTag.evaluate((node) => !(node as HTMLMediaElement).paused);
   await expect(isPlaying1).toBeFalsy();
@@ -29,7 +25,6 @@ test('click the first play/pause button', async ({ page }) => {
   // it should be paused after the pause button clicked
   const isPlaying3 = await audioTag.evaluate((node) => !(node as HTMLMediaElement).paused);
   await expect(isPlaying3).toBeFalsy();
-  */
 });
 /*
 // Theme: BlueMonday - video
