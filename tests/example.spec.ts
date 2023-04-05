@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Theme: BlueMonday - audio
-/*
+
 test('click the first play/pause button', async ({ page }) => {
   await page.goto('https://yuan-projects.github.io/YuanPlayer/demo/index-test.html');
 
@@ -26,7 +26,7 @@ test('click the first play/pause button', async ({ page }) => {
   const isPlaying3 = await audioTag.evaluate((node) => !(node as HTMLMediaElement).paused);
   await expect(isPlaying3).toBeFalsy();
 });
-
+/*
 // Theme: BlueMonday - video
 test('click the second play/pause button', async ({ page }) => {
   await page.goto('https://yuan-projects.github.io/YuanPlayer/demo/index-test.html');
@@ -54,9 +54,11 @@ test('click the second play/pause button', async ({ page }) => {
 });
 */
 
+/*
 test('has title', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/Playwright/);
 });
+*/
