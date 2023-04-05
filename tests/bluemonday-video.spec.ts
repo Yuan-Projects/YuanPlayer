@@ -51,14 +51,33 @@ test('BlueMonday-video: click the next button', async ({ page }) => {
 
   const videoSrc1 = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
   await expect(videoSrc1).toBe(videoList[1].src[0]);
-/*
+});
 
-  const isPlaying3 = await mediaTag.evaluate((node) => !(node as HTMLMediaElement).paused);
-  await expect(isPlaying3).toBeTruthy();
+test('BlueMonday-video: click the previous button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
 
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const nextBtn = await page.getByRole('button', { name: 'next' }).nth(1);
+  const previousBtn = await page.getByRole('button', { name: 'previous' }).nth(1);
+
+  // it should be paused at first
+  const isPlaying1 = await mediaTag.evaluate((node) => !(node as HTMLMediaElement).paused);
+  await expect(isPlaying1).toBeFalsy();
+  let videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[0].src[0]);
+
+  // Click the next button.
   await nextBtn.click();
-  // it should be paused after the pause button clicked
-  const isPlaying4 = await mediaTag.evaluate((node) => !(node as HTMLMediaElement).paused);
-  await expect(isPlaying4).toBeFalsy();
-  */
+  videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[1].src[0]);
+
+  await previousBtn.click();
+  videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[0].src[0]);
+
+  // Check if the video is playing using `evaluate`
+  const isPlaying2 = await mediaTag.evaluate((node) => !(node as HTMLMediaElement).paused);
+  // Expects the video file is playing
+  await expect(isPlaying2).toBeTruthy();
 });
