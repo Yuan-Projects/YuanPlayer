@@ -71,17 +71,17 @@ window.videolist = [
     src: ['http://www.jplayer.org/video/m4v/Incredibles_Teaser.m4v', 'http://www.jplayer.org/video/ogv/Incredibles_Teaser.ogv', 'http://www.jplayer.org/video/webm/Incredibles_Teaser.webm']
   },
   {
+    title: 'ABC News Live',
+    artist: 'ABC News',
+    isVideo: true,
+    src: 'https://abc-iview-mediapackagestreams-2.akamaized.net/out/v1/6e1cc6d25ec0480ea099a5399d73bc4b/index.m3u8',
+  },
+  {
     title: 'Big Buck Bunny Trailer',
     artist: 'Blender Foundation',
     poster: 'http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png',
     isVideo: true,
     src: ['http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v', 'http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv', 'http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm']
-  },
-  {
-    title: 'ABC News Live',
-    artist: 'ABC News',
-    isVideo: true,
-    src: 'https://abc-iview-mediapackagestreams-2.akamaized.net/out/v1/6e1cc6d25ec0480ea099a5399d73bc4b/index.m3u8',
   }
 ];
 

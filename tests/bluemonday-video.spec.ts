@@ -94,7 +94,6 @@ test('BlueMonday-video: click the volume bar', async ({ page }) => {
   const volumeWidth = await volumeBar.evaluate((node) => (node as HTMLElement).clientWidth);
   await expect(volume).toBe(1);
 
-  // Click the next button.
   await volumeBar.click({
     position: {
       x: volumeWidth / 2,
@@ -120,4 +119,108 @@ test('BlueMonday-video: click the mute button', async ({ page }) => {
   await expect(volume).toBe(1);
   const muted = await mediaTag.evaluate((node) => (node as HTMLMediaElement).muted);
   await expect(muted).toBeTruthy();
+});
+
+test('BlueMonday-video: click the volume max button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const maxBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-volume-max');
+
+  let volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  await expect(volume).toBe(1);
+  const muted = await mediaTag.evaluate((node) => (node as HTMLMediaElement).muted);
+  await expect(muted).toBeFalsy();
+
+  // Click the button.
+  await maxBtn.click();
+
+  volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  await expect(volume).toBe(1);
+
+  const volumeBar = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-volume-bar');
+  const volumeWidth = await volumeBar.evaluate((node) => (node as HTMLElement).clientWidth);
+  await volumeBar.click({
+    position: {
+      x: volumeWidth / 2,
+      y: 1
+    }
+  });
+  volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  await expect(volume).not.toBe(1);
+
+  await maxBtn.click();
+  volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  await expect(volume).toBe(1);
+});
+
+test('BlueMonday-video: click the repeat button once', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const repeatBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-repeat');
+
+  // Click the button.
+  await repeatBtn.click();
+
+  const hasRepeatOneClass = await repeatBtn.evaluate((node) => (node as HTMLElement).classList.contains('yuan-repeat-one'));
+  const mediaSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(mediaSrc).toBe(videoList[0].src[0]);
+  await expect(hasRepeatOneClass).toBeTruthy();
+  
+  await mediaTag.dispatchEvent('ended');
+  await expect(await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc)).toBe(videoList[0].src[0]);
+  await expect(await repeatBtn.evaluate((node) => (node as HTMLElement).classList.contains('yuan-repeat-one'))).toBeTruthy();
+});
+
+test('BlueMonday-video: click the repeat button 2 times', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const repeatBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-repeat');
+
+  //const lastRemoveBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-playlist-item:nth-child(5)');
+  //await lastRemoveBtn.click();
+  const lastItem = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-playlist-item:nth-child(5)');
+
+  // Click the button.
+  await repeatBtn.click();
+  await repeatBtn.click();
+
+  const hasRepeatOneClass = await repeatBtn.evaluate((node) => (node as HTMLElement).classList.contains('yuan-repeat-one'));
+  const mediaSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(mediaSrc).toBe(videoList[0].src[0]);
+  await expect(hasRepeatOneClass).toBeFalsy();
+
+  await lastItem.click();
+  await mediaTag.dispatchEvent('ended');
+  await expect(await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc)).toBe(videoList[0].src[0]);
+});
+
+test('BlueMonday-video: click the repeat button 3 times', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const repeatBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-repeat');
+
+  const lastItem = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-playlist-item:nth-child(5)');
+
+  // Click the button.
+  await repeatBtn.click();
+  await repeatBtn.click();
+  await repeatBtn.click();
+
+  const hasRepeatOneClass = await repeatBtn.evaluate((node) => (node as HTMLElement).classList.contains('yuan-repeat-one'));
+  const mediaSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(mediaSrc).toBe(videoList[0].src[0]);
+  await expect(hasRepeatOneClass).toBeFalsy();
+
+  await lastItem.click();
+  await expect(await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc)).toBe(videoList[4].src[0]);
+  await mediaTag.dispatchEvent('ended');
+  await expect(await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc)).toBe(videoList[4].src[0]);
 });
