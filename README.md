@@ -1,13 +1,13 @@
 YuanPlayer
 ==========
 
-[![Playwright Tests](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml/badge.svg?branch=master)](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml)
-[![npm](https://img.shields.io/npm/v/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
+[![npm](https://img.shields.io/npm/v/yuanplayer-core.svg)](https://www.npmjs.com/package/yuanplayer-core)
+[![npm](https://img.shields.io/npm/dt/yuanplayer-core.svg)](https://www.npmjs.com/package/yuanplayer-core)
 [![](https://data.jsdelivr.com/v1/package/npm/yuanplayer-core/badge)](https://www.jsdelivr.com/package/npm/yuanplayer-core)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
-[![npm](https://img.shields.io/npm/dt/yuanplayer-core.svg?style=flat-square)](https://www.npmjs.com/package/yuanplayer-core)
+[![](https://img.shields.io/bundlephobia/min/yuanplayer-core/latest)](https://www.npmjs.com/package/yuanplayer-core)
 [![CodeFactor](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer/badge)](https://www.codefactor.io/repository/github/yuan-projects/yuanplayer)
-[![yuanplayer-core](https://snyk.io/advisor/npm-package/yuanplayer-core/badge.svg)](https://snyk.io/advisor/npm-package/yuanplayer-core)
+[![Playwright Tests](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml/badge.svg?branch=master)](https://github.com/Yuan-Projects/YuanPlayer/actions/workflows/playwright.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Yuan-Projects/YuanPlayer/blob/master/LICENSE.md)
 
 YuanPlayer is a simple, customisable media player for HTML5 video and audio.
 
