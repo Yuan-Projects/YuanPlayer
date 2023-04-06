@@ -224,3 +224,78 @@ test('BlueMonday-video: click the repeat button 3 times', async ({ page }) => {
   await mediaTag.dispatchEvent('ended');
   await expect(await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc)).toBe(videoList[4].src[0]);
 });
+
+test('BlueMonday-video: click the shuffle button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const shuffleBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-shuffle');
+  const listItems = await page.locator('#blueMondayPlayerContainer2 .yuan-playlist-item');
+
+  await expect(shuffleBtn).toBeTruthy();
+  await expect(listItems).toHaveCount(5);
+  await expect(await listItems.nth(0)).toContainText(videoList[0].title);
+  await shuffleBtn.click();
+  await shuffleBtn.click();
+  await expect(await listItems.nth(0)).toContainText(videoList[0].title);
+});
+
+test('BlueMonday-video: click the fullscreen button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const fullscreenBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-full-screen');
+  
+  const outerHTML = await fullscreenBtn.evaluate((node) => node.outerHTML);
+  console.log('fullscreenBtn:', outerHTML)
+  const isBtnVisible = await (await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-full-screen')).isVisible();
+  const listItems = await page.locator('#blueMondayPlayerContainer2 .yuanplayer-bluemonday-playlist');
+
+  await expect(fullscreenBtn).toBeTruthy();
+  await expect(listItems).toBeVisible();
+  expect(isBtnVisible).toBeTruthy();
+  /* Fullscreen API is not supported by Playwright now, it may works on some browsers though*/
+  /*
+  if (isBtnVisible) {
+    await fullscreenBtn.click();
+    await expect(listItems).toBeHidden();
+
+    await fullscreenBtn.click();
+    await expect(listItems).toBeVisible();
+  }
+  */
+});
+
+test('BlueMonday-video: click the second track', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const secondItem = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-playlist-item:nth-child(2)');
+
+  let videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[0].src[0]);
+
+  await secondItem.click();
+
+  videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[1].src[0]);
+});
+
+test('BlueMonday-video: click the remove button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const firstRemoveBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-playlist-item:nth-child(1) .yuan-playlist-item-remove');
+
+  let videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[0].src[0]);
+
+  await firstRemoveBtn.click();
+
+  videoSrc = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
+  await expect(videoSrc).toBe(videoList[1].src[0]);
+});
