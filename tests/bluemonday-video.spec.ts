@@ -98,10 +98,26 @@ test('BlueMonday-video: click the volume bar', async ({ page }) => {
   await volumeBar.click({
     position: {
       x: volumeWidth / 2,
-      y: 0
+      y: 1
     }
   });
   volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
   //await expect(volume).toBeCloseTo(0.5);
   await expect(Math.abs(volume - 0.5) <= 0.1).toBeTruthy();
+});
+
+test('BlueMonday-video: click the mute button', async ({ page }) => {
+  await page.goto('./demo/index-test.html');
+
+  // Select the video tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
+  const muteBtn = await page.waitForSelector('#blueMondayPlayerContainer2 .yuan-mute');
+
+  // Click the mute button.
+  await muteBtn.click();
+
+  let volume = await mediaTag.evaluate((node) => (node as HTMLMediaElement).volume);
+  await expect(volume).toBe(1);
+  const muted = await mediaTag.evaluate((node) => (node as HTMLMediaElement).muted);
+  await expect(muted).toBeTruthy();
 });

@@ -72,7 +72,7 @@ const config = {
     command: 'npm run buildandstart',
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
   },
   timeout: 120000,
 };
