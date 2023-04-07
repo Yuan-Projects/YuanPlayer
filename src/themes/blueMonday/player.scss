@@ -103,6 +103,9 @@
         background-position: 0 0;
       }
     }
+    .yuan-high-quality {
+      background: url(images/high_quality.svg) 0 0 no-repeat;
+    }
     .yuan-mute {
       background: url(images/volume_down.svg) 0 0 no-repeat;
       &:focus {
@@ -680,7 +683,8 @@
   }
 }
 
-.cclist {
+.cclist,
+.qltlist {
   ul {
     list-style: none;
     padding: 5px;

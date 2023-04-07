@@ -14,6 +14,10 @@ import './player.scss';
 function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {
+      options.cssSelector = {
+        closedCaptionList: '.cclist',
+        qualityList: '.qltlist'
+      }
       options.useStateClassSkin = true;
       options.stateClass = {
         seeking: 'yuan-seeking-bg'
@@ -27,15 +31,23 @@ function getClass(Base) {
       const mediaType = this.mediaElement.tagName.toLowerCase();
       const div = this.container.querySelector(this.cssSelectorAncestor);
       const con = div.querySelector(`.yuan-${mediaType}`);
-      if (con) return;
-      div.innerHTML = this.mediaElement.tagName === 'AUDIO' ? playerTpl() : playerVideoTpl();
-      this.updateVolume();
-      this.updateFullScreenButton();
-      // If current browser support flex wrapping, use flexbox layout
-      // Some old browsers does not support this feature, such as Android 4.2 default browsers
-      if (document.createElement("p").style.flexWrap === '') {
-        div.querySelector('.yuan-interface')?.classList.add('flexbox');
+      if (!con) {
+        div.innerHTML = this.mediaElement.tagName === 'AUDIO' ? playerTpl() : playerVideoTpl();
+        this.updateVolume();
+        this.updateFullScreenButton();
+        // If current browser support flex wrapping, use flexbox layout
+        // Some old browsers does not support this feature, such as Android 4.2 default browsers
+        if (document.createElement("p").style.flexWrap === '') {
+          div.querySelector('.yuan-interface')?.classList.add('flexbox');
+        }
       }
+
+      // clear closed caption list
+      const cclist = div.querySelector('.cclist') as HTMLDivElement;
+      cclist.innerHTML = '';
+      // clear quality list
+      const qltlist = div.querySelector('.qltlist') as HTMLDivElement;
+      qltlist.innerHTML = '';
     }
   
     protected onReady() {
@@ -60,21 +72,23 @@ function getClass(Base) {
         div.querySelector('.yuan-interface')?.classList.add('flexbox');
       }
 
-      this.addEventListener(div, 'click', (e) => {
+      this.addEventListener(div, 'click', (e: MouseEvent) => {
         const div = this.container.querySelector(this.cssSelectorAncestor);
         const target = e.target as HTMLElement;
-        if (target.tagName === 'INPUT') {
-          const value = (target as HTMLInputElement).value;
+        const ccDomList = target.querySelectorAll('input[name="cc"]');
+        const qltyDomList = target.querySelectorAll('input[name="quality"]');
+        if (ccDomList.length === 1) {
+          const value = (ccDomList[0] as HTMLInputElement).value;
           this.setActiveCC(value);
-          const cclist = div.querySelector('.cclist') as HTMLDivElement;
-          cclist.innerHTML = '';
           this.updateCCButton();
-        } else if (this.isMatchedWithSelector(target, '.yuan-closed-caption')) {
-          this.showList();
+        } else if (qltyDomList.length === 1) {
+          const value = (qltyDomList[0] as HTMLInputElement).value;
+          this.setHLSQuality(Number(value));
+          this.updateQualityButton();
         }
       });
     }
-    showList() {
+    onShowClosedCaptionList() {
       var list = this.getCCList();
       var ul = document.createElement('ul');
       list.forEach(function(item) {
@@ -93,6 +107,27 @@ function getClass(Base) {
       const cclist = this.container.querySelector('.cclist') as HTMLDivElement;
       cclist.innerHTML = "";
       cclist.appendChild(ul);
+    }
+    onShowQualityList() {
+      var list = this.getQualityList();
+      var ul = document.createElement('ul');
+      list.forEach(function(item, index) {
+        var li = document.createElement('li');
+        var label = document.createElement('label');
+        label.textContent = item.label;
+        var radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'quality';
+        radio.value = index;
+        radio.checked = item.checked;
+        label.appendChild(radio);
+        li.appendChild(label);
+        ul.appendChild(li);
+      });
+      const qltlist = this.container.querySelector('.qltlist') as HTMLDivElement;
+      qltlist.innerHTML = "";
+      qltlist.appendChild(ul);
+      this.showGUIControls();
     }
   }
 }
