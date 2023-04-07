@@ -24,7 +24,9 @@ export interface CSSSelector {
   noSolution?: string
   shuffle?: string
   closedCaption?: string
+  closedCaptionList?: string
   quality?: string
+  qualityList?: string
 }
 
 export interface PlayerStateClass{

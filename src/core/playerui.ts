@@ -30,7 +30,9 @@ export default abstract class PlayerUI extends Player {
     repeatOff: ".yuan-repeat-off",
     gui: ".yuan-gui",
     closedCaption: ".yuan-closed-caption",
+    closedCaptionList: ".yuan-closed-caption-list",
     quality: ".yuan-high-quality",
+    qualityList: ".yuan-high-quality-list",
     noSolution: ".yuan-no-solution"
   };
   protected stateClass: PlayerStateClass = {
@@ -93,6 +95,8 @@ export default abstract class PlayerUI extends Player {
     }
   }
   protected abstract onReady();
+  protected abstract onShowQualityList();
+  protected abstract onShowClosedCaptionList();
   /**
    * Add event listeners for current <audio> or <video> element.
    */
@@ -272,6 +276,7 @@ export default abstract class PlayerUI extends Player {
     };
     const videoAttrs: any =  {
       ...attrs,
+      playsinline: true,
       style: "width: 100%; display: block;"
     };
     if (this.media?.poster) {
@@ -570,6 +575,26 @@ export default abstract class PlayerUI extends Player {
         const perc = (e as MouseEvent).offsetX / parseFloat(getComputedStyle(seekSlider).width);
         this.playHead(perc);
       }
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.quality)) {
+      this.onShowQualityList();
+      this.showGUIControls();
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.closedCaption)) {
+      this.onShowClosedCaptionList();
+      this.showGUIControls();
+    } else {
+      if (this.cssSelector.closedCaptionList) {
+        const element = domElement.querySelector(this.cssSelector.closedCaptionList) as HTMLElement;
+        if (element) {
+          element.innerHTML = '';
+        }
+      }
+      if (this.cssSelector.qualityList) {
+        const element = domElement.querySelector(this.cssSelector.qualityList) as HTMLElement;
+        if (element) {
+          element.innerHTML = '';
+        }
+      }
+      this.hideGUIControls();
     }
   }
   private fullscreenchangeFn = () => {
@@ -648,7 +673,12 @@ export default abstract class PlayerUI extends Player {
   protected showGUIControls = () => {
     showMouseCursor(this.cursorTimer);
     clearTimeout(this.debouncedHide.timer());
-  };
+  }
+  protected hideGUIControls = () => {
+    if (this.isPlaying()) {
+      this.debouncedHide();
+    }
+  }
   private hideCssAncestor = () => {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
