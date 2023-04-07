@@ -389,3 +389,16 @@ export function hideMouseCursor() {
     document.body.style.cursor = 'none';
   }
 }
+export function getVideoLevel(resolution: string): string {
+  if (!resolution) return '';
+  const matches = resolution.match(/([0-9]+)x([0-9]+)/);
+  if (!matches) return '';
+  const height = matches[2];
+  const heights = [2160, 1080, 720, 480, 360, 240];
+  for (let item of heights) {
+    if (height >= item) {
+      return String(item);
+    }
+  }
+  return '';
+}

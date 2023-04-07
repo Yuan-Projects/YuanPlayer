@@ -1,5 +1,5 @@
 import Player from "./player";
-import { showMouseCursor, hideMouseCursor, setActiveCC, getCCList, createTrackElement, isArray, contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
+import { getVideoLevel, showMouseCursor, hideMouseCursor, setActiveCC, getCCList, createTrackElement, isArray, contains, makeLandscape, unlockScreenOrientation, includes, isHtml5AudioSupported, isHtml5VideoSupported, isHLSJSSupported, isHLSNativelySupported, getMediaMimeType, createElement, formatTime, debounce, getFullScreenElement, matches, trunc, uuidv4, isFullScreen, isFullScreenEnabled, exitFullscreen, requestFullscreen } from './utils';
 import type { CSSSelector, PlayerStateClass, MediaItem, YuanPlayerOptions } from "./player.d";
 declare var Hls;
 
@@ -30,6 +30,7 @@ export default abstract class PlayerUI extends Player {
     repeatOff: ".yuan-repeat-off",
     gui: ".yuan-gui",
     closedCaption: ".yuan-closed-caption",
+    quality: ".yuan-high-quality",
     noSolution: ".yuan-no-solution"
   };
   protected stateClass: PlayerStateClass = {
@@ -247,6 +248,7 @@ export default abstract class PlayerUI extends Player {
   private processSrc(src: string): string {
     const fileExtension = src.split('.').pop();
     if (fileExtension === 'm3u8' && !isHLSNativelySupported()) {
+    //if (fileExtension === 'm3u8') {
       if (isHLSJSSupported()) {
         const hlsInstance = new Hls();
         hlsInstance.loadSource(src);
@@ -412,6 +414,7 @@ export default abstract class PlayerUI extends Player {
       this.updateLoopState();
       setTimeout(() => {
         this.updateCCButton();
+        this.updateQualityButton();
       });
     });
     this.on('error', () => {
@@ -642,6 +645,10 @@ export default abstract class PlayerUI extends Player {
     showMouseCursor(this.cursorTimer);
     clearTimeout(this.debouncedHide.timer());
   }
+  protected showGUIControls = () => {
+    showMouseCursor(this.cursorTimer);
+    clearTimeout(this.debouncedHide.timer());
+  };
   private hideCssAncestor = () => {
     const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
     if (!domElement) return false;
@@ -668,6 +675,7 @@ export default abstract class PlayerUI extends Player {
     this.updateVolume();
     this.updateLoopState();
     this.updateCCButton();
+    this.updateQualityButton();
   }
   private orientationChangeFn = (e) => {
     if (this.isVideo(this.media) === false) return;
@@ -816,5 +824,36 @@ export default abstract class PlayerUI extends Player {
         }
       }
     }
+  }
+  protected updateQualityButton() {
+    if (!this.cssSelector.quality) return;
+    const element = this.container.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector.quality) as HTMLElement;
+    if (!element) return;
+    if (!this.mediaElement || this.mediaElement?.tagName !== "VIDEO") {
+      element.style.display = 'none';
+    } else {
+      element.style.display = 'inline-block';
+    }
+  }
+  protected setHLSQuality(value: number = -1) {
+    if (!this.hlsInstance) return false;
+    this.hlsInstance.currentLevel = value;
+  }
+  protected getQualityList() {
+    const list: any = [];
+    if (this.hlsInstance?.levels) {
+      this.hlsInstance?.levels.forEach((level, index) => {
+        list.push({
+          label: `${level.name || getVideoLevel(isArray(level._attrs) ? level._attrs[0]?.RESOLUTION : '')}P`,
+          checked: index === this.hlsInstance.currentLevel
+        });
+      });
+    } else {
+      list.push({
+        label: 'Auto',
+        checked: true
+      });
+    }
+    return list;
   }
 }
