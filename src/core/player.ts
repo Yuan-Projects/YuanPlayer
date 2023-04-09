@@ -164,6 +164,10 @@ class Player extends Emitter {
     if (!this.mediaElement) return;
     this.mediaElement.volume = (ratio >= 1.0) ? 1.0 : ratio;
   }
+  public setPlaybackRate(rate: number) {
+    if (!this.mediaElement) return;
+    this.mediaElement.playbackRate = rate;
+  }
   /**
    * This method is used to clear the media and stop playback.
    * If a media file is downloading at the time, the download will be cancelled.

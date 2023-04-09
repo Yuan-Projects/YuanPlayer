@@ -33,6 +33,8 @@ export default abstract class PlayerUI extends Player {
     closedCaptionList: ".yuan-closed-caption-list",
     quality: ".yuan-high-quality",
     qualityList: ".yuan-high-quality-list",
+    playrate: ".yuan-playrate",
+    playrateList: ".yuan-playrate-list",
     noSolution: ".yuan-no-solution"
   };
   protected stateClass: PlayerStateClass = {
@@ -49,12 +51,16 @@ export default abstract class PlayerUI extends Player {
   private debouncedHide;
   private hlsInstance;
   private cursorTimer;
+  protected playbackRates = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2];
   constructor(options: YuanPlayerOptions) {
     super(options);
     // If no valid container exists, we do nothing.
     if(this.container) {
       this.cssSelectorAncestor = options.cssSelectorAncestor || `#yuan_container_${uuidv4()}`;
       this.useStateClassSkin = !!options.useStateClassSkin;
+      if (options.playbackRates) {
+        this.playbackRates = options.playbackRates;
+      }
       this.cssSelector = {
         ...this.cssSelector,
         ...options.cssSelector
@@ -97,6 +103,7 @@ export default abstract class PlayerUI extends Player {
   protected abstract onReady();
   protected abstract onShowQualityList();
   protected abstract onShowClosedCaptionList();
+  protected abstract onShowPlayrateList();
   /**
    * Add event listeners for current <audio> or <video> element.
    */
@@ -420,6 +427,7 @@ export default abstract class PlayerUI extends Player {
       setTimeout(() => {
         this.updateCCButton();
         this.updateQualityButton();
+        this.updatePlaybackRateButton();
       });
     });
     this.on('error', () => {
@@ -581,6 +589,9 @@ export default abstract class PlayerUI extends Player {
     } else if (this.isMatchedWithSelector(target, this.cssSelector.closedCaption)) {
       this.onShowClosedCaptionList();
       this.showGUIControls();
+    } else if (this.isMatchedWithSelector(target, this.cssSelector.playrate)) {
+      this.onShowPlayrateList();
+      this.showGUIControls();
     } else {
       if (this.cssSelector.closedCaptionList) {
         const element = domElement.querySelector(this.cssSelector.closedCaptionList) as HTMLElement;
@@ -590,6 +601,12 @@ export default abstract class PlayerUI extends Player {
       }
       if (this.cssSelector.qualityList) {
         const element = domElement.querySelector(this.cssSelector.qualityList) as HTMLElement;
+        if (element) {
+          element.innerHTML = '';
+        }
+      }
+      if (this.cssSelector.playrateList) {
+        const element = domElement.querySelector(this.cssSelector.playrateList) as HTMLElement;
         if (element) {
           element.innerHTML = '';
         }
@@ -706,6 +723,7 @@ export default abstract class PlayerUI extends Player {
     this.updateLoopState();
     this.updateCCButton();
     this.updateQualityButton();
+    this.updatePlaybackRateButton();
   }
   private orientationChangeFn = (e) => {
     if (this.isVideo(this.media) === false) return;
@@ -865,6 +883,16 @@ export default abstract class PlayerUI extends Player {
       element.style.display = 'inline-block';
     }
   }
+  protected updatePlaybackRateButton() {
+    if (!this.cssSelector.playrate) return;
+    const element = this.container.querySelector(this.cssSelectorAncestor + ' ' + this.cssSelector.playrate) as HTMLElement;
+    if (!element) return;
+    if (!this.mediaElement || this.mediaElement?.tagName !== "VIDEO") {
+      element.style.display = 'none';
+    } else {
+      element.style.display = 'inline-block';
+    }
+  }
   protected setHLSQuality(value: number = -1) {
     if (!this.hlsInstance) return false;
     this.hlsInstance.currentLevel = value;
@@ -885,5 +913,8 @@ export default abstract class PlayerUI extends Player {
       });
     }
     return list;
+  }
+  protected getPlayrateList() {
+    return this.playbackRates;
   }
 }

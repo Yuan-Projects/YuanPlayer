@@ -27,6 +27,8 @@ export interface CSSSelector {
   closedCaptionList?: string
   quality?: string
   qualityList?: string
+  playrate?: string
+  playrateList?: string
 }
 
 export interface PlayerStateClass{
@@ -58,4 +60,5 @@ export interface YuanPlayerOptions {
   cssSelectorAncestor?: string
   cssSelector?: CSSSelector
   stateClass?: PlayerStateClass
+  playbackRates?: number[]
 }
