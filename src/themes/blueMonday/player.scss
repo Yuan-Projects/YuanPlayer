@@ -68,7 +68,7 @@
     }
 
     .yuan-volume-bar {
-      margin-top: 9px;
+      margin-top: 11px;
     }
 
     .yuan-toggles {
@@ -106,35 +106,38 @@
     .yuan-high-quality {
       background: url(images/high_quality.svg) 0 0 no-repeat;
     }
+    .yuan-playrate {
+      background: url(images/slow_motion_video.svg) 0 0 no-repeat;
+    }
     .yuan-mute {
-      background: url(images/volume_down.svg) 0 0 no-repeat;
+      background: url(images/volume_down.svg) 0 2px no-repeat;
       &:focus {
-        background-position: 0 0;
+        background-position: 0 2px;
       }
     }
     .yuan-volume-max {
-      background: url(images/volume_up.svg) 0 0 no-repeat;
+      background: url(images/volume_up.svg) 0 2px no-repeat;
       &:focus {
-        background-position: 0 0;
+        background-position: 0 2px;
       }
     }
     .yuan-play {
-      background: url(images/play_arrow.svg) 0 0 no-repeat;
+      background: url(images/play_arrow.svg) 0 2px no-repeat;
 
       &:focus {
-        background-position: 0 0;
+        background-position: 0 2px;
       }
     }
     .yuan-previous {
-      background: url(images/skip_previous.svg) 0 0 no-repeat;
+      background: url(images/skip_previous.svg) 0 2px no-repeat;
       &:focus {
-        background-position: 0 0;
+        background-position: 0 2px;
       }
     }
     .yuan-next {
-      background: url(images/skip_next.svg) 0 0 no-repeat;
+      background: url(images/skip_next.svg) 0 2px no-repeat;
       &:focus {
-        background-position: 0 0;
+        background-position: 0 2px;
       }
     }
     .yuan-current-time,
@@ -147,18 +150,22 @@
     .yuan-video {
       .yuan-play {
         background-image: url(images/pause.svg);
-        background-position: 0 0;
+        
+        background-position: 0 2px;
   
         &:focus {
-          background-position: 0 0;
+          background-position: 0 2px;
         }
       }
+
+      /*
       .yuan-previous {
         background: url(images/skip_previous.svg) 0 0 no-repeat;
         &:focus {
           background-position: 0 0;
         }
       }
+      */
     }
   }
 
@@ -271,6 +278,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    flex-shrink: 0;
   }
   
   .yuan-controls button {
@@ -437,10 +445,10 @@
     .yuan-video {
       .yuan-mute {
         background-image: url(images/volume_off.svg);
-        background-position: 0 0;
+        background-position: 0 2px;
   
         &:focus {
-          background-position: 0 0;
+          background-position: 0 2px;
         }
       }
     }
@@ -489,7 +497,9 @@
     display: inline;
     text-align: right;
     cursor: pointer;
+    /*
     margin-left: 1rem;
+    */
   }
   
   /* @end */
@@ -506,6 +516,8 @@
   /* @group TOGGLES */
   /* The audio toggles are nested inside jp-time-holder */
   .yuan-toggles {
+    height: 28px;
+    flex-shrink: 0;
     padding: 0;
     margin: 0 auto;
     /*
@@ -645,10 +657,14 @@
     }
 
     .yuan-current-time {
+      /*
       width: 50px;
+      */
     }
     .yuan-duration {
+      /*
       width: 40px;
+      */
     }
 
     .yuan-volume-max {
@@ -684,7 +700,9 @@
 }
 
 .cclist,
-.qltlist {
+.qltlist,
+.speedlist {
+  z-index: 1;
   ul {
     list-style: none;
     padding: 5px;

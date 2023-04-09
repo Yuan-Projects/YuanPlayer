@@ -14,9 +14,11 @@ import './player.scss';
 function getClass(Base) {
   return class YuanPlayer extends Base {
     constructor(options: YuanPlayerOptions) {
+      options.playbackRates = [0.5, 1.0, 2];
       options.cssSelector = {
         closedCaptionList: '.cclist',
-        qualityList: '.qltlist'
+        qualityList: '.qltlist',
+        playrateList: ".speedlist"
       }
       options.useStateClassSkin = true;
       options.stateClass = {
@@ -48,6 +50,8 @@ function getClass(Base) {
       // clear quality list
       const qltlist = div.querySelector('.qltlist') as HTMLDivElement;
       qltlist.innerHTML = '';
+      const speedlist = div.querySelector('.speedlist') as HTMLDivElement;
+      speedlist.innerHTML = '';
     }
   
     protected onReady() {
@@ -73,10 +77,10 @@ function getClass(Base) {
       }
 
       this.addEventListener(div, 'click', (e: MouseEvent) => {
-        const div = this.container.querySelector(this.cssSelectorAncestor);
         const target = e.target as HTMLElement;
         const ccDomList = target.querySelectorAll('input[name="cc"]');
         const qltyDomList = target.querySelectorAll('input[name="quality"]');
+        const rateDomList = target.querySelectorAll('input[name="speed"]');
         if (ccDomList.length === 1) {
           const value = (ccDomList[0] as HTMLInputElement).value;
           this.setActiveCC(value);
@@ -85,6 +89,10 @@ function getClass(Base) {
           const value = (qltyDomList[0] as HTMLInputElement).value;
           this.setHLSQuality(Number(value));
           this.updateQualityButton();
+        } else if (rateDomList.length === 1) {
+          const value = (rateDomList[0] as HTMLInputElement).value;
+          this.setPlaybackRate(Number(value));
+          this.updatePlaybackRateButton();
         }
       });
     }
@@ -127,6 +135,27 @@ function getClass(Base) {
       const qltlist = this.container.querySelector('.qltlist') as HTMLDivElement;
       qltlist.innerHTML = "";
       qltlist.appendChild(ul);
+      this.showGUIControls();
+    }
+    onShowPlayrateList() {
+      var list = this.getPlayrateList();
+      var ul = document.createElement('ul');
+      list.forEach((item) => {
+        var li = document.createElement('li');
+        var label = document.createElement('label');
+        label.textContent = item == 1 ? 'Normal' : item;
+        var radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'speed';
+        radio.value = item;
+        radio.checked = item === this.mediaElement.playbackRate;
+        label.appendChild(radio);
+        li.appendChild(label);
+        ul.appendChild(li);
+      });
+      const speedlist = this.container.querySelector('.speedlist') as HTMLDivElement;
+      speedlist.innerHTML = "";
+      speedlist.appendChild(ul);
       this.showGUIControls();
     }
   }
