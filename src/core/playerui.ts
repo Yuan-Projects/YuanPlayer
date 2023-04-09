@@ -184,6 +184,7 @@ export default abstract class PlayerUI extends Player {
     const target = e.target;
     if (target.tagName !== 'VIDEO') return false;
     this.togglePlay();
+    this.hideGUIPopups();
     if (this.isPlaying() === false) {
       // show the controls and will not hide them automatically
       const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
@@ -584,33 +585,19 @@ export default abstract class PlayerUI extends Player {
         this.playHead(perc);
       }
     } else if (this.isMatchedWithSelector(target, this.cssSelector.quality)) {
+      this.hideGUIPopups();
       this.onShowQualityList();
       this.showGUIControls();
     } else if (this.isMatchedWithSelector(target, this.cssSelector.closedCaption)) {
+      this.hideGUIPopups();
       this.onShowClosedCaptionList();
       this.showGUIControls();
     } else if (this.isMatchedWithSelector(target, this.cssSelector.playrate)) {
+      this.hideGUIPopups();
       this.onShowPlayrateList();
       this.showGUIControls();
     } else {
-      if (this.cssSelector.closedCaptionList) {
-        const element = domElement.querySelector(this.cssSelector.closedCaptionList) as HTMLElement;
-        if (element) {
-          element.innerHTML = '';
-        }
-      }
-      if (this.cssSelector.qualityList) {
-        const element = domElement.querySelector(this.cssSelector.qualityList) as HTMLElement;
-        if (element) {
-          element.innerHTML = '';
-        }
-      }
-      if (this.cssSelector.playrateList) {
-        const element = domElement.querySelector(this.cssSelector.playrateList) as HTMLElement;
-        if (element) {
-          element.innerHTML = '';
-        }
-      }
+      this.hideGUIPopups();
       this.hideGUIControls();
     }
   }
@@ -916,5 +903,26 @@ export default abstract class PlayerUI extends Player {
   }
   protected getPlayrateList() {
     return this.playbackRates;
+  }
+  protected hideGUIPopups() {
+    const domElement = document.querySelector(this.cssSelectorAncestor) as HTMLElement;
+    if (this.cssSelector.closedCaptionList) {
+      const element = domElement.querySelector(this.cssSelector.closedCaptionList) as HTMLElement;
+      if (element) {
+        element.innerHTML = '';
+      }
+    }
+    if (this.cssSelector.qualityList) {
+      const element = domElement.querySelector(this.cssSelector.qualityList) as HTMLElement;
+      if (element) {
+        element.innerHTML = '';
+      }
+    }
+    if (this.cssSelector.playrateList) {
+      const element = domElement.querySelector(this.cssSelector.playrateList) as HTMLElement;
+      if (element) {
+        element.innerHTML = '';
+      }
+    }
   }
 }
