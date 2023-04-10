@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 import videoList from '../demo/video-list.js';
 
+const testURL = './tests/index.html';
+
 // Theme: BlueMonday - video
 test('BlueMonday-video: click the second play/pause button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -29,7 +31,7 @@ test('BlueMonday-video: click the second play/pause button', async ({ page }) =>
 
 // Theme: BlueMonday - video
 test('BlueMonday-video: click the next button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -54,7 +56,7 @@ test('BlueMonday-video: click the next button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the previous button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -83,7 +85,7 @@ test('BlueMonday-video: click the previous button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the volume bar', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -106,7 +108,7 @@ test('BlueMonday-video: click the volume bar', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the mute button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -122,7 +124,7 @@ test('BlueMonday-video: click the mute button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the volume max button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -156,7 +158,7 @@ test('BlueMonday-video: click the volume max button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the repeat button once', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -176,7 +178,7 @@ test('BlueMonday-video: click the repeat button once', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the repeat button 2 times', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -201,7 +203,7 @@ test('BlueMonday-video: click the repeat button 2 times', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the repeat button 3 times', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -226,7 +228,7 @@ test('BlueMonday-video: click the repeat button 3 times', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the shuffle button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -242,7 +244,7 @@ test('BlueMonday-video: click the shuffle button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the fullscreen button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -269,7 +271,7 @@ test('BlueMonday-video: click the fullscreen button', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the second track', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');
@@ -285,7 +287,7 @@ test('BlueMonday-video: click the second track', async ({ page }) => {
 });
 
 test('BlueMonday-video: click the remove button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto(testURL);
 
   // Select the video tag by its selector
   const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer2"]/div[1]/video');

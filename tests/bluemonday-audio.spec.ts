@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // Theme: BlueMonday - audio
 
 test('click the first play/pause button', async ({ page }) => {
-  await page.goto('./demo/index-test.html');
+  await page.goto('./tests/index.html');
 
   // Select the audio tag by its selector
   const audioTag = await page.locator('//*[@id="blueMondayPlayerContainer1"]/div[1]/audio');
