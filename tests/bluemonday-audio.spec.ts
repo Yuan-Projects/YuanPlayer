@@ -55,3 +55,21 @@ test('BlueMonday-audio: click the next button', async ({ page }) => {
   const mediaSrc1 = await mediaTag.evaluate((node) => (node as HTMLMediaElement).currentSrc);
   await expect(mediaSrc1).toBe(AudioList[1].src);
 });
+
+test('BlueMonday-audio: the controls container should always be visible',async ({ page }) => {
+  await page.goto(testURL);
+
+  // Select the audio tag by its selector
+  const mediaTag = await page.locator('//*[@id="blueMondayPlayerContainer1"]/div[1]/audio');
+  const playPauseBtn = await page.getByRole('button', { name: 'play' }).nth(0);
+  const currentTimeDiv = await page.locator('#blueMondayPlayerContainer1 .yuan-current-time');
+  const controlsContainer = await page.locator('#blueMondayPlayerContainer1 audio+div');
+
+  await expect(controlsContainer).toBeVisible();
+  await playPauseBtn.click();
+  await currentTimeDiv.click();
+
+  // wait for 3 second
+  await page.waitForTimeout(3000);
+  await expect(controlsContainer).toBeVisible();
+});
