@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import videoList from '../demo/video-list.js';
+import videoList from '../tests/video-list.js';
 
 const testURL = './tests/index.html';
 
