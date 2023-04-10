@@ -46,12 +46,18 @@ function getClass(Base) {
 
       // clear closed caption list
       const cclist = div.querySelector('.cclist') as HTMLDivElement;
-      cclist.innerHTML = '';
+      if (cclist) {
+        cclist.innerHTML = '';
+      }
       // clear quality list
       const qltlist = div.querySelector('.qltlist') as HTMLDivElement;
-      qltlist.innerHTML = '';
+      if (qltlist) {
+        qltlist.innerHTML = '';
+      }
       const speedlist = div.querySelector('.speedlist') as HTMLDivElement;
-      speedlist.innerHTML = '';
+      if (speedlist) {
+        speedlist.innerHTML = '';
+      }
     }
   
     protected onReady() {
