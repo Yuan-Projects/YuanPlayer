@@ -679,7 +679,7 @@ export default abstract class PlayerUI extends Player {
     clearTimeout(this.debouncedHide.timer());
   }
   protected hideGUIControls = () => {
-    if (this.isPlaying()) {
+    if (this.mediaElement?.tagName.toLowerCase() === 'video' && this.isPlaying()) {
       this.debouncedHide();
     }
   }
