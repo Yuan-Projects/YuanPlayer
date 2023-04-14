@@ -1,3 +1,8 @@
+## 1.6.0 (April 14, 2023)
+
+- Add quality switch support
+- Add playback rate support
+
 ## 1.5.0 (April 3, 2023)
 
 - New feature: Click the video to play/pause playback
