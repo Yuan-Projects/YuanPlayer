@@ -1,3 +1,8 @@
+## 1.4.0 (April 14, 2023)
+
+- Add video quality switch support
+- Add video playback rate support
+
 ## 1.3.0 (April 3, 2023)
 
 Note: This theme requires yuanplayer-core@1.5.0.
