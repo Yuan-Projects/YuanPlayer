@@ -1,0 +1,12 @@
+[
+  {
+    "id": "cctv",
+    "title": "中央电视台",
+    "dataURL": "https://yuan-projects.github.io/YuanPlayer/demo/tvchannels.json"
+  },
+  {
+    "id": "regionalchannels",
+    "title": "地方卫视",
+    "dataURL": "https://yuan-projects.github.io/YuanPlayer/demo/regionalchannels.json"
+  }
+]
