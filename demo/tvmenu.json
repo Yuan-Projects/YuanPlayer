@@ -8,5 +8,10 @@
     "id": "regionalchannels",
     "title": "地方卫视",
     "dataURL": "https://yuan-projects.github.io/YuanPlayer/demo/regionalchannels.json"
+  },
+  {
+    "id": "internationalchannels",
+    "title": "国际媒体",
+    "dataURL": "https://yuan-projects.github.io/YuanPlayer/demo/internationalchannels.json"
   }
 ]
