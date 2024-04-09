@@ -6,7 +6,6 @@
   {"title":"CCTV-6 电影", "videoURL":"https://node1.olelive.com:6443/live/CCTV6HD/hls.m3u8"},
   {"title":"CCTV-8 电视剧", "videoURL":"https://node1.olelive.com:6443/live/CCTV8HD/hls.m3u8"},
   {"title":"CCTV-9 记录", "videoURL":"https://node1.olelive.com:6443/live/CCTV9HD/hls.m3u8"},
-  {"title":"CCTV-10 科教", "videoURL":"https://node1.olelive.com:6443/live/CCTV10HD/hls.m3u8"},
   {"title":"CCTV-13 新闻", "videoURL":"https://node1.olelive.com:6443/live/CCTV13HD/hls.m3u8"},
   {"title":"CCTV-16 奥林匹克", "videoURL":"https://node1.olelive.com:6443/live/CCTV16HD/hls.m3u8"},
   {"title":"CCTV+", "videoURL":"https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL1.smil/playlist.m3u8"}
