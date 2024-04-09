@@ -1,5 +1,7 @@
 [
   {"title":"CNN", "videoURL":"https://turnerlive.warnermediacdn.com/hls/live/586495/cnngo/cnn_slate/VIDEO_0_3564000.m3u8"},
+  {"title":"BBC", "videoURL":"https://i.mjh.nz/SamsungTVPlus/US4000033L.m3u8"},
+  {"title":"BBC2", "videoURL":"https://bbceu-doctorwho-3-fr.rakuten.wurl.tv/playlist.m3u8"},
   {"title":"BBC Earth", "videoURL":"https://i.mjh.nz/SamsungTVPlus/USBD1700001RW.m3u8"},
   {"title":"ABC News", "videoURL":"https://abc-iview-mediapackagestreams-2.akamaized.net/out/v1/6e1cc6d25ec0480ea099a5399d73bc4b/index.m3u8"},
   {"title":"日语新闻台", "videoURL":"https://n24-cdn-live.ntv.co.jp/ch01/index_high.m3u8"},
