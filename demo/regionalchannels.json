@@ -1,4 +1,5 @@
 [
+  {"title": "凤凰中文", "videoURL": "https://play-flive.ifeng.com/live/06OLEGEGM4G.m3u8"},
   {"title": "东方卫视", "videoURL": "https://node1.olelive.com:6443/live/DONGFANGHD/hls.m3u8"},
   {"title": "辽宁卫视", "videoURL": "https://node1.olelive.com:6443/live/LIAONINGHD/hls.m3u8"},
   {"title": "广东卫视", "videoURL": "https://node1.olelive.com:6443/live/GUANGDONGHD/hls.m3u8"},
